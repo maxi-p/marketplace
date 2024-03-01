@@ -1,5 +1,16 @@
 import { useState } from 'react';
 
+const app_name = 'cop4331-marketplace';
+
+const buildPath = (route: string) => {
+    if(process.env.NODE_ENV === 'production'){
+        return 'https://'+app_name+'.herokuapp.com'+route;
+    }
+    else{
+        return 'http://localhost:5000'+route;
+    }
+};
+
 function Login()
 {
     var loginName: string;
@@ -15,7 +26,7 @@ function Login()
 
         try
         {
-            const response = await fetch('http://localhost:5000/api/login', {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            const response = await fetch(buildPath('/api/login'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
 
             if( res.id <= 0 )
