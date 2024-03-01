@@ -11,14 +11,13 @@ const buildPath = (route: string) => {
     }
 };
 
-
 function CardUI()
 {
     let _ud = localStorage.getItem('user_data');
-    let ud = JSON.parse(_ud);
+    let ud = JSON.parse(_ud  || '{}');
     let userId = ud.id;
-    let firstName = ud.firstName;
-    let lastName = ud.lastName;
+    // let firstName = ud.firstName;
+    // let lastName = ud.lastName;
 
     var card = '';
     var search = '';
@@ -27,11 +26,11 @@ function CardUI()
     const [searchResults,setResults] = useState('');
     const [cardList,setCardList] = useState('');
 
-    const addCard = async event => 
+    const addCard = async (event:React.MouseEvent<HTMLElement>) => 
     {
 	    event.preventDefault();
 
-        let obj = {userId:userId,card:card.value};
+        let obj = {userId:userId,card:card.valueOf};
         let js = JSON.stringify(obj);
 
         try
@@ -52,17 +51,17 @@ function CardUI()
         }
         catch(e)
         {
-            setMessage(e.toString());
+            console.log("catch block.");
         }
 
 	    // alert('addCard() ' + card.value);
     };
 
-    const searchCard = async event => 
+    const searchCard = async (event:React.MouseEvent<HTMLElement>) => 
     {
         event.preventDefault();
 
-        let obj = {userId:userId, search:search.value};
+        let obj = {userId:userId, search:search.valueOf};
         let js = JSON.stringify(obj);
 
         try
@@ -86,8 +85,7 @@ function CardUI()
         }
         catch(e)
         {
-            alert(e.toString());
-            setResults(e.toString());
+            console.log("catch block.");
         }
 
         // alert('searchCard() ' + search.value);
@@ -95,11 +93,11 @@ function CardUI()
 
     return(
       <div id="cardUIDiv">  <br />
-       <input type="text" id="searchText" placeholder="Card To Search For" ref={(c) => search = c} />
+       <input type="text" id="searchText" placeholder="Card To Search For" ref={(c) => {if(c !=null)search = c.value}} />
        <button type="button" id="searchCardButton" className="buttons" onClick={searchCard}> Search Card </button><br />
        <span id="cardSearchResult">{searchResults}</span>
        <p id="cardList">{cardList}</p><br /><br />
-       <input type="text" id="cardText" placeholder="Card To Add" ref={(c) => card = c} />
+       <input type="text" id="cardText" placeholder="Card To Add" ref={(c) => {if(c !=null)card = c.value}} />
        <button type="button" id="addCardButton" className="buttons" onClick={addCard}> Add Card </button><br />
        <span id="cardAddResult">{message}</span>
      </div>

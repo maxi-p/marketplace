@@ -18,10 +18,10 @@ function Login()
 
     const [message,setMessage] = useState('');
 
-    const doLogin = async event =>
+    const doLogin = async (event:React.MouseEvent<HTMLElement>) =>
     {
         event.preventDefault();
-        var obj = {login:loginName.value, password:loginPassword.value};
+        var obj = {login:loginName.valueOf, password:loginPassword.valueOf};
         var js = JSON.stringify(obj);
 
         try
@@ -44,8 +44,7 @@ function Login()
 
         }
         catch(e){
-            alert(e.toString());
-            return;
+            console.log("catch block.")
         }
 
         // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
@@ -53,10 +52,10 @@ function Login()
 
     return(
         <div id="loginDiv">
-            <form onSubmit={doLogin}>
+            <form>
                 <span id="inner-title">PLEASE LOG IN</span><br />
-                <input type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c}/><br />
-                <input type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c} /><br />
+                <input type="text" id="loginName" placeholder="Username" ref={(c) => {if(c !=null)loginName = c.value}}/><br />
+                <input type="password" id="loginPassword" placeholder="Password" ref={(c) => {if(c !=null)loginPassword = c.value}} /><br />
                 <input type="submit" id="loginButton" className="buttons" value = "Do It" onClick={doLogin} />
             </form>
             <span id="loginResult">{message}</span>
