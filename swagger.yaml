@@ -1,0 +1,54 @@
+swagger: '2.0'
+info:
+  description: This is the API documentation for the COP 4331 Marketplace App. Made by Jeovan Teixeira and Remi Roper.
+  version: 1.0.0
+  title: Marketplace App
+  contact:
+    email: je127364@ucf.edu
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /login:
+    post:
+      tags:
+      - Users
+      summary: Logs in to the marketplace app
+      operationId: dlLogin
+      description: Logs in to the marketplace app, returns empty info with an error string saying if it worked or not
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: loginUser
+        description: Login
+        schema:
+          $ref: '#/definitions/Login'
+      responses:
+        "Empty Error String":
+          description: OK
+        "No Records Found":
+          description: Login couldn't find the user in the Users table with their login and password
+          
+definitions:
+  Login:
+    type: object
+    required:
+    - Login
+    - Password
+    properties:
+      username:
+        type: string
+        example: fred
+      password:
+        type: string
+        example: secret
+
+host: cop4331-marketplace-98e1376d9db6.herokuapp.com
+basePath: /api
+schemes:
+- https

@@ -77,7 +77,7 @@ app.post('/api/login', async (req, res, next) =>
     }
     else
     {
-        err = 'Couldn\'t find user with those credentials';
+        err = 'No Records Found';
     }
 
     var ret = { id:id, firstName:fn, lastName:ln, email: email, error:err};
