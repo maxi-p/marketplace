@@ -1,27 +1,29 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-const app_name = 'cop4331-marketplace';
-
-const buildPath = (route: string) => {
-    if(process.env.NODE_ENV === 'production'){
-        return 'https://'+app_name+'.herokuapp.com'+route;
+function buildPath(route)
+{
+    const app_name = 'cop4331-marketplace-98e1376d9db6'
+    if (process.env.NODE_ENV === 'production')
+    {
+    return 'https://' + app_name + '.herokuapp.com/' + route;
     }
-    else{
-        return 'http://localhost:5000'+route;
+    else
+    {
+    return 'http://localhost:5000/' + route;
     }
-};
+}
 
 function Login()
 {
-    var loginName: string;
-    var loginPassword: string;
+    var loginName;
+    var loginPassword;
 
     const [message,setMessage] = useState('');
 
-    const doLogin = async (event:React.MouseEvent<HTMLElement>) =>
+    const doLogin = async event =>
     {
         event.preventDefault();
-        var obj = {login:loginName.valueOf, password:loginPassword.valueOf};
+        var obj = {login:loginName.value, password:loginPassword.value};
         var js = JSON.stringify(obj);
 
         try
@@ -44,7 +46,8 @@ function Login()
 
         }
         catch(e){
-            console.log("catch block.")
+            alert(e.toString());
+            return;
         }
 
         // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
@@ -52,10 +55,10 @@ function Login()
 
     return(
         <div id="loginDiv">
-            <form>
+            <form onSubmit={doLogin}>
                 <span id="inner-title">PLEASE LOG IN</span><br />
-                <input type="text" id="loginName" placeholder="Username" ref={(c) => {if(c !=null)loginName = c.value}}/><br />
-                <input type="password" id="loginPassword" placeholder="Password" ref={(c) => {if(c !=null)loginPassword = c.value}} /><br />
+                <input type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c}/><br />
+                <input type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c} /><br />
                 <input type="submit" id="loginButton" className="buttons" value = "Do It" onClick={doLogin} />
             </form>
             <span id="loginResult">{message}</span>

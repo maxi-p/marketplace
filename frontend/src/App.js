@@ -1,11 +1,13 @@
+import React from 'react';
+import './App.css';
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LoginPage from './pages/LoginPage';
 import CardPage from './pages/CardPage';
-import './App.css'
 
-function App() {
-
+function App()
+{
   return (
     <BrowserRouter>
       <Routes>
