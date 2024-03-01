@@ -28,7 +28,8 @@ function Login()
 
         try
         {
-            const response = await fetch(buildPath('/api/login'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            const response = await fetch(buildPath('api/login'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
             var res = JSON.parse(await response.text());
 
             if( res.id <= 0 )
