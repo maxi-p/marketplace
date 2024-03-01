@@ -33,6 +33,29 @@ paths:
           description: OK
         "No Records Found":
           description: Login couldn't find the user in the Users table with their login and password
+paths:
+  /Register:
+    post:
+      tags:
+      - Users
+      summary: Regisers new users in to the marketplace app
+      operationId: dlRegister
+      description: registers in to the marketplace app, returns empty info with an error string saying if it worked or not
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: registerUser
+        description: Register
+        schema:
+          $ref: '#/definitions/Register'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Records already Found":
+          description: User has already been found and needs to be inputed
           
 definitions:
   Login:
