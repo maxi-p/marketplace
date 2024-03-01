@@ -1,11 +1,13 @@
 // Serverving code
 
 // DB
+require('dotenv').config();
 
-const url = 'mongodb+srv://RickLeinecker:COP4331Rocks@cluster0.ehunp00.mongodb.net/?retryWrites=true&w=majority';
+const url = process.env.MONGODB_URI;
 const MongoClient = require("mongodb").MongoClient;
 const client = new MongoClient(url);
 client.connect(console.log("mongodb connected"));
+
 
 
 // Hardcoded data
@@ -115,7 +117,11 @@ var cardList =
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
+const path = require('path');
+const PORT = process.env.PORT || 5000;
 const app = express();
+app.set('port', PORT);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -126,6 +132,17 @@ app.use((req, res, next) =>
     res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, DELETE, OPTIONS');
     next();
 });
+
+// Server static assets if in production
+if (process.env.NODE_ENV === 'production')
+{
+    // Set static folder
+    app.use(express.static('frontend/build'));
+    app.get('*', (req, res) =>
+    {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+    });
+}
 
 app.post('/api/addcard', async (req, res, next) =>
 {
@@ -200,4 +217,6 @@ app.post('/api/searchcards', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.listen(5000); // start Node + Express server on port 5000
+app.listen(PORT, () => {
+  console.log("Server listening on port " + PORT)
+}); // start Node + Express server on port 5000
