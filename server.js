@@ -10,7 +10,7 @@ client.connect(console.log("mongodb connected"));
 
 
 // Hardcoded data
-var cardList = 
+/*var cardList = 
 [
   'Roy Campanella',
   'Paul Molitor',
@@ -111,7 +111,7 @@ var cardList =
   'Willie Mays',
   'Rickey Henderson',
   'Babe Ruth'
-];
+];*/
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -133,7 +133,8 @@ app.use((req, res, next) =>
     next();
 });
 
-app.post('/api/addcard', async (req, res, next) =>
+// From Professor
+/*app.post('/api/addcard', async (req, res, next) =>
 {
   // incoming: userId, color
   // outgoing: error
@@ -156,34 +157,45 @@ app.post('/api/addcard', async (req, res, next) =>
   cardList.push( card );
   var ret = { error: error };
   res.status(200).json(ret);
-});
+});*/
 
 app.post('/api/login', async (req, res, next) => 
 {
-  // incoming: login, password
-  // outgoing: id, firstName, lastName, error
-  var error = '';
-  const { login, password } = req.body;
+    const {username, password} = req.body;
 
-  const db = client.db("COP4331Cards");
-  const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
+    const db = client.db("oMarketDB");
+    const results = await db.collection('Users').find({username: username, password: password}).toArray();
 
-  var id = -1;
-  var fn = '';
-  var ln = '';
+    var id = -1;
+    var fn = '';
+    var ln = '';
+    var email = '';
+    var err = '';
 
-  if( results.length > 0 )
-  {
-    id = results[0].UserID;
-    fn = results[0].FirstName;
-    ln = results[0].LastName;
-  }
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
-  res.status(200).json(ret);
+    if( results.length != 0 )
+    {
+        id = results[0]._id;
+        fn = results[0].firstname;
+        ln = results[0].lastname;
+        email = results[0].email;
+    }
+    else
+    {
+        err = 'Couldn\'t find user with those credentials';
+    }
+
+    var ret = { id:id, firstName:fn, lastName:ln, email: email, error:err};
+    res.status(200).json(ret);
+});
+
+app.post('/api/register', async (req, res, next) => 
+{
+    
 
 });
 
-app.post('/api/searchcards', async (req, res, next) => 
+// Example from professor
+/*app.post('/api/searchcards', async (req, res, next) => 
 {
   // incoming: userId, search
   // outgoing: results[], error
@@ -215,9 +227,9 @@ if (process.env.NODE_ENV === 'production')
     {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
-}
+}*/
 
 app.listen(PORT, () =>
 {
-console.log('Server listening on port ' + PORT);
+    console.log('Server listening on port ' + PORT);
 });
