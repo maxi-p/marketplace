@@ -84,10 +84,48 @@ app.post('/api/login', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+// Hash Function for Password
+String.prototype.hashCode = function() 
+{
+    var hash = 0,
+        i, chr;
+    
+    if (this.length === 0) return hash;
+
+    for (i = 0; i < this.length; i++) 
+    {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+
+    return hash;
+}
+
 app.post('/api/register', async (req, res, next) => 
 {
+    // incoming: firstname, lastname, username, password, email, phoneNumber, aboutme, verified
+    // outgoing: error
+    var error = '';
+    const {firstname, lastname, username, password, email, phoneNumber,aboutme, verified} = req.body;
+    const newRegister = {firstname: firstname, lastname: lastname, username: username, password: password.hashCode(), email: email, phoneNumber: phoneNumber,aboutme: aboutme , verified : verified};
 
+    try
+    {
+      const db = client.db("oMarketDB");
+      const result = db.collection('Users').insertOne(newRegister);
+    }
+    catch(e)
+    {
+      error = e.toString();
+    }
+  
+    // TEMP FOR LOCAL TESTING.
+    //cardList.push( card );
 
+    var ret = { error: error };
+    res.status(200).json(ret);
+   
 });
 
 // Example from professor
