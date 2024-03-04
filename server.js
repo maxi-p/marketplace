@@ -57,10 +57,13 @@ app.use((req, res, next) =>
 
 app.post('/api/login', async (req, res, next) => 
 {
+    // incoming: username, password
+    // outgoing: userInfo, error
+
     const {username, password} = req.body;
 
     const db = client.db("oMarketDB");
-    const results = await db.collection('Users').find({username: username, password: password}).toArray();
+    const results = await db.collection('Users').find({username: username, password: password.hashCode()}).toArray();
 
     var id = -1;
     var fn = '';
@@ -87,8 +90,7 @@ app.post('/api/login', async (req, res, next) =>
 // Hash Function for Password
 String.prototype.hashCode = function() 
 {
-    var hash = 0,
-        i, chr;
+    var hash = 0, i, chr;
     
     if (this.length === 0) return hash;
 
@@ -104,28 +106,36 @@ String.prototype.hashCode = function()
 
 app.post('/api/register', async (req, res, next) => 
 {
-    // incoming: firstname, lastname, username, password, email, phoneNumber, aboutme, verified
+    // incoming: firstname, lastname, username, password, email, phoneNumber
     // outgoing: error
+
+    const db = client.db("oMarketDB");
+
     var error = '';
-    const {firstname, lastname, username, password, email, phoneNumber,aboutme, verified} = req.body;
-    const newRegister = {firstname: firstname, lastname: lastname, username: username, password: password.hashCode(), email: email, phoneNumber: phoneNumber,aboutme: aboutme , verified : verified};
+    const {firstname, lastname, username, password, email, phoneNumber} = req.body;
+
+    let verified = 0;
+    let aboutMe = '';
+    const newRegister = {firstname: firstname, lastname: lastname, username: username, password: password.hashCode(), email: email, phoneNumber: phoneNumber, aboutme: aboutMe, verified: verified};
+
+    const results = await db.collection('Users').find({username: username, email: email}).toArray();
 
     try
     {
-      const db = client.db("oMarketDB");
-      const result = db.collection('Users').insertOne(newRegister);
+        if (results.length != 0)
+        {
+            throw new Error('User Already Exists');
+        }
+
+        const result = db.collection('Users').insertOne(newRegister);
     }
     catch(e)
     {
-      error = e.toString();
+        error = e.toString();
     }
-  
-    // TEMP FOR LOCAL TESTING.
-    //cardList.push( card );
 
     var ret = { error: error };
     res.status(200).json(ret);
-   
 });
 
 // Example from professor

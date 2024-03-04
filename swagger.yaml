@@ -33,8 +33,7 @@ paths:
           description: OK
         "No Records Found":
           description: Login couldn't find the user in the Users table with their login and password
-paths:
-  /Register:
+  /register:
     post:
       tags:
       - Users
@@ -54,8 +53,8 @@ paths:
       responses:
         "Empty Error String":
           description: OK
-        "Records already Found":
-          description: User has already been found and needs to be inputed
+        "User Already Exists":
+          description: Duplicate User has been Found
           
 definitions:
   Login:
@@ -70,6 +69,34 @@ definitions:
       password:
         type: string
         example: secret
+  Register:
+    type: object
+    required:
+    - First Name
+    - Last Name
+    - Username
+    - Password
+    - Email
+    - Phone Number
+    properties:
+      firstname:
+        type: string
+        example: Fred
+      lastname:
+        type: string
+        example: Doe
+      username:
+        type: string
+        example: fred111
+      password:
+        type: string
+        example: secret
+      email:
+        type: string
+        example: fred@fred.com
+      phoneNumber:
+        type: string
+        example: 4079981234
 
 host: cop4331-marketplace-98e1376d9db6.herokuapp.com
 basePath: /api
