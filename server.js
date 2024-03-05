@@ -9,110 +9,6 @@ const client = new MongoClient(url);
 client.connect(console.log("mongodb connected"));
 
 
-// Hardcoded data
-var cardList = 
-[
-  'Roy Campanella',
-  'Paul Molitor',
-  'Tony Gwynn',
-  'Dennis Eckersley',
-  'Reggie Jackson',
-  'Gaylord Perry',
-  'Buck Leonard',
-  'Rollie Fingers',
-  'Charlie Gehringer',
-  'Wade Boggs',
-  'Carl Hubbell',
-  'Dave Winfield',
-  'Jackie Robinson',
-  'Ken Griffey, Jr.',
-  'Al Simmons',
-  'Chuck Klein',
-  'Mel Ott',
-  'Mark McGwire',
-  'Nolan Ryan',
-  'Ralph Kiner',
-  'Yogi Berra',
-  'Goose Goslin',
-  'Greg Maddux',
-  'Frankie Frisch',
-  'Ernie Banks',
-  'Ozzie Smith',
-  'Hank Greenberg',
-  'Kirby Puckett',
-  'Bob Feller',
-  'Dizzy Dean',
-  'Joe Jackson',
-  'Sam Crawford',
-  'Barry Bonds',
-  'Duke Snider',
-  'George Sisler',
-  'Ed Walsh',
-  'Tom Seaver',
-  'Willie Stargell',
-  'Bob Gibson',
-  'Brooks Robinson',
-  'Steve Carlton',
-  'Joe Medwick',
-  'Nap Lajoie',
-  'Cal Ripken, Jr.',
-  'Mike Schmidt',
-  'Eddie Murray',
-  'Tris Speaker',
-  'Al Kaline',
-  'Sandy Koufax',
-  'Willie Keeler',
-  'Pete Rose',
-  'Robin Roberts',
-  'Eddie Collins',
-  'Lefty Gomez',
-  'Lefty Grove',
-  'Carl Yastrzemski',
-  'Frank Robinson',
-  'Juan Marichal',
-  'Warren Spahn',
-  'Pie Traynor',
-  'Roberto Clemente',
-  'Harmon Killebrew',
-  'Satchel Paige',
-  'Eddie Plank',
-  'Josh Gibson',
-  'Oscar Charleston',
-  'Mickey Mantle',
-  'Cool Papa Bell',
-  'Johnny Bench',
-  'Mickey Cochrane',
-  'Jimmie Foxx',
-  'Jim Palmer',
-  'Cy Young',
-  'Eddie Mathews',
-  'Honus Wagner',
-  'Paul Waner',
-  'Grover Alexander',
-  'Rod Carew',
-  'Joe DiMaggio',
-  'Joe Morgan',
-  'Stan Musial',
-  'Bill Terry',
-  'Rogers Hornsby',
-  'Lou Brock',
-  'Ted Williams',
-  'Bill Dickey',
-  'Christy Mathewson',
-  'Willie McCovey',
-  'Lou Gehrig',
-  'George Brett',
-  'Hank Aaron',
-  'Harry Heilmann',
-  'Walter Johnson',
-  'Roger Clemens',
-  'Ty Cobb',
-  'Whitey Ford',
-  'Willie Mays',
-  'Rickey Henderson',
-  'Babe Ruth'
-];
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -133,7 +29,8 @@ app.use((req, res, next) =>
     next();
 });
 
-app.post('/api/addcard', async (req, res, next) =>
+// From Professor
+/*app.post('/api/addcard', async (req, res, next) =>
 {
   // incoming: userId, color
   // outgoing: error
@@ -156,34 +53,93 @@ app.post('/api/addcard', async (req, res, next) =>
   cardList.push( card );
   var ret = { error: error };
   res.status(200).json(ret);
-});
+});*/
 
 app.post('/api/login', async (req, res, next) => 
 {
-  // incoming: login, password
-  // outgoing: id, firstName, lastName, error
-  var error = '';
-  const { login, password } = req.body;
+    // incoming: username, password
+    // outgoing: userInfo, error
 
-  const db = client.db("COP4331Cards");
-  const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
+    const {username, password} = req.body;
 
-  var id = -1;
-  var fn = '';
-  var ln = '';
+    const db = client.db("oMarketDB");
+    const results = await db.collection('Users').find({username: username, password: password.hashCode()}).toArray();
 
-  if( results.length > 0 )
-  {
-    id = results[0].UserID;
-    fn = results[0].FirstName;
-    ln = results[0].LastName;
-  }
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
-  res.status(200).json(ret);
+    var id = -1;
+    var fn = '';
+    var ln = '';
+    var email = '';
+    var err = '';
 
+    if( results.length != 0 )
+    {
+        id = results[0]._id;
+        fn = results[0].firstname;
+        ln = results[0].lastname;
+        email = results[0].email;
+    }
+    else
+    {
+        err = 'No Records Found';
+    }
+
+    var ret = { id:id, firstName:fn, lastName:ln, email: email, error:err};
+    res.status(200).json(ret);
 });
 
-app.post('/api/searchcards', async (req, res, next) => 
+// Hash Function for Password
+String.prototype.hashCode = function() 
+{
+    var hash = 0, i, chr;
+    
+    if (this.length === 0) return hash;
+
+    for (i = 0; i < this.length; i++) 
+    {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+
+    return hash;
+}
+
+app.post('/api/register', async (req, res, next) => 
+{
+    // incoming: firstname, lastname, username, password, email, phoneNumber
+    // outgoing: error
+
+    const db = client.db("oMarketDB");
+
+    var error = '';
+    const {firstname, lastname, username, password, email, phoneNumber} = req.body;
+
+    let verified = 0;
+    let aboutMe = '';
+    const newRegister = {firstname: firstname, lastname: lastname, username: username, password: password.hashCode(), email: email, phoneNumber: phoneNumber, aboutme: aboutMe, verified: verified};
+
+    const results = await db.collection('Users').find({username: username, email: email}).toArray();
+
+    try
+    {
+        if (results.length != 0)
+        {
+            throw new Error('User Already Exists');
+        }
+
+        const result = db.collection('Users').insertOne(newRegister);
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
+
+// Example from professor
+/*app.post('/api/searchcards', async (req, res, next) => 
 {
   // incoming: userId, search
   // outgoing: results[], error
@@ -215,9 +171,9 @@ if (process.env.NODE_ENV === 'production')
     {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
-}
+}*/
 
 app.listen(PORT, () =>
 {
-console.log('Server listening on port ' + PORT);
+    console.log('Server listening on port ' + PORT);
 });
