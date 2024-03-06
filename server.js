@@ -10,10 +10,10 @@ client.connect(console.log("mongodb connected"));
 // Email API
 const nodemailer = require('nodemailer');
 const { google }  = require('googleapis');
-const CLIENT_ID = '1042314204094-9bdb71cd9a9irg3o16moo1cgf5i013a2.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//04CVyl6tXrPP8CgYIARAAGAQSNwF-L9IrMZ7FIzUi6OMJZa1TRlw1w0k_X2a_d4h_C0yHS8pN1VylyjDN9JZ0e-cjlqH1vlfSA4E';
+const CLIENT_ID = process.env.CLIENT_ID;;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
