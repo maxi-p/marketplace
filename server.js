@@ -1,14 +1,25 @@
 // Serverving code
 
 // DB
-
 require('dotenv').config();
 const url = process.env.MONGODB_URI;
 const MongoClient = require("mongodb").MongoClient;
 const client = new MongoClient(url);
 client.connect(console.log("mongodb connected"));
 
+// Email API
+const nodemailer = require('nodemailer');
+const { google }  = require('googleapis');
+const CLIENT_ID = '1042314204094-9bdb71cd9a9irg3o16moo1cgf5i013a2.apps.googleusercontent.com';
+const CLIENT_SECRET = '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';
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
+const REFRESH_TOKEN = '1//04CVyl6tXrPP8CgYIARAAGAQSNwF-L9IrMZ7FIzUi6OMJZa1TRlw1w0k_X2a_d4h_C0yHS8pN1VylyjDN9JZ0e-cjlqH1vlfSA4E';
 
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+
+// Connection Management
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -87,6 +98,92 @@ app.post('/api/login', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/register', async (req, res, next) => 
+{
+    // incoming: firstname, lastname, username, password, email, phoneNumber
+    // outgoing: error, newUserId
+
+    const db = client.db("oMarketDB");
+
+    var error = '';
+    const {firstname, lastname, username, password, email, phoneNumber} = req.body;
+
+    let verified = 0;
+    let aboutMe = '';
+    let newId = -1;
+
+    const newRegister = {firstname: firstname, lastname: lastname, username: username, password: password.hashCode(), email: email, phoneNumber: phoneNumber, aboutme: aboutMe, verified: verified};
+
+    const results = await db.collection('Users').find({username: username, email: email}).toArray();
+
+    try
+    {
+        if (results.length != 0)
+        {
+            throw new Error('User Already Exists');
+        }
+
+        db.collection('Users').insertOne(newRegister);
+
+        let newUser = await db.collection('Users').find({username: username, email: email}).toArray();
+        newId = newUser[0]._id;
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = { _id: newId, error: error};
+    res.status(200).json(ret);
+});
+
+app.post('/api/verifyEmail', async (req, res, next) => 
+{
+    // incoming: email
+    // outgoing: email, verifyNumber, error
+
+    const {email} = req.body;
+    const verifyNum = randomNum();
+    //console.log(verifyNum);
+
+    let message = 'Here is your verification code: ' + verifyNum;
+    var error = '';
+
+    try
+    {
+        const accessToken = await oAuth2Client.getAccessToken();
+
+        const transport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: 'randomrandomrandom120@gmail.com',
+                clientId: CLIENT_ID,
+                clientSecret:  CLIENT_SECRET,
+                refreshToken: REFRESH_TOKEN,
+                accessToken: accessToken
+            }
+        });
+
+        const mailOptions = {
+            from: 'Open Market <randomrandomrandom120@gmail.com>',
+            to: email,
+            subject: 'Verification Code',
+            text: message
+        };
+
+        const result = await transport.sendMail(mailOptions);
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    
+    var ret = { email: email, verifiedNumber: verifyNum, error: error};
+    res.status(200).json(ret);
+});
+
 // Hash Function for Password
 String.prototype.hashCode = function() 
 {
@@ -107,54 +204,8 @@ String.prototype.hashCode = function()
 // generates a random number for email verification
 function randomNum()
 {
-    return Math.random() * (99999 - 10000) + 10000;
+    return Math.ceil(Math.random() * (99999 - 10000) + 10000);
 }
-
-app.post('/api/verifyNum', async (req, res, next) => 
-{
-    // incoming: firstname, lastname, username, password, email, phoneNumber
-    // outgoing: error
-
-    var error = '';
-    let verifyNum = randomNum();
-
-    var ret = { verifiedNumber: verifyNum ,error: error};
-    res.status(200).json(ret);
-});
-
-app.post('/api/register', async (req, res, next) => 
-{
-    // incoming: firstname, lastname, username, password, email, phoneNumber
-    // outgoing: error
-
-    const db = client.db("oMarketDB");
-
-    var error = '';
-    const {firstname, lastname, username, password, email, phoneNumber} = req.body;
-
-    let verified = 0;
-    let aboutMe = '';
-    const newRegister = {firstname: firstname, lastname: lastname, username: username, password: password.hashCode(), email: email, phoneNumber: phoneNumber, aboutme: aboutMe, verified: verified};
-
-    const results = await db.collection('Users').find({username: username, email: email}).toArray();
-
-    try
-    {
-        if (results.length != 0)
-        {
-            throw new Error('User Already Exists');
-        }
-
-        const result = db.collection('Users').insertOne(newRegister);
-    }
-    catch(e)
-    {
-        error = e.toString();
-    }
-
-    var ret = { error: error};
-    res.status(200).json(ret);
-});
 
 // Example from professor
 /*app.post('/api/searchcards', async (req, res, next) => 
