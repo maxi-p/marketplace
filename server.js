@@ -104,6 +104,24 @@ String.prototype.hashCode = function()
     return hash;
 }
 
+// generates a random number for email verification
+function randomNum()
+{
+    return Math.random() * (99999 - 10000) + 10000;
+}
+
+app.post('/api/verifyNum', async (req, res, next) => 
+{
+    // incoming: firstname, lastname, username, password, email, phoneNumber
+    // outgoing: error
+
+    var error = '';
+    let verifyNum = randomNum();
+
+    var ret = { verifiedNumber: verifyNum ,error: error};
+    res.status(200).json(ret);
+});
+
 app.post('/api/register', async (req, res, next) => 
 {
     // incoming: firstname, lastname, username, password, email, phoneNumber
@@ -134,7 +152,7 @@ app.post('/api/register', async (req, res, next) =>
         error = e.toString();
     }
 
-    var ret = { error: error };
+    var ret = { error: error};
     res.status(200).json(ret);
 });
 

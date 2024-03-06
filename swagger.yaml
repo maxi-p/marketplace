@@ -55,6 +55,26 @@ paths:
           description: OK
         "User Already Exists":
           description: Duplicate User has been Found
+  /verifyNum:
+    post:
+      tags:
+      - Server
+      summary: Creates the verification number and sends it out
+      operationId: dlVerifiedNum
+      description: registers in to the marketplace app, returns empty info with an error string saying if it worked or not
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: VerifiedNum
+        description: Verifys the
+        schema:
+          $ref: '#/definitions/verifyNum'
+      responses:
+        "Empty Error String":
+          description: OK
           
 definitions:
   Login:
@@ -97,6 +117,10 @@ definitions:
       phoneNumber:
         type: string
         example: 4079981234
+  verifyNum:
+    type: object
+    required:
+    properties:
 
 host: cop4331-marketplace-98e1376d9db6.herokuapp.com
 basePath: /api
