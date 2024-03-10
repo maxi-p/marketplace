@@ -54,6 +54,14 @@ function Login()
         // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
     };
 
+    const registerRedirect = async event =>
+    {
+        event.preventDefault();
+        window.location.href = '/register'
+
+        // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
+    };
+
     return(
         <div id="loginDiv">
             <form onSubmit={doLogin}>
@@ -61,6 +69,7 @@ function Login()
                 <input type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c}/><br />
                 <input type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c} /><br />
                 <input type="submit" id="loginButton" className="buttons" value = "Do It" onClick={doLogin} />
+                <input type="submit" id="registerButton" className="buttons" value = "Register" onClick={registerRedirect} />
             </form>
             <span id="loginResult">{message}</span>
         </div>
