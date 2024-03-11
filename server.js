@@ -161,7 +161,7 @@ app.post('/api/register', async (req, res, next) =>
   var ret = {results:_ret, error:error};
   res.status(200).json(ret);
 });
-
+*/
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production')
 {
@@ -171,7 +171,7 @@ if (process.env.NODE_ENV === 'production')
     {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
-}*/
+}
 
 app.listen(PORT, () =>
 {
