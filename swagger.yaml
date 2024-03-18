@@ -99,6 +99,28 @@ paths:
           description: OK
         "Non-Empty Error String":
           description: An error occured with updating the database
+  /editUser:
+    post:
+      tags:
+      - Users
+      summary: Edits the user's account info with given fields
+      operationId: dlEditUser
+      description: Takes in the user's unique identifier and edit's their database document with given input fields.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: editUser
+        description: Editing
+        schema:
+          $ref: '#/definitions/EditUser'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Non-Empty Error String":
+          description: An error occured with updating the user
           
 definitions:
   Login:
@@ -157,6 +179,41 @@ definitions:
       id:
         type: string
         example: 12121fafwfaf103012
+  EditUser:
+    type: object
+    required:
+    - id
+    - New First Name
+    - New Last Name
+    - New Username
+    - New Password
+    - New Email
+    - New Phone Number
+    properties:
+      id:
+        type: string
+        example: 12121fafwfaf103012
+      newFirstName:
+        type: string
+        example: Fred
+      newLastName:
+        type: string
+        example: Doe
+      newUserName:
+        type: string
+        example: fred111
+      newPassword:
+        type: string
+        example: secret
+      newEmail:
+        type: string
+        example: fred@fred.com
+      newPhoneNumber:
+        type: string
+        example: 4079981234
+      newAboutMe:
+        type: string
+        example: Hi I am Fred
 
 host: cop4331-marketplace-98e1376d9db6.herokuapp.com
 basePath: /api

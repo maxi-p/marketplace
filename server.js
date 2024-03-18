@@ -209,6 +209,37 @@ app.post('/api/changeVerification', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/editUser', async (req, res, next) => 
+{
+    // incoming: id, newUserInfo
+    // outgoing: id, error
+    
+    const {id, newFirstName, newLastName, newUserName, newPassword, newEmail, newPhoneNumber, newAboutMe} = req.body;
+
+    const db = client.db("oMarketDB");
+
+    var error = '';
+
+    try{
+        const newUser = await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set:
+                                                               {firstname: newFirstName,
+                                                                lastname: newLastName, 
+                                                                username: newUserName,
+                                                                password: newPassword.hashCode(),
+                                                                email: newEmail,
+                                                                phoneNumber: newPhoneNumber, 
+                                                                aboutme: newAboutMe}});
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+    
+
+    var ret = {_id: id, error: error};
+    res.status(200).json(ret);
+});
+
 // Hash Function for Password
 String.prototype.hashCode = function() 
 {
