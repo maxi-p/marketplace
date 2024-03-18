@@ -9,7 +9,7 @@ function buildPath(route)
     }
     else
     {
-    return 'http://localhost:5000/' + route;
+        return 'https://' + app_name + '.herokuapp.com/' + route;
     }
 }
 
@@ -27,41 +27,49 @@ function Register()
     const doRegister = async event =>
     {
         event.preventDefault();
-        // var obj = {register:registerUsername.value, password:registerPassword.value};
-        // var js = JSON.stringify(obj);
+        var obj = {
+            firstname: registerFName.value,
+            lastname: registerLName.value,
+            username: registerUsername.value,
+            password: registerPassword.value,
+            email: registerEmail.value,
+            phoneNumber: registerPhoneNo.value
+        };
+        var js = JSON.stringify(obj);
 
-        // try
-        // {
-        //     const response = await fetch(buildPath('api/register'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+        try
+        {
+            const response = await fetch(buildPath('api/register'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-        //     var res = JSON.parse(await response.text());
+            var res = JSON.parse(await response.text());
+            if(res.error)
+            {
+                setMessage(res.error);
+            }
+            else
+            {
+                var user = {
+                    firstname: registerFName.value,
+                    lastname: registerLName.value,
+                    username: registerUsername.value,
+                    password: registerPassword.value,
+                    email: registerEmail.value,
+                    phoneNumber: registerPhoneNo.value
+                };
+                localStorage.setItem('user_data', JSON.stringify(user));
 
-        //     if( res.id <= 0 )
-        //     {
-        //         setMessage('User/Password combination incorrect');
-        //     }
-        //     else
-        //     {
-        //         var user = {
-        //         firstname: registerFName,
-        //         lastname: registerLName,
-        //         username: registerUsername,
-        //         password: registerPassword,
-        //         email: registerEmail,
-        //         phoneNumber: registerPhoneNo}
-        //         localStorage.setItem('user_data', JSON.stringify(user));
+                setMessage('');
+                window.location.href = '/';
+            }
 
-        //         setMessage('');
-        //         window.location.href = '/';
-        //     }
+        }
+        catch(e){
+            alert(e.toString());
+            console.log(e.toString());
+            return;
+        }
 
-        // }
-        // catch(e){
-        //     alert(e.toString());
-        //     return;
-        // }
-
-        alert('doRegister() ' + registerFName.value + ' ' + registerLName.value + ' ' + registerUsername.value + ' ' + registerPassword.value + ' ' + registerEmail.value + ' ' + registerPhoneNo.value);
+        // alert('doRegister() ' + registerFName.value + ' ' + registerLName.value + ' ' + registerUsername.value + ' ' + registerPassword.value + ' ' + registerEmail.value + ' ' + registerPhoneNo.value);
     };
 
     const backToLogin = async event =>
