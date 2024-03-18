@@ -7,9 +7,8 @@ const TempHomePage = () =>
     return(
         <div>
             <PageTitle />
-            <TempHome />
             <LoggedInName />
-
+            <TempHome />
         </div>
     );
 }
