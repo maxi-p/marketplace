@@ -4,6 +4,7 @@
 require('dotenv').config();
 const url = process.env.MONGODB_URI;
 const MongoClient = require("mongodb").MongoClient;
+const { ObjectId } = require('mongodb');
 const client = new MongoClient(url);
 client.connect(console.log("mongodb connected"));
 
@@ -182,6 +183,29 @@ app.post('/api/verifyEmail', async (req, res, next) =>
 
     
     var ret = { email: email, verifiedNumber: verifyNum, error: error};
+    res.status(200).json(ret);
+});
+
+app.post('/api/changeVerification', async (req, res, next) => 
+{
+    // incoming: id
+    // outgoing: id, error
+
+    const {id} = req.body;
+    const db = client.db("oMarketDB");
+
+    var error = '';
+
+    try 
+    {
+        const user = await db.collection('Users').updateOne({_id: new ObjectId(id)} ,{$set: {verified: 1}});    
+    } 
+    catch (e) 
+    {
+        error = e.toString();
+    }
+    
+    var ret = { _id: id, error: error};
     res.status(200).json(ret);
 });
 
