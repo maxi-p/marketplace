@@ -2,50 +2,56 @@
 
 // TODO add Comments
 // TODO Move to new File
+// TODO Expand Image when Pressed
 import React, { useState } from "react"; 
 import { 
 	View, 
-	Text, 
-	TouchableOpacity, 
-	FlatList, 
 	StyleSheet,
-  Image, 
+  Button,
+  Alert,
 } from "react-native"; 
-
+import ProductModal from "./Components/ProductModal";
 import ProductList from "./Components/ProductList";
 
+
+
 function App() {
-  const data = [
-    {
-      id:1,
-      name:'Hello',
-      price:"$50",
-    },
-    {
-      id:2,
-      name:'Hello2',
-      price:"$750",
-    },
-    {
-      id:3,
-      price:"$50",
-      desc: "This is when the name is removed",
-    },
-    {
-      id:4,
-      name:'Hello2',
-      desc: "This is when the Price is removed"
-    }
-  ];
+  const [modalItem, setModalitem] = useState(null);
+    const data = [
+      {
+        id:1,
+        name: "Hello1",
+        price: "$50",
+        desc: "Test"
+      },
+      {
+        id:2,
+        name: "Hello2",
+        price: "$5000",
+        desc: "This is also a Test"
+      },
+      {
+        id:3,
+        name: "Greetings",
+        price: "$5.00",
+      },
+      {
+        id:4,
+        name: "Goo Dragon",
+        price: "$Goo",
+        desc: "hello THis is a test"
+      },
+    ];
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>
-        Header
-      </Text>
-      <ProductList data={data} />
+      <ProductModal visible={modalItem != null}
+        close={() => setModalitem(null)}
+        item={modalItem}
+        />
+      <ProductList data={data} onItemPress={(item) => {setModalitem(item)}}/>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   header: {
@@ -57,8 +63,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex:1,
-    padding: 20,
     backgroundColor: "#f5f5f5",
+    alignItems: "center",
+    justifyContent: "center",
+    margin:10,
   },
-})
+});
 export default App;
