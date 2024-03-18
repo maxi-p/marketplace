@@ -1,15 +1,15 @@
 import React from 'react';
 import PageTitle from '../components/PageTitle';
-import Login from '../components/Login';
-//trying to fix heroku error
-const LoginPage = () =>
+import Register from '../components/Register';
+
+const RegisterPage = () =>
 {
     return(
         <div>
             <PageTitle />
-            <Login />
+            <Register />
         </div>
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
