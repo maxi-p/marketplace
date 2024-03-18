@@ -77,6 +77,28 @@ paths:
           description: OK
         "Non-Empty Error String":
           description: An error occured with the email sending API
+  /changeVerification:
+    post:
+      tags:
+      - Server
+      summary: Changes verification status
+      operationId: dlVerificationUpdate
+      description: Looks for the user defined by the user id and changes the status of their account verification
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: ChangeVerification
+        description: VerificationUpdate
+        schema:
+          $ref: '#/definitions/ChangeVerification'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Non-Empty Error String":
+          description: An error occured with updating the database
           
 definitions:
   Login:
@@ -127,6 +149,14 @@ definitions:
       email:
         type: string
         example: fred@gmail.com
+  ChangeVerification:
+    type: object
+    required:
+    - id
+    properties:
+      id:
+        type: string
+        example: 12121fafwfaf103012
 
 host: cop4331-marketplace-98e1376d9db6.herokuapp.com
 basePath: /api
