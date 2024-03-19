@@ -3,70 +3,179 @@
 // TODO add Comments
 // TODO Move to new File
 // TODO Expand Image when Pressed
-import React, { useState } from "react"; 
+import React, {} from "react"; 
 import { 
-	View, 
+  View,
+  Text,
+  Keyboard,
+  KeyboardAvoidingView,
 	StyleSheet,
+  TextInput,
+  Touchable,
+  TouchableWithoutFeedback,
   Button,
-  Alert,
+  ScrollView,
 } from "react-native"; 
-import ProductModal from "./Components/ProductModal";
-import ProductList from "./Components/ProductList";
 
 
-
-function App() {
-  const [modalItem, setModalitem] = useState(null);
-    const data = [
-      {
-        id:1,
-        name: "Hello1",
-        price: "$50",
-        desc: "Test"
-      },
-      {
-        id:2,
-        name: "Hello2",
-        price: "$5000",
-        desc: "This is also a Test"
-      },
-      {
-        id:3,
-        name: "Greetings",
-        price: "$5.00",
-      },
-      {
-        id:4,
-        name: "Goo Dragon",
-        price: "$Goo",
-        desc: "hello THis is a test"
-      },
-    ];
+// Move From Here
+function RegisterComponent() {
   return (
-    <View style={styles.container}>
-      <ProductModal visible={modalItem != null}
-        close={() => setModalitem(null)}
-        item={modalItem}
-        />
-      <ProductList data={data} onItemPress={(item) => {setModalitem(item)}}/>
+    <View style={styles.root}>
+      <KeyboardAvoidingView
+        style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {/* Component Starts Here*/}
+          <View>
+          {/* First Name*/}
+          <RegInput 
+            label="First Name"
+
+            autoCapitalize="words"
+            textContentType="givenName"
+            autoComplete="given-name"
+            autoCorrect={false}
+            keyboardType="default"
+            returnKeyType="next"
+
+            onSubmitEditing={(event) => { event && this.LNRef.focus()}}
+            inputRef={(r) => this.FNRef = r}
+          />
+          {/* Last Name*/}
+          <RegInput 
+            label="Last Name"
+
+            autoCapitalize="words"
+            textContentType="familyName"
+            autoComplete="family-name"
+            autoCorrect={false}
+            keyboardType="default"
+            returnKeyType="next"
+
+            onSubmitEditing={(event) => { event && this.UNRef.focus()}}
+            inputRef={(r) => this.LNRef = r}
+            
+          />
+          {/* Username*/}
+          <RegInput 
+            label="Username"
+
+            autoCapitalize="none"
+            textContentType="username"
+            autoComplete="username"
+            autoCorrect={false}
+            keyboardType="default"
+            returnKeyType="next"
+
+            onSubmitEditing={(event) => { event && this.EMRef.focus()}}
+            inputRef={(r) => this.UNRef = r}
+          />
+          {/* Email*/}
+          <RegInput 
+            label="Email"
+
+            autoCapitalize="none"
+            textContentType="emailAddress"
+            autoComplete="email"
+            autoCorrect={false}
+            keyboardType="email-address"
+            returnKeyType="next"
+
+            onSubmitEditing={(event) => { event && this.PHRef.focus()}}
+            inputRef={(r) => this.EMRef = r}
+          />
+          {/* Phone Number*/}
+          <RegInput 
+            label="Phone Number"
+
+            autoCapitalize="none"
+            textContentType="telephoneNumber"
+            autoComplete="tel"
+            autoCorrect={false}
+            keyboardType="phone-pad"
+            returnKeyType="next"
+
+          onSubmitEditing={(event) => { event && this.PWRef.focus()}}
+            inputRef={(r) => this.PHRef = r}
+          />
+          {/* Password*/}
+          <RegInput 
+            label="Password"
+
+            autoCapitalize="none"
+            textContentType="password"
+            autoComplete="new-password"
+            autoCorrect={false}
+            keyboardType="visible-password"
+            returnKeyType="done"
+
+
+            inputRef={(r) => this.PWRef = r}
+          />
+          <View style={[styles.form, styles.formButton]}>
+            <Button 
+              onPress={null}
+              title="Submit"
+              disabled
+            />
+          </View>
+        </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </View>
-  );
-};
+  ) };
+
+  // Register Input: Acts like TextInput with label
+  // Props:
+  //  All Textinput Props
+  //  label - lable text
+  //  errorText - Error Text
+  //  style effects Textinput Style
+  //  formStyle
+  //  labelStyle
+  //  inputRef - Ref of TextInput
+function RegInput(props) {
+  return (
+    <View style={[styles.form, props.formStyle]}>
+      {props.label && (
+        <Text style={[styles.label, props.labelStyle]}>{props.label}</Text>
+      )}
+      <TextInput
+        style={[styles.textInput, props.error && styles.errorInput, props.style]}
+        {...props}
+        ref={(r) => {props.inputRef && props.inputRef(r)}}
+        />
+        {props.errorText && (
+          <Text style={styles.errorText}>{props.errorText}</Text>
+        )}
+
+    </View>
+  )
+}
+function App() {
+  return(
+    <ScrollView>
+      <RegisterComponent />
+    </ScrollView>
+  )};
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "green"
+  // ----
+  root: { },
+  container: { },
+  form: { },
+  label: { },
+  textInput: {
+    height:40,
+    margin:12,
+    borderWidth: 1,
+    padding: 10,
   },
-  container: {
-    flex:1,
-    backgroundColor: "#f5f5f5",
-    alignItems: "center",
-    justifyContent: "center",
-    margin:10,
+  errorInput: {
+    borderColor: "red",
+  },
+  errorText: {
+    color: "red",
   },
 });
 export default App;
