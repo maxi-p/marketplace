@@ -240,6 +240,70 @@ app.post('/api/editUser', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/createPost', async(req, res, next) =>{
+
+    //incoming: username, condition, genre, price, desc
+    //outgoing: id, error
+
+    const {username, name, genre, price, desc, condition} = req.body;
+    const db = client.db("oMarketDB");
+
+
+    const newRegister = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
+    const results = await db.collection('Posts').find({username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}).toArray();
+
+    var id = -1;
+    var err = '';
+
+    try{
+
+        if(results != 0){
+            throw new Error('Post already exists');
+        }
+
+        //creates new post and grabs the new id to return 
+        db.collection('Posts').insertOne(newRegister);
+        const newId = await db.collection('Posts').find({username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}).toArray();
+        id = newId[0]._id;
+
+    }
+    catch(e){
+        err = e.toString();
+    }
+
+    var ret = { _id: id, error: err};
+    res.status(200).json(ret);
+});
+
+app.post('/api/editPost', async(req, res, next) => {
+
+    //incoming: id, username, condition, genre, price, desc
+    //outgoing: id, error
+
+    var id = -1;
+    var err = '';
+
+    const {id,username, name, genre, price, desc, condition} = req.body;
+    const db = client.db("oMarketDB");
+
+    const newRegister = {id: id,username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
+    
+    //just updates all the fields and if they're unchanged they just update from the prev value.
+    try{
+        const user = db.collection('Posts').updateOne({_id: new ObjectId(id)}, 
+        {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}});
+        
+    }
+    catch(e){
+        err = e.toString();
+    }
+
+    var ret = {_id: id, error: err};
+    res.status(200).json(ret);
+
+
+});
+
 // Hash Function for Password
 String.prototype.hashCode = function() 
 {
