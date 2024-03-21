@@ -1,10 +1,7 @@
 
-// FileName: App.js 
+// FileName: RegisterComponent.js, Created by Griffin Zakow 
 
 // TODO add Comments
-// TODO Add Username Validation
-// TODO add Password Validation
-// TODO Add Phone number validation
 import React, {useState} from "react"; 
 import { 
   Alert,
@@ -67,7 +64,7 @@ function RegisterComponent() {
       else
       {
         setMessage("");
-        //TODO Back to Login
+        props.navigation?.navigate('Login');
       }
     }
     catch(e){
@@ -157,13 +154,13 @@ function RegisterComponent() {
                 value: R_Validation_Data.userNameRegex,
                 message: "Username must be 4-18 characters (Alphanumeric, -, _) and start with a character"
               },
-              required: true,
+              required: "This field is required",
             }} 
             render={({field: {onChange, onBlur, value}}) => (
               <RegInput 
                 label="Username"
                 error={errors.username}
-                errorText={errors.username && "This is required"}
+                errorText={errors.username?.message}
 
                 autoCapitalize="none"
                 textContentType="username"
@@ -225,13 +222,13 @@ function RegisterComponent() {
                 value: R_Validation_Data.phoneRegex,
                 message: "This must be a valid phone number"
               },
-              required: true,
+              required: "This field is required",
             }} 
             render={({field: {onChange, onBlur, value}}) => (
               <RegInput 
                 label="Phone Number"
                 error={errors.phone}
-                errorText={errors.phone && "This is required"}
+                errorText={errors.phone?.message}
 
                 autoCapitalize="none"
                 textContentType="telephoneNumber"
@@ -259,13 +256,13 @@ function RegisterComponent() {
                 value: R_Validation_Data.passwordRegex,
                 message: "Passwords must be 8-32 long, with at least 1 digit, 1 letter, 1 special character"
               },
-              required: true
+              required: "This field is required"
             }}
             render={({field: {onChange, onBlur, value}}) => (
               <RegInput 
                 label="Password"
                 error={errors.pass}
-                errorText={errors.pass && "This is required"}
+                errorText={errors.pass?.message}
 
                 autoCapitalize="none"
                 textContentType="password"
