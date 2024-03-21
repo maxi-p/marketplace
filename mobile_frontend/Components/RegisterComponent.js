@@ -19,9 +19,10 @@ import {
   ScrollView,
 } from "react-native"; 
 import { useForm, Controller } from "react-hook-form";
+import R_Validation_Data from "../logic/RegisterValidation";
 
 
-// Move From Here
+// Helper functions
 function buildPath(route)
 {
     const app_name = 'cop4331-marketplace-98e1376d9db6'
@@ -35,6 +36,7 @@ function buildPath(route)
     }
 }
 
+  // Component Functions
 function RegisterComponent() {
 
   const [message, setMessage] = useState('');
@@ -46,7 +48,7 @@ function RegisterComponent() {
       username: regData.username,
       password: regData.pass,
       email: regData.email,
-      phoneNumber: regData.phone
+      phoneNumber: R_Validation_Data.dePhoneify(regData.phone)
     };
     var js = JSON.stringify(obj);
 
@@ -150,7 +152,13 @@ function RegisterComponent() {
           <Controller 
             name="username"
             defaultValue=""
-            rules={{required: true,}} 
+            rules={{
+              pattern: {
+                value: R_Validation_Data.userNameRegex,
+                message: "Username must be 4-18 characters (Alphanumeric, -, _) and start with a character"
+              },
+              required: true,
+            }} 
             render={({field: {onChange, onBlur, value}}) => (
               <RegInput 
                 label="Username"
@@ -212,7 +220,13 @@ function RegisterComponent() {
           <Controller 
             name="phone"
             defaultValue=""
-            rules={{required: true,}} 
+            rules={{
+              pattern:{
+                value: R_Validation_Data.phoneRegex,
+                message: "This must be a valid phone number"
+              },
+              required: true,
+            }} 
             render={({field: {onChange, onBlur, value}}) => (
               <RegInput 
                 label="Phone Number"
@@ -240,7 +254,13 @@ function RegisterComponent() {
           <Controller 
             name="pass"
             defaultValue=""
-            rules={{required: true,}} 
+            rules={{ 
+              pattern:{
+                value: R_Validation_Data.passwordRegex,
+                message: "Passwords must be 8-32 long, with at least 1 digit, 1 letter, 1 special character"
+              },
+              required: true
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <RegInput 
                 label="Password"
@@ -277,6 +297,8 @@ function RegisterComponent() {
       </KeyboardAvoidingView>
     </View>
   ) };
+
+
 
   // Register Input: Acts like TextInput with label
   // Props:
