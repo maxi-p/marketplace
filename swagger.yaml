@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: This is the API documentation for the COP 4331 Marketplace App. Made by Jeovan Teixeira and Remi Roper.
+  description: This is the API documentation for the COP 4331 Marketplace App. Made by Jeovan Teixeira, Ethan Fluhr, and Remi Roper.
   version: 1.0.0
   title: Marketplace App
   contact:
@@ -121,6 +121,50 @@ paths:
           description: OK
         "Non-Empty Error String":
           description: An error occured with updating the user
+  /createPost:
+    post:
+      tags:
+      - Posts
+      summary: Creates a new post to show in the marketplace app
+      operationId: dlCreatePost
+      description: Creates a new post and puts it into the database, returns id of post and error string
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: createPost
+        description: Post
+        schema:
+          $ref: '#/definitions/CreatePost'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Post already exists":
+          description: Duplicate post has been found
+  /editPost:
+    post:
+      tags:
+      - Posts
+      summary: Edits the user's post with given fields
+      operationId: dlEditPost
+      description: Takes in the new post details and edits the post at the given id in the database.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: editPost
+        description: Editing
+        schema:
+          $ref: '#/definitions/EditPost'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Non-Empty Error String":
+          description: An error occured with updating the post
           
 definitions:
   Login:
@@ -214,6 +258,66 @@ definitions:
       newAboutMe:
         type: string
         example: Hi I am Fred
+  CreatePost:
+    type: object
+    required:
+    - Username
+    - Name
+    - Genre
+    - Price
+    - Description
+    - Condition
+    properties:
+      username:
+        type: string
+        example: Fred1245
+      name:
+        type: string
+        example: Fred
+      genre:
+        type: string
+        example: Cars
+      price:
+        type: string
+        example: 22.49
+      desc:
+        type: string
+        example: Description
+      condition:
+        type: string
+        example: Good as new
+  EditPost:
+    type: object
+    required:
+    - id
+    - User Name
+    - Name
+    - Genre
+    - Price
+    - Description
+    - Condition
+    properties:
+      id:
+        type: string
+        example: 12121fafwfaf103012
+      username:
+        type: string
+        example: Fred121
+      name:
+        type: string
+        example: Fred Doe
+      genre:
+        type: string
+        example: Cars
+      price:
+        type: string
+        example: 22.49
+      desc:
+        type: string
+        example: Description
+      condition:
+        type: string
+        example: Good as new
 
 host: cop4331-marketplace-98e1376d9db6.herokuapp.com
 basePath: /api

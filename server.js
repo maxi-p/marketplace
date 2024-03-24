@@ -242,7 +242,7 @@ app.post('/api/editUser', async (req, res, next) =>
 
 app.post('/api/createPost', async(req, res, next) =>{
 
-    //incoming: username, condition, genre, price, desc
+    //incoming: username, name, condition, genre, price, desc
     //outgoing: id, error
 
     const {username, name, genre, price, desc, condition} = req.body;
@@ -280,13 +280,12 @@ app.post('/api/editPost', async(req, res, next) => {
     //incoming: id, username, condition, genre, price, desc
     //outgoing: id, error
 
-    var id = -1;
     var err = '';
 
-    const {id,username, name, genre, price, desc, condition} = req.body;
+    const {id, username, name, genre, price, desc, condition} = req.body;
     const db = client.db("oMarketDB");
 
-    const newRegister = {id: id,username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
+    const newRegister = {id: id, username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
     
     //just updates all the fields and if they're unchanged they just update from the prev value.
     try{
