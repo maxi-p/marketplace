@@ -1,0 +1,16 @@
+#Wed Mar 20 20:35:44 EDT 2024
+base.0=/Users/noah/Desktop/MERN/OpenMarket/android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
+base.1=/Users/noah/Desktop/MERN/OpenMarket/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
+base.2=/Users/noah/Desktop/MERN/OpenMarket/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/14/classes.dex
+base.3=/Users/noah/Desktop/MERN/OpenMarket/android/app/build/intermediates/dex/debug/mergeProjectDexDebug/4/classes.dex
+base.4=/Users/noah/Desktop/MERN/OpenMarket/android/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
+path.0=classes.dex
+path.1=0/classes.dex
+path.2=14/classes.dex
+path.3=4/classes.dex
+path.4=classes2.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex
+renamed.3=classes4.dex
+renamed.4=classes5.dex

@@ -32,7 +32,10 @@ const Login = (props) => {
         setMessage('User/Password combination incorrect');
       } else {
         // Navigate to Home screen
-        props.navigation?.navigate('Home');
+        props.navigation?.navigate('Home', { username: username });
+        setUsername(''); // Clear username
+        setPassword(''); // Clear password
+        setMessage('') // Clear error message
       }
     } catch (error) {
       console.error(error);
@@ -54,7 +57,7 @@ const Login = (props) => {
   // Render the login page if isLoggedIn is false
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>PLEASE LOG IN</Text>
+      <Text style={styles.title}>LOGIN</Text>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -84,12 +87,16 @@ const Login = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'top',
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
-    marginBottom: 20,
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "black",
+    marginTop: 50,
+    marginBottom: 150,
+    marginVertical: 0, 
   },
   input: {
     width: '80%',
@@ -99,6 +106,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 10,
     paddingLeft: 10,
+    paddingRight: 60, 
   },
   button: {
     width: '80%',
@@ -112,6 +120,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+    margin: 10,
+    marginHorizontal: 75,
   },
   message: {
     color: 'red',
