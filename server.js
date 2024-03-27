@@ -113,8 +113,17 @@ app.post('/api/register', async (req, res, next) =>
     let verified = 0;
     let aboutMe = '';
     let newId = -1;
+    let interested = [];
 
-    const newRegister = {firstname: firstname, lastname: lastname, username: username, password: password.hashCode(), email: email, phoneNumber: phoneNumber, aboutme: aboutMe, verified: verified};
+    const newRegister = {firstname: firstname, 
+                         lastname: lastname, 
+                         username: username, 
+                         password: password.hashCode(), 
+                         email: email, 
+                         phoneNumber: phoneNumber, 
+                         aboutme: aboutMe, 
+                         verified: verified,
+                         interestedIn: interested};
 
     const results = await db.collection('Users').find({username: username, email: email}).toArray();
 
@@ -249,8 +258,10 @@ app.post('/api/createPost', async(req, res, next) =>{
     const db = client.db("oMarketDB");
 
 
-    const newRegister = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
-    const results = await db.collection('Posts').find({username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}).toArray();
+    let usersInterested = [];
+
+    const newRegister = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, usersInterested: usersInterested};
+    const results = await db.collection('Posts').find({username: username, name: name/*, genre: genre, price: price, desc: desc, condition: condition*/}).toArray();
 
     var id = -1;
     var err = '';
@@ -301,6 +312,30 @@ app.post('/api/editPost', async(req, res, next) => {
     res.status(200).json(ret);
 
 
+});
+
+app.post('/api/interestAddition', async(req, res, next) => {
+
+    //incoming: userId, postId
+    //outgoing: error
+
+    var err = '';
+
+    const {userId, postId} = req.body;
+    const db = client.db("oMarketDB");
+    
+    
+    try {
+        const post = db.collection('Posts').updateOne({_id: new ObjectId(postId)}, {$push: {usersInterested: userId}});
+        const user = db.collection('Users').updateOne({_id: new ObjectId(userId)}, {$push: {interestedIn: postId}});
+        
+    }
+    catch(e){
+        err = e.toString();
+    }
+
+    var ret = {error: err};
+    res.status(200).json(ret);
 });
 
 // Hash Function for Password
