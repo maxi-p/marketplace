@@ -165,6 +165,28 @@ paths:
           description: OK
         "Non-Empty Error String":
           description: An error occured with updating the post
+  /interestAddition:
+    post:
+      tags:
+      - Posts
+      summary: Adds the user to the interests section for the given post
+      operationId: dlInterest
+      description: Takes in the post id and user id and adjusts the database to show that the user is interested
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: interest
+        description: Editing Interest
+        schema:
+          $ref: '#/definitions/InterestAddition'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Non-Empty Error String":
+          description: An error occured with updating the database
           
 definitions:
   Login:
@@ -318,6 +340,18 @@ definitions:
       condition:
         type: string
         example: Good as new
+  InterestAddition:
+    type: object
+    required:
+    - User ID
+    - Post ID
+    properties:
+      userId:
+        type: string
+        example: 12121fafwfaf103012
+      postId:
+        type: string
+        example: 1313131fwasdwad131
 
 host: cop4331-marketplace-98e1376d9db6.herokuapp.com
 basePath: /api
