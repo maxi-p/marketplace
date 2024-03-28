@@ -5,13 +5,9 @@ function buildPath(route)
 {
     const app_name = 'cop4331-marketplace-98e1376d9db6'
     if (process.env.NODE_ENV === 'production')
-    {
-    return 'https://' + app_name + '.herokuapp.com/' + route;
-    }
-    else
-    {
         return 'https://' + app_name + '.herokuapp.com/' + route;
-    }
+    else
+        return 'http://localhost:5000/'+ route;
 }
 
 function Register()
@@ -56,9 +52,7 @@ function Register()
                 
                 var res = JSON.parse(await response.text());
                 if(res.error)
-                {
                     setMessage(res.error);
-                }
                 else
                 {
                     var user = {
@@ -72,7 +66,7 @@ function Register()
                     localStorage.setItem('user_data', JSON.stringify(user));
                     
                     setMessage('');
-                    window.location.href = '/';
+                    window.location.href = '/verify-email';
                 }
                 
             }
