@@ -129,15 +129,12 @@ app.post('/api/register', async (req, res, next) =>
 
     try
     {
-        if (results.length != 0)
+        if (results.length > 0)
         {
             throw new Error('User Already Exists');
         }
 
-        db.collection('Users').insertOne(newRegister);
-
-        let newUser = await db.collection('Users').find({username: username, email: email}).toArray();
-        newId = newUser[0]._id;
+        newId = (await db.collection('Users').insertOne(newRegister)).insertedId;
     }
     catch(e)
     {
