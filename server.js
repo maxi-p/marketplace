@@ -182,7 +182,7 @@ app.post('/api/verifyEmail', async (req, res, next) =>
             subject: 'Verification Code',
             text: message
         };
-
+        
         const result = await transport.sendMail(mailOptions);
     }
     catch(e)

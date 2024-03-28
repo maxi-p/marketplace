@@ -1,6 +1,6 @@
 import React from 'react';
 
-function tempHome()
+function TempHome()
 {
    return(
     <div>
@@ -9,4 +9,4 @@ function tempHome()
    );
 };
 
-export default tempHome;
+export default TempHome;
