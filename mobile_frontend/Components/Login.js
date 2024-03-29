@@ -31,8 +31,8 @@ const Login = (props) => {
       if (res.id <= 0) {
         setMessage('User/Password combination incorrect');
       } else {
+        props.navigation?.navigate('Post-Login', { username: username });
         // Navigate to Home screen
-        props.navigation?.navigate('Home', { username: username });
         setUsername(''); // Clear username
         setPassword(''); // Clear password
         setMessage('') // Clear error message
@@ -46,6 +46,7 @@ const Login = (props) => {
   const registerRedirect = () => {
     // Handle redirection to register screen here
     console.log('Redirecting to register screen');
+    props.navigation.navigate('Register');
   };
 
   const handleLogout = () => {
@@ -74,9 +75,7 @@ const Login = (props) => {
       <TouchableOpacity style={styles.button} onPress={doLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={
-        () => {props.navigation.navigate('Register')}
-      }>
+      <TouchableOpacity style={styles.button} onPress={registerRedirect}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
       <Text style={styles.message}>{message}</Text>

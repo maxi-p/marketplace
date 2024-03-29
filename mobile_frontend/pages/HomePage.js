@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 
 const HomePage = (props) => {
-  const { username } = props.route.params;
+  const { username } = "N/A" ; // TODO change This
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
