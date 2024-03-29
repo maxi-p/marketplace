@@ -55,50 +55,36 @@ paths:
           description: OK
         "User Already Exists":
           description: Duplicate User has been Found
-  /verifyEmail:
+  /emailVerify:
     post:
       tags:
       - Server
-      summary: Creates the verification number and sends it out to email in input
-      operationId: dlVerifiedNum
-      description: Sends an email to the user's email in the input and then outputs the verification code sent to that user.
+      summary: Checks if the user can verify their email or not
+      operationId: dlVerifyEmail
+      description: Takes in the user's id and verification number. If it matches the verification number in the database and was verified in time then they will be marked as verified. If not return an error.
       consumes:
       - application/json
       produces:
       - application/json
       parameters:
       - in: body
-        name: VerifiedNum
-        description: Verification
+        name: verifyEmail
+        description: Email
         schema:
-          $ref: '#/definitions/VerifyEmail'
+          $ref: '#/definitions/EmailVerify'
       responses:
+        "User Id Not Found":
+          description: The given id was not found in the database
+        "User is already verified":
+          description: The user has been verified before
+        "User didn't verify in time":
+          description: The user verified their account too late
+        "Incorrect Verification Number":
+          description: The given verification number did not match the database
+        "Undefined Behavior Spotted":
+          description: A database issue was encountered
         "Empty Error String":
           description: OK
-        "Non-Empty Error String":
-          description: An error occured with the email sending API
-  /changeVerification:
-    post:
-      tags:
-      - Server
-      summary: Changes verification status
-      operationId: dlVerificationUpdate
-      description: Looks for the user defined by the user id and changes the status of their account verification
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: body
-        name: ChangeVerification
-        description: VerificationUpdate
-        schema:
-          $ref: '#/definitions/ChangeVerification'
-      responses:
-        "Empty Error String":
-          description: OK
-        "Non-Empty Error String":
-          description: An error occured with updating the database
   /editUser:
     post:
       tags:
@@ -229,22 +215,18 @@ definitions:
       phoneNumber:
         type: string
         example: 4079981234
-  VerifyEmail:
-    type: object
-    required:
-    - Email
-    properties:
-      email:
-        type: string
-        example: fred@gmail.com
-  ChangeVerification:
+  EmailVerify:
     type: object
     required:
     - id
+    - Verification Number
     properties:
       id:
         type: string
         example: 12121fafwfaf103012
+      verifyNum:
+        type: integer
+        example: 458792
   EditUser:
     type: object
     required:
