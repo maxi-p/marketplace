@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import HomePage from '../pages/HomePage';
+import {UserContext} from '../logic/UserContext';
 
 
 function buildPath(route) {
@@ -9,6 +10,7 @@ function buildPath(route) {
 }
 
 const Login = (props) => {
+  const {username: gUsername, setUsername:gSetUsername} = useContext(UserContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -31,7 +33,8 @@ const Login = (props) => {
       if (res.id <= 0) {
         setMessage('User/Password combination incorrect');
       } else {
-        props.navigation?.navigate('Post-Login', { username: username });
+        gSetUsername(username);
+        props.navigation?.navigate('Post-Login');
         // Navigate to Home screen
         setUsername(''); // Clear username
         setPassword(''); // Clear password

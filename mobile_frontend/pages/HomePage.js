@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
-
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, BackHandler } from 'react-native';
+import { UserContext } from '../logic/UserContext';
+import { useFocusEffect } from '@react-navigation/native';
 const HomePage = (props) => {
-  const { username } = "N/A" ; // TODO change This
+  const {username, setUsername} = useContext( UserContext );
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
@@ -11,31 +12,28 @@ const HomePage = (props) => {
 
   const handleLogout = () => {
     // Handle logout logic here
+    setUsername(null);
     props.navigation.navigate('Login');
   };
+  // Logout on Back button
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        handleLogout();
+        return true;
+      };
+      const subscrip = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
 
-  const handleSell = () => {
-    // Handle sell functionality here
-    // For example, navigate to the sell screen
-    props.navigation.navigate('Sell');
-  };
-
-  const handleBrowse = () => {
-    // Handle browse functionality here
-    // For example, navigate to the browse screen
-    props.navigation.navigate('Browse');
-  };
+      return ()=> subscrip.remove();
+    }, [handleLogout])
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.banner}>
-        <TouchableOpacity onPress={handleSell}>
-          <Text style={styles.bannerButton}>Sell</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleBrowse}>
-          <Text style={styles.bannerButton}>Browse</Text>
-        </TouchableOpacity>
-
         <View style={styles.usernameContainer}>
         <TouchableOpacity onPress={toggleDropdown}>
           <Text style={styles.username}>{username}</Text>
