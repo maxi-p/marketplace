@@ -55,7 +55,7 @@ const Login = (props) => {
   const handleLogout = () => {
     setUsername(''); // Clear username
     setPassword(''); // Clear password
-    setMessage('') // Clear error message
+    setMessage(''); // Clear error message
   };
 
   // Render the login page if isLoggedIn is false
