@@ -9,7 +9,6 @@ import * as testData from "../TestData/TestProducts.json"
 const localTest = true;
 const DelayTime = 3e3;
 const fetchAmount = 5;
-var index = 0;
 
 // Test Functions
 function resolveAfterDelay(Delay, x) {
@@ -19,7 +18,7 @@ function resolveAfterDelay(Delay, x) {
         }, Delay);
      });
 }
-async function fetchData() {
+async function fetchData(index) {
     var retval = {data: [], endReached: false};
     var datalen = testData.data.length;
     if (index >= datalen) {
@@ -28,11 +27,7 @@ async function fetchData() {
     }
     retval.data = testData.data.slice(index, index + fetchAmount);
     if (index + fetchAmount >= datalen) {
-        index = datalen;
         retval.endReached = true;
-    }
-    else {
-        index += fetchAmount;
     }
     await resolveAfterDelay(DelayTime, null);
     return retval;
@@ -62,6 +57,8 @@ function ProductList(props) {
     // States
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [index, setIndex] = useState(0);
+    const [refreshing, setRefreshing] = useState(false);
 
     // Render Functions
     const renderItem = ({item}) => {
@@ -87,16 +84,17 @@ function ProductList(props) {
         if (loading) {
             return <LoadingCard />;
         }
-        return false;
+        return null;
     };
 
 
-    // Fetch Data
+    // Fetch Data -- First Load
     useEffect(() => {
         const addData = async () => {
-            var getData = fetchData();
-            setData((await getData).data);
+            var inData = await fetchData(0);
+            setData(inData.data);
             setLoading(false);
+            setIndex(inData.data.length);
         };
         setLoading(true);
         addData();
@@ -105,8 +103,20 @@ function ProductList(props) {
     const getData = async () => {
         if (loading === false) {
             setLoading(true);
-            var inData = await fetchData();
+            var inData = await fetchData(index);
             setData([...data, ...(await inData).data]);
+            setIndex(index + inData.data.length);
+            setLoading(false);
+        }
+    };
+    const refresh = async () => {
+        if (loading === false){
+            setLoading(true);
+            setRefreshing(true);
+            var inData = await fetchData(0);
+            setData([...(await inData).data]);
+            setIndex(inData.data.length);
+            setRefreshing(false);
             setLoading(false);
         }
     };
@@ -121,6 +131,9 @@ function ProductList(props) {
             ListHeaderComponent={props.children}
             onEndReached={getData}
             onEndReachedThreshold={1}
+            onRefresh={refresh}
+            refreshing={refreshing}
+            style={props.style}
         />
     );
 }
