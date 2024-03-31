@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
-import ProductCard from './Components/Cards/ProductCard';
+import ProductList from './Components/newProductList';
 const App = () => {
   return (
     <View>
-      <ProductCard />
+      <ProductList />
     </View>
   );
 };

@@ -1,6 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React from 'react';
-import { Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Alert, Animated, Easing, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 const defaultProduct = {
     catagory: 'Catagory?',
@@ -99,12 +100,55 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
     );
 };
 
+export const LoadingCard = () => {
+    const fadeAnim = useRef(new Animated.Value(0.3)).current;
+    useEffect(() => {
+
+        const [startValue, endValue] = [0.3, 0.7];
+        const loopTime = 4e3;
+        const easing = Easing.ease;
+
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(fadeAnim, {
+                    toValue: endValue,
+                    duration: loopTime / 2,
+                    useNativeDriver: true,
+                    easing: easing,
+                    isInteraction: false,
+                }),
+                Animated.timing(fadeAnim, {
+                    toValue: startValue,
+                    duration: loopTime / 2,
+                    useNativeDriver: true,
+                    easing: easing,
+                    isInteraction: false,
+                }),
+        ])).start();
+    }, [fadeAnim]);
+    return (
+        <Animated.View style={[styles.itemContainter,
+        {
+            backgroundColor:'#ccc', elevation: 2,
+            opacity: fadeAnim,
+        }]}>
+            <View style={{
+                height: 200,
+                backgroundColor: '#777',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                }}/>
+        </Animated.View>
+    );
+};
+
 const styles = StyleSheet.create({
     itemContainter: {
         backgroundColor: 'white',
         borderRadius: 20,
         elevation: 10,
         margin: 10,
+        minHeight: 310,
     },
     imageBox: {},
     image: {
