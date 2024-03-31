@@ -42,6 +42,93 @@ app.use((req, res, next) =>
     next();
 });
 
+
+app.post('/api/searchPost', async (req, res, next) => 
+{
+    // incoming: username, name, genre
+    // outgoing: results[], error
+    var error = '';
+
+    const { username, name, genre } = req.body;
+    //var _search = search.trim();
+
+    const db = client.db("oMarketDB");
+
+    try{
+
+        if (username != "" && name != "" && genre != "")
+        {
+            throw new Error('Too many used feilds');
+        }
+
+        if (username != "" && name != "")
+        {
+            throw new Error('Too many used feilds');
+        }
+
+        if (username != "" && genre != "")
+        {
+            throw new Error('Too many used feilds');
+        }
+
+        if (name != "" && genre != "")
+        {
+            throw new Error('Too many used feilds');
+        }
+
+
+            if (username != "")
+            {
+
+                var _search = username.trim()
+                const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i].username);
+                }
+            }
+
+            if (name != "" )
+            {
+                var _search = name.trim()
+                const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i].name );
+                }
+            }
+            
+
+            if (genre != "" )
+            {
+                var _search = genre.trim()
+                const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i].genre );
+                }
+            }
+        
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+    
+
+    var ret = {results:_ret, error:error};
+    res.status(200).json(ret);
+});
+
 app.post('/api/login', async (req, res, next) => 
 {
     // incoming: username, password
@@ -300,6 +387,34 @@ app.post('/api/editPost', async(req, res, next) => {
         const user = db.collection('Posts').updateOne({_id: new ObjectId(id)}, 
         {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}});
         
+    }
+    catch(e){
+        err = e.toString();
+    }
+
+    var ret = {_id: id, error: err};
+    res.status(200).json(ret);
+
+
+});
+
+
+
+app.post('/api/deltePost', async(req, res, next) => {
+
+    //incoming: id, username, condition, genre, price, desc
+    //outgoing: id, error
+
+    var err = '';
+
+    const {id, username, name, genre, price, desc, condition} = req.body;
+    const db = client.db("oMarketDB");
+
+    const selectedPost = {id: id, username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
+    
+    //just updates all the fields and if they're unchanged they just update from the prev value.
+    try{
+        const user = db.collection('Posts').deleteOne(selectedPost);
     }
     catch(e){
         err = e.toString();
