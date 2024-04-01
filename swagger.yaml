@@ -31,6 +31,8 @@ paths:
       responses:
         "Empty Error String":
           description: OK
+          schema: 
+            $ref: '#/definitions/LoginResponse'
         "No Records Found":
           description: Login couldn't find the user in the Users table with their login and password
   /register:
@@ -53,6 +55,8 @@ paths:
       responses:
         "Empty Error String":
           description: OK
+          schema:
+            $ref: '#/definitions/RegisterResponse'
         "User Already Exists":
           description: Duplicate User has been Found
   /emailVerify:
@@ -85,6 +89,8 @@ paths:
           description: A database issue was encountered
         "Empty Error String":
           description: OK
+          schema:
+            $ref: '#/definitions/NormalResponse'
   /editUser:
     post:
       tags:
@@ -105,6 +111,8 @@ paths:
       responses:
         "Empty Error String":
           description: OK
+          schema:
+            $ref: '#/definitions/NormalResponse'
         "Non-Empty Error String":
           description: An error occured with updating the user
   /createPost:
@@ -127,6 +135,8 @@ paths:
       responses:
         "Empty Error String":
           description: OK
+          schema:
+            $ref: '#/definitions/NormalResponse'
         "Post already exists":
           description: Duplicate post has been found
   /editPost:
@@ -149,8 +159,60 @@ paths:
       responses:
         "Empty Error String":
           description: OK
+          schema:
+            $ref: '#/definitions/NormalResponse'
         "Non-Empty Error String":
           description: An error occured with updating the post
+  /searchPost:
+    post:
+      tags:
+      - Posts
+      summary: Searches the database for posts given certain input
+      operationId: dlsearchPost
+      description: Takes in one of 3 diffrent.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: searchPost
+        description: search
+        schema:
+          $ref: '#/definitions/SearchPost'
+      responses:
+        "Empty Error String":
+          description: OK
+          schema:
+            $ref: '#/definitions/SearchPostResponse'
+        "Too many used fields":
+          description: Input format was incorrect. Two fields must be blank.
+        "Requires at least one field to search":
+          description: Input format was incorrect. At least one field must have info.
+  /deletePost:
+    post:
+      tags:
+      - Posts
+      summary: Deletes a certain post
+      operationId: dldeletePost
+      description: Takes in the info of a post and deletes it off the database.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deletePost
+        description: deleting
+        schema:
+          $ref: '#/definitions/DeletePost'
+      responses:
+        "Empty Error String":
+          description: OK
+          schema:
+            $ref: '#/definitions/NormalResponse'
+        "Post was not found":
+          description: Database wasn't able to find the post
   /interestAddition:
     post:
       tags:
@@ -171,10 +233,27 @@ paths:
       responses:
         "Empty Error String":
           description: OK
+          schema:
+            $ref: '#/definitions/ErrorOnlyResponse'
         "Non-Empty Error String":
           description: An error occured with updating the database
           
 definitions:
+  NormalResponse:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 12121fafwfaf103012
+      error:
+        type: string
+        example: ""
+  ErrorOnlyResponse:
+    type: object
+    properties:
+      error:
+        type: string
+        example: ""
   Login:
     type: object
     required:
@@ -187,6 +266,24 @@ definitions:
       password:
         type: string
         example: secret
+  LoginResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        example: 12121fafwfaf103012
+      firstName:
+        type: string
+        example: Fred
+      lastName:
+        type: string
+        example: Doe
+      email:
+        type: string
+        example: fred@doe.com
+      error:
+        type: string
+        example: ""
   Register:
     type: object
     required:
@@ -215,6 +312,18 @@ definitions:
       phoneNumber:
         type: string
         example: 4079981234
+  RegisterResponse:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 12121fafwfaf103012
+      verifyNum:
+        type: integer
+        example: 12345
+      error:
+        type: string
+        example: ""
   EmailVerify:
     type: object
     required:
@@ -282,7 +391,7 @@ definitions:
         type: string
         example: Cars
       price:
-        type: string
+        type: number
         example: 22.49
       desc:
         type: string
@@ -314,7 +423,7 @@ definitions:
         type: string
         example: Cars
       price:
-        type: string
+        type: number
         example: 22.49
       desc:
         type: string
@@ -332,6 +441,41 @@ definitions:
         type: string
         example: 12121fafwfaf103012
       postId:
+        type: string
+        example: 1313131fwasdwad131
+  SearchPost:
+    type: object
+    required:
+    - Username
+    - Name of Post
+    - Genre
+    properties:
+      username:
+        type: string
+        example: Fred121
+      name:
+        type: string
+        example: Fred
+      genre: 
+        type: string
+        example: Cars
+  SearchPostResponse:
+    type: object
+    properties:
+      results: 
+        type: array
+        items:
+          type: string
+          example: 1313131fwasdwad131
+      error:
+        type: string
+        example: ""
+  DeletePost:
+    type: object
+    required:
+    - Id
+    properties:
+      id:
         type: string
         example: 1313131fwasdwad131
 

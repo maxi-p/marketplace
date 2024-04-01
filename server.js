@@ -19,8 +19,6 @@ const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-// random
-
 // Connection Management
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -40,6 +38,85 @@ app.use((req, res, next) =>
     res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, DELETE, OPTIONS');
     next();
+});
+
+
+app.post('/api/searchPost', async (req, res, next) => 
+{
+    // incoming: username, name, genre
+    // outgoing: results[], error
+    var error = '';
+
+    const { username, name, genre } = req.body;
+    const fields = [username, name, genre];
+
+    const db = client.db("oMarketDB");
+
+    try{
+        let numFieds = 0;
+        for (let i = 0; i < 3; i++)
+        {
+            if (fields[i] != "")
+                numFieds++;
+        }
+
+        if (numFieds > 1)
+            throw new Error('Too many used fields');
+        else if (numFieds == 0)
+            throw new Error('Requires at least one field to search');
+        
+
+
+        if (username != "")
+        {
+
+            var _search = username.trim()
+            const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+            var _ret = [];
+
+            for( var i=0; i< results.length; i++ )
+            {
+                _ret.push( results[i]._id);
+            }
+        }
+
+        if (name != "" )
+        {
+            var _search = name.trim()
+            const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+            var _ret = [];
+
+            for( var i=0; i< results.length; i++ )
+            {
+                _ret.push( results[i]._id );
+            }
+        }
+            
+
+        if (genre != "" )
+        {
+            var _search = genre.trim()
+            const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+            var _ret = [];
+
+            for( var i=0; i< results.length; i++ )
+            {
+                _ret.push( results[i]._id );
+            }
+        }
+        
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+    
+
+    var ret = {results:_ret, error:error};
+    res.status(200).json(ret);
 });
 
 app.post('/api/login', async (req, res, next) => 
@@ -154,7 +231,7 @@ async function verifyEmail(email, verifyNum)
             subject: 'Verification Code',
             text: message
         };
-
+        
         const result = await transport.sendMail(mailOptions);
     }
     catch(e)
@@ -181,12 +258,8 @@ app.post('/api/emailVerify', async (req, res, next) =>
         if (user == null)
             throw new Error('User Id Not Found');
 
-
         const TTL = user.ttl;
         const userNum = user.verifyNum;
-        
-        //console.log(TTL);
-        //console.log(currentTime);
 
         if (TTL <= 0) // If the database says TTL is 0 or negative then we already verified the user
             throw new Error('User is already verified');
@@ -307,8 +380,31 @@ app.post('/api/editPost', async(req, res, next) => {
 
     var ret = {_id: id, error: err};
     res.status(200).json(ret);
+});
 
 
+
+app.post('/api/deletePost', async(req, res, next) => {
+    //incoming: id
+    //outgoing: id, error
+
+    var err = '';
+
+    const {id} = req.body;
+    const db = client.db("oMarketDB");
+    
+    try{
+        const post = await db.collection('Posts').findOneAndDelete({_id: new ObjectId(id)})
+
+        if (!post)
+            throw new Error('Post was not found');
+    }
+    catch(e){
+        err = e.toString();
+    }
+
+    var ret = {_id: id, error: err};
+    res.status(200).json(ret);
 });
 
 app.post('/api/interestAddition', async(req, res, next) => {
@@ -357,30 +453,6 @@ function randomNum()
 {
     return Math.ceil(Math.random() * (99999 - 10000) + 10000);
 }
-
-// Example from professor
-/*app.post('/api/searchcards', async (req, res, next) => 
-{
-  // incoming: userId, search
-  // outgoing: results[], error
-  var error = '';
-
-  const { userId, search } = req.body;
-  var _search = search.trim();
-
-  const db = client.db("COP4331Cards");
-  const results = await db.collection('Cards').find({"Card":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-  var _ret = [];
-
-  for( var i=0; i<results.length; i++ )
-  {
-    _ret.push( results[i].Card );
-  }
-
-  var ret = {results:_ret, error:error};
-  res.status(200).json(ret);
-});*/
 
 // DO NOT MESS WITH THIS (Required to make website work)
 // Server static assets if in production
