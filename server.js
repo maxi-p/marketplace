@@ -400,7 +400,7 @@ app.post('/api/editPost', async(req, res, next) => {
 
 
 
-app.post('/api/deltePost', async(req, res, next) => {
+app.post('/api/deletePost', async(req, res, next) => {
 
     //incoming: id, username, condition, genre, price, desc
     //outgoing: id, error

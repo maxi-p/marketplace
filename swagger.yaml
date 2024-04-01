@@ -151,6 +151,50 @@ paths:
           description: OK
         "Non-Empty Error String":
           description: An error occured with updating the post
+  /searchPost:
+    post:
+      tags:
+      - Posts
+      summary: Searches the database for posts given the certian input
+      operationId: dlsearchPost
+      description: Takes in one of 3 diffrent.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: searchPost
+        description: search
+        schema:
+          $ref: '#/definitions/searchPost'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Non-Empty Error String":
+          description: An error occured used too many inputs
+  /deletePost:
+    post:
+      tags:
+      - Posts
+      summary: deletes a certian post
+      operationId: dldeletePost
+      description: Takes in the the info of a post and deletes it off the database.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deletePost
+        description: deleting
+        schema:
+          $ref: '#/definitions/deletePost'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Post was not found":
+          description: post could not be deleted
   /interestAddition:
     post:
       tags:
