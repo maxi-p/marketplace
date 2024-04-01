@@ -42,31 +42,92 @@ app.use((req, res, next) =>
     next();
 });
 
-// From Professor
-/*app.post('/api/addcard', async (req, res, next) =>
+
+app.post('/api/searchPost', async (req, res, next) => 
 {
-  // incoming: userId, color
-  // outgoing: error
-  var error = '';
-  const { userId, card } = req.body;
-  const newCard = {Card:card,UserId:userId};
-  
-  try
-  {
-    const db = client.db("COP4331Cards");
-    const result = db.collection('Cards').insertOne(newCard);
-  }
-  catch(e)
-  {
-    error = e.toString();
-  }
+    // incoming: username, name, genre
+    // outgoing: results[], error
+    var error = '';
+
+    const { username, name, genre } = req.body;
+    //var _search = search.trim();
+
+    const db = client.db("oMarketDB");
+
+    try{
+
+        if (username != "" && name != "" && genre != "")
+        {
+            throw new Error('Too many used feilds');
+        }
+
+        if (username != "" && name != "")
+        {
+            throw new Error('Too many used feilds');
+        }
+
+        if (username != "" && genre != "")
+        {
+            throw new Error('Too many used feilds');
+        }
+
+        if (name != "" && genre != "")
+        {
+            throw new Error('Too many used feilds');
+        }
 
 
-  // TEMP FOR LOCAL TESTING.
-  cardList.push( card );
-  var ret = { error: error };
-  res.status(200).json(ret);
-});*/
+            if (username != "")
+            {
+
+                var _search = username.trim()
+                const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i].username);
+                }
+            }
+
+            if (name != "" )
+            {
+                var _search = name.trim()
+                const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i].name );
+                }
+            }
+            
+
+            if (genre != "" )
+            {
+                var _search = genre.trim()
+                const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i].genre );
+                }
+            }
+        
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+    
+
+    var ret = {results:_ret, error:error};
+    res.status(200).json(ret);
+});
 
 app.post('/api/login', async (req, res, next) => 
 {
@@ -110,10 +171,16 @@ app.post('/api/register', async (req, res, next) =>
     var error = '';
     const {firstname, lastname, username, password, email, phoneNumber} = req.body;
 
-    let verified = 0;
+    let verifyNum = randomNum();
     let aboutMe = '';
     let newId = -1;
     let interested = [];
+
+
+    const currentTime = Date.now();
+    const oneHour = 60*60*1000; // 1000 ms in one second; 60 second in one min; 60 min in one hour
+    const TTL = oneHour + currentTime;
+
 
     const newRegister = {firstname: firstname, 
                          lastname: lastname, 
@@ -122,43 +189,35 @@ app.post('/api/register', async (req, res, next) =>
                          email: email, 
                          phoneNumber: phoneNumber, 
                          aboutme: aboutMe, 
-                         verified: verified,
+                         verifyNum: verifyNum,
+                         ttl: TTL,
                          interestedIn: interested};
 
     const results = await db.collection('Users').find({username: username, email: email}).toArray();
 
     try
     {
-        if (results.length != 0)
+        if (results.length > 0)
         {
             throw new Error('User Already Exists');
         }
 
-        db.collection('Users').insertOne(newRegister);
-
-        let newUser = await db.collection('Users').find({username: username, email: email}).toArray();
-        newId = newUser[0]._id;
+        newId = (await db.collection('Users').insertOne(newRegister)).insertedId;
     }
     catch(e)
     {
         error = e.toString();
     }
 
-    var ret = { _id: newId, error: error};
+    verifyEmail(email, verifyNum);
+
+    var ret = { _id: newId, verifyNum: verifyNum, error: error};
     res.status(200).json(ret);
 });
 
-app.post('/api/verifyEmail', async (req, res, next) => 
+async function verifyEmail(email, verifyNum)
 {
-    // incoming: email
-    // outgoing: email, verifyNumber, error
-
-    const {email} = req.body;
-    const verifyNum = randomNum();
-    //console.log(verifyNum);
-
     let message = 'Here is your verification code: ' + verifyNum;
-    var error = '';
 
     try
     {
@@ -187,33 +246,61 @@ app.post('/api/verifyEmail', async (req, res, next) =>
     }
     catch(e)
     {
-        error = e.toString();
+        console.log(e.toString());
     }
 
-    
-    var ret = { email: email, verifiedNumber: verifyNum, error: error};
-    res.status(200).json(ret);
-});
+}
 
-app.post('/api/changeVerification', async (req, res, next) => 
+app.post('/api/emailVerify', async (req, res, next) =>
 {
-    // incoming: id
+    // incoming: id, verifyNum
     // outgoing: id, error
-
-    const {id} = req.body;
-    const db = client.db("oMarketDB");
+    
+    const {id, verifyNum} = req.body;
+    const db = client.db('oMarketDB');
 
     var error = '';
+    const currentTime = Date.now();
 
-    try 
-    {
-        const user = await db.collection('Users').updateOne({_id: new ObjectId(id)} ,{$set: {verified: 1}});    
-    } 
-    catch (e) 
+    try{
+        const user = await db.collection('Users').findOne({_id: new ObjectId(id)});
+
+        if (user == null)
+            throw new Error('User Id Not Found');
+
+
+        const TTL = user.ttl;
+        const userNum = user.verifyNum;
+        
+        //console.log(TTL);
+        //console.log(currentTime);
+
+        if (TTL <= 0) // If the database says TTL is 0 or negative then we already verified the user
+            throw new Error('User is already verified');
+        
+        if (TTL >= currentTime && verifyNum == userNum) // If the user verified in time and has the correct number verify them in the db
+        {
+            const newUser = await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {verifyNum: 0, ttl: -1}})
+        }
+        else if (TTL < currentTime) // If they didn't verify in time then delete their registration in the db
+        {
+            const newUser = await db.collection('Users').deleteOne({_id: new ObjectId(id)});
+            throw new Error('User didn\'t verify in time');
+        }
+        else if (verifyNum !=  userNum) // If the number isn't correct throw error saying so
+        {
+            throw new Error('Incorrect Verification Number');
+        }
+        else // If we reach here then there is probably a internal database issue
+        {
+            throw new Error('Undefined Behavior Spotted');
+        }
+    }
+    catch(e)
     {
         error = e.toString();
     }
-    
+
     var ret = { _id: id, error: error};
     res.status(200).json(ret);
 });
@@ -260,23 +347,20 @@ app.post('/api/createPost', async(req, res, next) =>{
 
     let usersInterested = [];
 
-    const newRegister = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, usersInterested: usersInterested};
-    const results = await db.collection('Posts').find({username: username, name: name/*, genre: genre, price: price, desc: desc, condition: condition*/}).toArray();
+    const newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, usersInterested: usersInterested};
+    const results = await db.collection('Posts').find({username: username, name: name}).toArray();
 
     var id = -1;
     var err = '';
 
     try{
 
-        if(results != 0){
+        if(results.length > 0){
             throw new Error('Post already exists');
         }
 
         //creates new post and grabs the new id to return 
-        db.collection('Posts').insertOne(newRegister);
-        const newId = await db.collection('Posts').find({username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}).toArray();
-        id = newId[0]._id;
-
+        id = (await db.collection('Posts').insertOne(newPost)).insertedId;
     }
     catch(e){
         err = e.toString();
@@ -303,6 +387,34 @@ app.post('/api/editPost', async(req, res, next) => {
         const user = db.collection('Posts').updateOne({_id: new ObjectId(id)}, 
         {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}});
         
+    }
+    catch(e){
+        err = e.toString();
+    }
+
+    var ret = {_id: id, error: err};
+    res.status(200).json(ret);
+
+
+});
+
+
+
+app.post('/api/deletePost', async(req, res, next) => {
+
+    //incoming: id, username, condition, genre, price, desc
+    //outgoing: id, error
+
+    var err = '';
+
+    const {id, username, name, genre, price, desc, condition} = req.body;
+    const db = client.db("oMarketDB");
+
+    const selectedPost = {id: id, username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
+    
+    //just updates all the fields and if they're unchanged they just update from the prev value.
+    try{
+        const user = db.collection('Posts').deleteOne(selectedPost);
     }
     catch(e){
         err = e.toString();
