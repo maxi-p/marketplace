@@ -407,57 +407,6 @@ app.post('/api/deletePost', async(req, res, next) => {
     res.status(200).json(ret);
 });
 
-
-
-app.post('/api/deletePost', async(req, res, next) => {
-
-    //incoming: id, username, condition, genre, price, desc
-    //outgoing: id, error
-
-    var err = '';
-
-    const {id, username, name, genre, price, desc, condition} = req.body;
-    const db = client.db("oMarketDB");
-
-    const selectedPost = {id: id, username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
-    
-    //just updates all the fields and if they're unchanged they just update from the prev value.
-    try{
-        const user = db.collection('Posts').deleteOne(selectedPost);
-    }
-    catch(e){
-        err = e.toString();
-    }
-
-    var ret = {_id: id, error: err};
-    res.status(200).json(ret);
-});
-
-
-
-app.post('/api/deletePost', async(req, res, next) => {
-    //incoming: id
-    //outgoing: id, error
-
-    var err = '';
-
-    const {id} = req.body;
-    const db = client.db("oMarketDB");
-    
-    try{
-        const post = await db.collection('Posts').findOneAndDelete({_id: new ObjectId(id)})
-
-        if (!post)
-            throw new Error('Post was not found');
-    }
-    catch(e){
-        err = e.toString();
-    }
-
-    var ret = {_id: id, error: err};
-    res.status(200).json(ret);
-});
-
 app.post('/api/interestAddition', async(req, res, next) => {
 
     //incoming: userId, postId
