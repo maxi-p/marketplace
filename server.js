@@ -47,8 +47,8 @@ app.post('/api/searchPost', async (req, res, next) =>
     // outgoing: results[], error
     var error = '';
 
-    const { username, name, genre } = req.body;
-    const fields = [username, name, genre];
+    const { username, name, genre, searchType } = req.body;
+    const fields = [username, name, genre, searchType];
 
     const db = client.db("oMarketDB");
 
@@ -65,49 +65,59 @@ app.post('/api/searchPost', async (req, res, next) =>
         else if (numFieds == 0)
             throw new Error('Requires at least one field to search');
         
+        //since the other fields are empty if your searching by a specific field (i.e. searching by username) you only need to check if the searchType is ALL to indicate
+        //if you need to search any of the fields or just return all the posts.
 
+        //the search results returns the post object instead of the post object id. Requested by Maksim.
 
-        if (username != "")
-        {
-
-            var _search = username.trim()
-            const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-            var _ret = [];
-
-            for( var i=0; i< results.length; i++ )
+        if (searchType != 'ALL'){
+            if (username != "")
             {
-                _ret.push( results[i]._id);
+
+                var _search = username.trim()
+                const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i]);
+                }
+            }
+
+            if (name != "" )
+            {
+                var _search = name.trim()
+                const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i]);
+                }
+            }
+                
+
+            if (genre != "" )
+            {
+                var _search = genre.trim()
+                const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
+
+                var _ret = [];
+
+                for( var i=0; i< results.length; i++ )
+                {
+                    _ret.push( results[i]);
+                }
             }
         }
 
-        if (name != "" )
-        {
-            var _search = name.trim()
-            const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-            var _ret = [];
-
-            for( var i=0; i< results.length; i++ )
-            {
-                _ret.push( results[i]._id );
-            }
+        else if(searchType == 'ALL'){
+            //returns all posts.
+            const results = await db.collection('Posts').find();
         }
-            
 
-        if (genre != "" )
-        {
-            var _search = genre.trim()
-            const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-            var _ret = [];
-
-            for( var i=0; i< results.length; i++ )
-            {
-                _ret.push( results[i]._id );
-            }
-        }
-        
     }
     catch(e)
     {
