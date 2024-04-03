@@ -43,9 +43,10 @@ app.use((req, res, next) =>
 
 app.post('/api/searchPost', async (req, res, next) => 
 {
-    // incoming: username, name, genre
+    // incoming: username, name, genre, searchType
     // outgoing: results[], error
     var error = '';
+    var _ret = [];
 
     const { username, name, genre, searchType } = req.body;
     const fields = [username, name, genre, searchType];
@@ -62,8 +63,6 @@ app.post('/api/searchPost', async (req, res, next) =>
 
         if (numFieds > 1)
             throw new Error('Too many used fields');
-        else if (numFieds == 0)
-            throw new Error('Requires at least one field to search');
         
         //since the other fields are empty if your searching by a specific field (i.e. searching by username) you only need to check if the searchType is ALL to indicate
         //if you need to search any of the fields or just return all the posts.
@@ -77,12 +76,7 @@ app.post('/api/searchPost', async (req, res, next) =>
                 var _search = username.trim()
                 const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
 
-                var _ret = [];
-
-                for( var i=0; i< results.length; i++ )
-                {
-                    _ret.push( results[i]);
-                }
+                _ret = results;
             }
 
             if (name != "" )
@@ -90,12 +84,7 @@ app.post('/api/searchPost', async (req, res, next) =>
                 var _search = name.trim()
                 const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
 
-                var _ret = [];
-
-                for( var i=0; i< results.length; i++ )
-                {
-                    _ret.push( results[i]);
-                }
+                _ret = results;
             }
                 
 
@@ -104,18 +93,14 @@ app.post('/api/searchPost', async (req, res, next) =>
                 var _search = genre.trim()
                 const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
 
-                var _ret = [];
-
-                for( var i=0; i< results.length; i++ )
-                {
-                    _ret.push( results[i]);
-                }
+                _ret = results;
             }
         }
 
         else if(searchType == 'ALL'){
             //returns all posts.
-            const results = await db.collection('Posts').find();
+            const results = await db.collection('Posts').find({}).toArray();
+            _ret = results;
         }
 
     }

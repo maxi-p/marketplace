@@ -169,7 +169,7 @@ paths:
       - Posts
       summary: Searches the database for posts given certain input
       operationId: dlsearchPost
-      description: Takes in one of 3 diffrent.
+      description: To search for all the posts in the database make sure to set the "searchType" field to "ALL". Otherwise to search for posts set only one of these fields (username, name, or genre) to a value and what gets returned is an array of objects pertaining to that field.
       consumes:
       - application/json
       produces:
@@ -187,8 +187,6 @@ paths:
             $ref: '#/definitions/SearchPostResponse'
         "Too many used fields":
           description: Input format was incorrect. Two fields must be blank.
-        "Requires at least one field to search":
-          description: Input format was incorrect. At least one field must have info.
   /deletePost:
     post:
       tags:
@@ -449,6 +447,7 @@ definitions:
     - Username
     - Name of Post
     - Genre
+    - searchType
     properties:
       username:
         type: string
@@ -459,14 +458,38 @@ definitions:
       genre: 
         type: string
         example: Cars
+      searchType:
+        type: string
+        example: ALL
   SearchPostResponse:
     type: object
     properties:
       results: 
         type: array
         items:
-          type: string
-          example: 1313131fwasdwad131
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 1313131fwasdwad131
+            username: 
+              type: string
+              example: Fred121
+            name:
+              type: string
+              example: Fred
+            genre:
+              type: string
+              example: Cars
+            price:
+              type: number
+              example: 22.49
+            desc: 
+              type: string
+              example: Description
+            condition:
+              type: string
+              example: Good
       error:
         type: string
         example: ""
