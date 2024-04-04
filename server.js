@@ -40,6 +40,38 @@ app.use((req, res, next) =>
     next();
 });
 
+// Image Storage
+const multer = require('multer');
+const mongoose = require('mongoose');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, __dirname + '/imageUploads');
+    },
+    filename: function (req, file, callback) {
+        const filename = Date.now() + file.originalname;
+        callback(null, filename);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 12 * 1024 * 1024 // 12 mb image limit just to be on the safe side
+    }
+});
+
+const imageSchema = new mongoose.Schema({ // Defines image objects
+    name: {
+        type: String,
+        required: true
+    },
+    image: {
+        data: Buffer,
+        contentType: String
+    }
+});
+const imageModel = mongoose.model("imagemodel", imageSchema);
 
 app.post('/api/searchPost', async (req, res, next) => 
 {
@@ -317,22 +349,33 @@ app.post('/api/editUser', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
-app.post('/api/createPost', async(req, res, next) =>{
-
-    //incoming: username, name, condition, genre, price, desc
-    //outgoing: id, error
+app.post('/api/createPost', upload.single('image'), async function(req, res, next) { 
+    //incoming: username, name, condition, genre, price, desc, image
+    //outgoing: newPost, error
 
     const {username, name, genre, price, desc, condition} = req.body;
     const db = client.db("oMarketDB");
 
 
     let usersInterested = [];
+    var newImage = null;
 
-    const newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, usersInterested: usersInterested};
+    if (req.file !== undefined) // If we have an image process it
+    {
+        newImage = new imageModel({
+            name: req.file.filename,
+            image: {
+                data: req.file.filename,
+                contentType: req.file.mimetype
+            }
+        });
+    }
+
+    var newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage, usersInterested: usersInterested};
     const results = await db.collection('Posts').find({username: username, name: name}).toArray();
 
-    var id = -1;
     var err = '';
+    var id = -1;
 
     try{
 
@@ -340,20 +383,21 @@ app.post('/api/createPost', async(req, res, next) =>{
             throw new Error('Post already exists');
         }
 
-        //creates new post and grabs the new id to return 
+        //Creates new post
         id = (await db.collection('Posts').insertOne(newPost)).insertedId;
     }
     catch(e){
         err = e.toString();
+        newPost = '';
     }
 
     var ret = { _id: id, error: err};
     res.status(200).json(ret);
 });
 
-app.post('/api/editPost', async(req, res, next) => {
+app.post('/api/editPost', upload.single('image'), async(req, res, next) => {
 
-    //incoming: id, username, condition, genre, price, desc
+    //incoming: id, username, condition, genre, price, desc, image
     //outgoing: id, error
 
     var err = '';
@@ -361,12 +405,24 @@ app.post('/api/editPost', async(req, res, next) => {
     const {id, username, name, genre, price, desc, condition} = req.body;
     const db = client.db("oMarketDB");
 
-    const newRegister = {id: id, username: username, name: name, genre: genre, price: price, desc: desc, condition: condition};
+    var newImage = null;
+
+    if (req.file !== undefined)
+    {
+        newImage = new imageModel({
+            name: req.file.filename,
+            image: {
+                data: req.file.filename,
+                contentType: req.file.mimetype
+            }
+        });
+    }
+
     
     //just updates all the fields and if they're unchanged they just update from the prev value.
     try{
         const user = db.collection('Posts').updateOne({_id: new ObjectId(id)}, 
-        {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition}});
+        {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage}});
         
     }
     catch(e){
@@ -376,7 +432,6 @@ app.post('/api/editPost', async(req, res, next) => {
     var ret = {_id: id, error: err};
     res.status(200).json(ret);
 });
-
 
 
 app.post('/api/deletePost', async(req, res, next) => {
@@ -416,6 +471,30 @@ app.post('/api/interestAddition', async(req, res, next) => {
     try {
         const post = db.collection('Posts').updateOne({_id: new ObjectId(postId)}, {$push: {usersInterested: userId}});
         const user = db.collection('Users').updateOne({_id: new ObjectId(userId)}, {$push: {interestedIn: postId}});
+        
+    }
+    catch(e){
+        err = e.toString();
+    }
+
+    var ret = {error: err};
+    res.status(200).json(ret);
+});
+
+app.post('/api/interestDeletion', async(req, res, next) => {
+
+    //incoming: userId, postId
+    //outgoing: error
+
+    var err = '';
+
+    const {userId, postId} = req.body;
+    const db = client.db("oMarketDB");
+    
+    
+    try {
+        const post = db.collection('Posts').updateOne({_id: new ObjectId(postId)}, {$pull: {usersInterested: userId}});
+        const user = db.collection('Users').updateOne({_id: new ObjectId(userId)}, {$pull: {interestedIn: postId}});
         
     }
     catch(e){

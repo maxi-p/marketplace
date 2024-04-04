@@ -123,15 +123,17 @@ paths:
       operationId: dlCreatePost
       description: Creates a new post and puts it into the database, returns id of post and error string
       consumes:
-      - application/json
+      - multipart/form-data
       produces:
       - application/json
       parameters:
-      - in: body
-        name: createPost
-        description: Post
-        schema:
-          $ref: '#/definitions/CreatePost'
+        - $ref: '#/parameters/username'
+        - $ref: '#/parameters/name'
+        - $ref: '#/parameters/genre'
+        - $ref: '#/parameters/price'
+        - $ref: '#/parameters/desc'
+        - $ref: '#/parameters/condition'
+        - $ref: '#/parameters/image'
       responses:
         "Empty Error String":
           description: OK
@@ -147,15 +149,18 @@ paths:
       operationId: dlEditPost
       description: Takes in the new post details and edits the post at the given id in the database.
       consumes:
-      - application/json
+      - multipart/form-data
       produces:
       - application/json
       parameters:
-      - in: body
-        name: editPost
-        description: Editing
-        schema:
-          $ref: '#/definitions/EditPost'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/username'
+        - $ref: '#/parameters/name'
+        - $ref: '#/parameters/genre'
+        - $ref: '#/parameters/price'
+        - $ref: '#/parameters/desc'
+        - $ref: '#/parameters/condition'
+        - $ref: '#/parameters/image'
       responses:
         "Empty Error String":
           description: OK
@@ -235,7 +240,73 @@ paths:
             $ref: '#/definitions/ErrorOnlyResponse'
         "Non-Empty Error String":
           description: An error occured with updating the database
+  /interestDeletion:
+    post:
+      tags:
+      - Posts
+      summary: Deletes the user to the interests section for the given post
+      operationId: dlInterestDelete
+      description: Takes in the post id and user id and adjusts the database to show that the user is uninterested
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: interest
+        description: Editing Interest
+        schema:
+          $ref: '#/definitions/InterestAddition'
+      responses:
+        "Empty Error String":
+          description: OK
+          schema:
+            $ref: '#/definitions/ErrorOnlyResponse'
+        "Non-Empty Error String":
+          description: An error occured with updating the database
           
+
+parameters:
+  id:
+    in: multipart/form-data
+    name: id
+    type: string
+    example: 12121fafwfaf103012
+  username:
+    in: multipart/form-data
+    name: username
+    type: string
+    example: Fred121
+  name:
+    in: multipart/form-data
+    name: name
+    type: string
+    example: Fred
+  genre:
+    in: multipart/form-data
+    name: genre
+    type: string
+    example: Cars
+  price:
+    in: multipart/form-data
+    name: prices
+    type: Number
+    example: 22.50
+  desc:
+    in: multipart/form-data
+    name: desc
+    type: string
+    example: Description
+  condition:
+    in: multipart/form-data
+    name: condition
+    type: string
+    example: Good
+  image:
+    in: multipart/form-data
+    name: image
+    type: file
+
 definitions:
   NormalResponse:
     type: object
