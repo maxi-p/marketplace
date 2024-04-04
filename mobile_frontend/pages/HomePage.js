@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, BackHandler, Touchable } from 'react-native';
 import { UserContext } from '../logic/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
 const HomePage = (props) => {
@@ -15,6 +15,11 @@ const HomePage = (props) => {
     setUsername(null);
     props.navigation.navigate('Login');
   };
+
+  const handleSettings = () => {
+    // Handle settings logic here
+    props.navigation.navigate('Settings');
+  }
   // Logout on Back button
   useFocusEffect(
     React.useCallback(() => {
@@ -51,6 +56,9 @@ const HomePage = (props) => {
               onPress={toggleDropdown}
               style={styles.modalBackground}></TouchableOpacity>
             <View style={styles.dropdown}>
+              <TouchableOpacity onPress={handleSettings}>
+                <Text style={styles.dropdownText}>Settings</Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={handleLogout}>
                 <Text style={styles.dropdownText}>Logout</Text>
               </TouchableOpacity>

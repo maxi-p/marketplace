@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
+import SettingsPage from './pages/SettingsPage';
 import { UserContext } from './logic/UserContext';
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +42,7 @@ const App = () => {
       <Stack.Navigator initialRouteName='Login'>
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Register" component={RegisterPage} />
+        <Stack.Screen name="Settings" component={SettingsPage} />
         <Stack.Screen name="Post-Login" component={PostLogin}
           options={{headerShown: false}}
         />
