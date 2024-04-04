@@ -63,9 +63,14 @@ function ProductList(props) {
     const [searchText, setSearchText] = useState('');
     const [searchClicked, setSearchClicked] = useState(false);
 
+     const OpenProduct = (item) => {
+        props.navigation.navigate('ProductModal', {
+            product: item,
+        });
+     };
     // Render Functions
     const renderItem = ({item}) => {
-        var onTouchEvent=null;
+        var onTouchEvent = () => OpenProduct(item);
         var onSellerTouchEvent=null;
         if (props.onTouch)
         {
@@ -96,12 +101,14 @@ function ProductList(props) {
             <View
              style={styles.header}
             >
-                <SearchBar 
-                    clicked={searchClicked}
-                    setClicked={setSearchClicked}
-                    searchPhrase={searchText}
-                    setSearchPhrase={setSearchText}
-                />
+                <View style={styles.inHeader} >
+                    <SearchBar
+                        clicked={searchClicked}
+                        setClicked={setSearchClicked}
+                        searchPhrase={searchText}
+                        setSearchPhrase={setSearchText}
+                    />
+                </View>
             </View>
     );};
 
@@ -166,7 +173,13 @@ function ProductList(props) {
 const styles = StyleSheet.create({
     header: {
         justifyContent:'center',
-        backgroundColor:'white',
+        alignItems:'center',
+    },
+    inHeader: {
+        justifyContent:'center',
+        width: '90%',
+        elevation: 10,
+        paddingTop: 10,
     },
     container: {
         backgroundColor: 'white',

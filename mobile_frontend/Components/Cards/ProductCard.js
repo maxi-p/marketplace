@@ -144,7 +144,7 @@ export const LoadingCard = () => {
 
 const styles = StyleSheet.create({
     itemContainter: {
-        backgroundColor: 'white',
+        backgroundColor: 'floralwhite',
         borderRadius: 20,
         elevation: 10,
         margin: 10,
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     },
     sellerBox: {
         position: 'absolute',
-        backgroundColor: '#ddd',
+        backgroundColor: 'lavender',
         bottom: 5,
         right: 5,
         borderWidth: 0.8,

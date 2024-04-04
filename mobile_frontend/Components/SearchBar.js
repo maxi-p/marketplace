@@ -37,17 +37,18 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}) => {
 
 const styles = StyleSheet.create({
     container: {
-        margin:15,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection:'row',
         height: 'auto',
+        borderRadius: 50,
     },
     searchBar: {
         paddingHorizontal: 10,
         backgroundColor:'lavender',
         color:'#d9dbda',
-        borderRadius:15,
+        borderRadius:50,
+        borderWidth: 1,
         alignItems: 'center',
         flexDirection: 'row',
     },
@@ -57,8 +58,9 @@ const styles = StyleSheet.create({
     searchBar__unclicked: {
     },
     input: {
-        width:'85%',
+        width:'90%',
         color:'black',
+        marginHorizontal: 10,
     },
     text: {
         color:'deepskyblue',
