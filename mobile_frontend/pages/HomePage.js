@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, BackHandler } from 'react-native';
 import { UserContext } from '../logic/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
 const HomePage = (props) => {
-  const {username, setUsername} = useContext( UserContext );
+  const {user, setUser} = useContext( UserContext );
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
@@ -12,31 +13,16 @@ const HomePage = (props) => {
 
   const handleLogout = () => {
     // Handle logout logic here
-    setUsername(null);
+    setUser(null);
     props.navigation.navigate('Login');
   };
-  // Logout on Back button
-  useFocusEffect(
-    React.useCallback(() => {
-      const onBackPress = () => {
-        handleLogout();
-        return true;
-      };
-      const subscrip = BackHandler.addEventListener(
-        'hardwareBackPress',
-        onBackPress
-      );
-
-      return ()=> subscrip.remove();
-    }, [handleLogout])
-  );
 
   return (
     <View style={styles.container}>
       <View style={styles.banner}>
         <View style={styles.usernameContainer}>
         <TouchableOpacity onPress={toggleDropdown}>
-          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.username}>{user?.username ?? 'N/A'}</Text>
         </TouchableOpacity>
 
         <Modal

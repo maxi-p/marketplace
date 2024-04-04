@@ -13,9 +13,8 @@ import { UserContext } from './logic/UserContext';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const App = () => {
-
-  const [username, setUsername] = useState("N/A");
-  const UserC = {username, setUsername};
+  const [user, setUser] = useState(null);
+  const UserC = {user, setUser};
 
   /* Old Render
   const renderScreen = () => {
