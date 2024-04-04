@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Alert, FlatList, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import ProductCard, { LoadingCard } from './Cards/ProductCard';
 
 import * as testData from "../TestData/TestProducts.json"
+import SearchBar from './SearchBar';
 
 // Test Settings
 const localTest = true;
@@ -59,6 +60,8 @@ function ProductList(props) {
     const [loading, setLoading] = useState(true);
     const [index, setIndex] = useState(0);
     const [refreshing, setRefreshing] = useState(false);
+    const [searchText, setSearchText] = useState('');
+    const [searchClicked, setSearchClicked] = useState(false);
 
     // Render Functions
     const renderItem = ({item}) => {
@@ -86,6 +89,21 @@ function ProductList(props) {
         }
         return null;
     };
+
+    const header = () =>
+    {
+        return (
+            <View
+             style={styles.header}
+            >
+                <SearchBar 
+                    clicked={searchClicked}
+                    setClicked={setSearchClicked}
+                    searchPhrase={searchText}
+                    setSearchPhrase={setSearchText}
+                />
+            </View>
+    );};
 
 
     // Fetch Data -- First Load
@@ -123,19 +141,35 @@ function ProductList(props) {
 
 
     return (
-        <FlatList
-            data={data}
-            renderItem={renderItem}
-            extraData={[loading, data]}
-            ListFooterComponent={footer}
-            ListHeaderComponent={props.children}
-            onEndReached={getData}
-            onEndReachedThreshold={1}
-            onRefresh={refresh}
-            refreshing={refreshing}
-            style={props.style}
-        />
+        <View
+         style={styles.container}
+        >
+            <FlatList
+                data={data}
+                renderItem={renderItem}
+                extraData={[loading, data]}
+                ListFooterComponent={footer}
+                onEndReached={getData}
+                onEndReachedThreshold={1}
+                onRefresh={refresh}
+                refreshing={refreshing}
+                style={props.style}
+
+                ListHeaderComponent={header}
+                stickyHeaderIndices={[0]}
+                fadingEdgeLength={4}
+            />
+        </View>
     );
 }
 
+const styles = StyleSheet.create({
+    header: {
+        justifyContent:'center',
+        backgroundColor:'white',
+    },
+    container: {
+        backgroundColor: 'white',
+    },
+});
 export default ProductList;

@@ -36,7 +36,7 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
             android_ripple={{color: 'gray', foreground: true}}
             >
 
-                {/* Image, Catagory and Price */}
+                {/* Image, Catagory and Seller */}
                 <View style={styles.imageBox} >
                     <Image source={staticImage} style={styles.image}/>
                     <View style={styles.catagoryBox}>
@@ -47,14 +47,19 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
                             {product.catagory ?? 'catagory'}
                         </Text>
                     </View>
-                    <View style={styles.priceBox}>
-                        <Text
-                        style={[styles.text, styles.priceText]}
+                    <Pressable onPress={onSellerTouch}
+                        style={styles.sellerBox}
+                        android_ripple={{
+                            color :'gray',
+                            foreground: true,
+                        }}>
+                        <Image source={staticImage} style={styles.sellerImage} />
+                        <Text style={[styles.text, styles.sellerText]}
                         numberOfLines={1}
                         >
-                            {product.price ?? '$N/A'}
+                            {product.seller ?? 'N/A'}
                         </Text>
-                    </View>
+                    </Pressable>
                 </View>
                 <View style={styles.rows} >
                     {/* Title */}
@@ -65,26 +70,21 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
                             {product.title ?? 'N/A'}
                         </Text>
                     </View>
-                    {/* Condition and Seller */}
+                    {/* Condition and Price */}
                     <View style={[styles.row, styles.conditionRow]}>
                         <Text style={[styles.text, styles.conditionText]}
                         numberOfLines={2}
                         >
                             {product.condition ?? 'N/A'}
                         </Text>
-                        <Pressable onPress={onSellerTouch}
-                            style={styles.sellerBox}
-                            android_ripple={{
-                                color :'gray',
-                                foreground: true,
-                            }}>
-                            <Image source={staticImage} style={styles.sellerImage} />
-                            <Text style={[styles.text, styles.sellerText]}
+                        <View style={styles.priceBox}>
+                            <Text
+                            style={[styles.text, styles.priceText]}
                             numberOfLines={1}
                             >
-                                {product.seller ?? 'N/A'}
+                                {product.price ?? '$N/A'}
                             </Text>
-                        </Pressable>
+                        </View>
                     </View>
                     {/* discription */}
                     <View style={[styles.row, styles.discRow]}>
@@ -171,19 +171,6 @@ const styles = StyleSheet.create({
         textAlignVertical: 'center',
         top: -1,
     },
-    priceBox: {
-        position: 'absolute',
-        bottom: 5,
-        right: 5,
-        maxWidth: 150,
-    },
-    priceText: {
-        color: 'white',
-        fontSize: 25,
-        textShadowColor: '#000',
-        textShadowOffset: {width:0, height:0},
-        textShadowRadius: 6,
-    },
     rows: {
         padding: 10,
         paddingTop: 0,
@@ -212,8 +199,8 @@ const styles = StyleSheet.create({
     sellerBox: {
         position: 'absolute',
         backgroundColor: '#ddd',
-        top:0,
-        right:0,
+        bottom: 5,
+        right: 5,
         borderWidth: 0.8,
         borderRadius: 50,
 
@@ -228,6 +215,15 @@ const styles = StyleSheet.create({
     sellerText: {
         paddingHorizontal: 5,
         maxWidth: 130,
+    },
+    priceBox: {
+        position: 'absolute',
+        right:0,
+        maxWidth: 150,
+    },
+    priceText: {
+        fontSize: 20,
+        color: 'dimgray',
     },
     discRow: {
     },
