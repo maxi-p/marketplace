@@ -192,6 +192,7 @@ app.post('/api/register', async (req, res, next) =>
     let aboutMe = '';
     let newId = -1;
     let interested = [];
+    let profilePic = null;
 
 
     const currentTime = Date.now();
@@ -205,7 +206,8 @@ app.post('/api/register', async (req, res, next) =>
                          password: password.hashCode(), 
                          email: email, 
                          phoneNumber: phoneNumber, 
-                         aboutme: aboutMe, 
+                         aboutme: aboutMe,
+                         profilePic: profilePic, 
                          verifyNum: verifyNum,
                          ttl: TTL,
                          interestedIn: interested};
@@ -318,26 +320,40 @@ app.post('/api/emailVerify', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
-app.post('/api/editUser', async (req, res, next) => 
+app.post('/api/editUser', upload.single('image'), async (req, res, next) => 
 {
     // incoming: id, newUserInfo
     // outgoing: id, error
     
-    const {id, newFirstName, newLastName, newUserName, newPassword, newEmail, newPhoneNumber, newAboutMe} = req.body;
+    const {id, firstName, lastName, username, password, email, phoneNumber, aboutMe} = req.body;
 
     const db = client.db("oMarketDB");
+
+    var newImage = null;
+
+    if (req.file !== undefined)
+    {
+        newImage = new imageModel({
+            name: req.file.filename,
+            image: {
+                data: req.file.filename,
+                contentType: req.file.mimetype
+            }
+        });
+    }
 
     var error = '';
 
     try{
         const newUser = await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set:
-                                                               {firstname: newFirstName,
-                                                                lastname: newLastName, 
-                                                                username: newUserName,
-                                                                password: newPassword.hashCode(),
-                                                                email: newEmail,
-                                                                phoneNumber: newPhoneNumber, 
-                                                                aboutme: newAboutMe}});
+                                                               {firstname: firstName,
+                                                                lastname: lastName, 
+                                                                username: username,
+                                                                password: password.hashCode(),
+                                                                email: email,
+                                                                profilePic: newImage,
+                                                                phoneNumber: phoneNumber, 
+                                                                aboutme: aboutMe}});
     }
     catch(e)
     {
@@ -502,6 +518,50 @@ app.post('/api/interestDeletion', async(req, res, next) => {
     }
 
     var ret = {error: err};
+    res.status(200).json(ret);
+});
+
+app.post('/api/getUser', async(req, res, next) => {
+
+    const {userId} = req.body;
+
+    const db = client.db('oMarketDB');
+    var user = null;
+    var error = '';
+
+    try{
+        user = await db.collection('Users').findOne({_id: new ObjectId(userId)});
+
+        if (!user)
+            throw new Error('User was not found');
+    }
+    catch(e){
+        error = e.toString();
+    }
+
+    var ret = {user: user, error: error};
+    res.status(200).json(ret);
+});
+
+app.post('/api/getPost', async(req, res, next) => {
+
+    const {postId} = req.body;
+
+    const db = client.db('oMarketDB');
+    var post = null;
+    var error = '';
+
+    try{
+        post = await db.collection('Posts').findOne({_id: new ObjectId(postId)});
+
+        if (!post)
+            throw new Error('Post was not found');
+    }
+    catch(e){
+        error = e.toString();
+    }
+
+    var ret = {post: post, error: error};
     res.status(200).json(ret);
 });
 
