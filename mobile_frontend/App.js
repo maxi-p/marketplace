@@ -13,10 +13,39 @@ import { UserContext } from './logic/UserContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const App = () => {
 
-  const [username, setUsername] = useState("N/A");
-  const UserC = {username, setUsername};
+const App = () => {
+  const [user, setUser] = useState({
+    id: null,
+    username: null,
+    firstName: null,
+    lastName: null,
+    email: null,
+    phoneNumber: null,
+    aboutMe: null,
+  });
+
+  const setId = (id) => setUser((prevUser) => ({ ...prevUser, id }));
+  const setUsername = (username) => setUser((prevUser) => ({ ...prevUser, username }));
+  const setFirstName = (firstName) => setUser((prevUser) => ({ ...prevUser, firstName }));
+  const setLastName = (lastName) => setUser((prevUser) => ({ ...prevUser, lastName }));
+  const setEmail = (email) => setUser((prevUser) => ({ ...prevUser, email }));
+  const setPhoneNumber = (phoneNumber) => setUser((prevUser) => ({ ...prevUser, phoneNumber }));
+  const setAboutMe = (aboutMe) => setUser((prevUser) => ({ ...prevUser, aboutMe }));
+
+  // Define other setter functions here
+
+  const userContextValue = {
+    user,
+    setId,
+    setUsername,
+    setFirstName,
+    setLastName,
+    setEmail,
+    setPhoneNumber,
+    setAboutMe
+    // Include other setter functions here
+  };
 
   /* Old Render
   const renderScreen = () => {
@@ -38,7 +67,7 @@ const App = () => {
 // TODO: Add Keyring and state to store credentials
   return (
     <NavigationContainer>
-    <UserContext.Provider value={UserC}>
+    <UserContext.Provider value={userContextValue}>
       <Stack.Navigator initialRouteName='Login'>
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Register" component={RegisterPage} />

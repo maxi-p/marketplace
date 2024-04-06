@@ -1,50 +1,72 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { UserContext } from '../logic/UserContext';
 
-const SettingsPage = ({ username }) => {
-  const { userId } = useContext(UserContext);
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+const SettingsPage = () => {
+  const { user, setId, setUsername, setFirstName, setLastName, setEmail, setPhoneNumber, setAboutMe } = useContext(UserContext);
+  const [newUserInfo, setNewUserInfo] = useState({
+    newFirstName: user.firstname,
+    newLastName: user.lastname,
+    newUserName: user.username,
+    newPassword: '', // Assuming you don't display or update password in the settings page
+    newEmail: user.email,
+    newPhoneNumber: user.phoneNumber,
+    newAboutMe: user.aboutMe,
+  });
 
-  const updateEmail = async () => {
+  const handleUpdate = async () => {
     try {
-      const response = await fetch(`https://cop4331-marketplace-98e1376d9db6.herokuapp.com/api/editUser/${userId}/email`, {
-        method: 'PUT',
+      const response = await fetch('/api/editUser', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: 'new_email@example.com' }), // Replace with new email
+        body: JSON.stringify({
+          id: user.id,
+          ...newUserInfo,
+        }),
       });
-      if (response.ok) {
-        // Email updated successfully, you can update UI accordingly
-        console.log('Email updated successfully');
+      const data = await response.json();
+      if (data.error) {
+        // Handle error
+        console.error(data.error);
+        Alert.alert('Error', 'Failed to update user settings');
       } else {
-        console.error('Failed to update email');
+        // Update user context with new information
+        setId(user.id);
+        setFirstName(newUserInfo.newFirstName);
+        setLastName(newUserInfo.newLastName);
+        setUsername(newUserInfo.newUserName);
+        setEmail(newUserInfo.newEmail);
+        setPhoneNumber(newUserInfo.newPhoneNumber);
+        setAboutMe(newUserInfo.newAboutMe);
+        // Optionally, show success message
+        Alert.alert('Success', 'User settings updated successfully');
       }
     } catch (error) {
-      console.error('Error updating email:', error);
+      console.error(error);
+      Alert.alert('Error', error.message);
     }
   };
 
-  // Similar function for updating phone number
-
   return (
     <View style={styles.container}>
-      <View style={styles.middleContent}>
-        <Text style={styles.middleText}>Account Settings</Text>
-        <Text style={styles.Text}>Email: {email}</Text>
-        <TouchableOpacity style={styles.button} onPress={updateEmail}>
-          <Text style={styles.buttonText}>Update Email</Text>
-        </TouchableOpacity>
-        <Text style={styles.Text}>Phone number: {phoneNumber}</Text>
-        {/* Add button and logic for updating phone number */}
-      </View>
+      {/* Input fields for updating user information */}
+      <TextInput
+        style={styles.input}
+        placeholder="New First Name"
+        value={newUserInfo.newFirstName}
+        onChangeText={(text) => setNewUserInfo({ ...newUserInfo, newFirstName: text })}
+      />
+      {/* Add more input fields for other user information */}
+
+      {/* Button to trigger update */}
+      <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+        <Text style={styles.buttonText}>Update</Text>
+      </TouchableOpacity>
     </View>
   );
 };
-
-export default SettingsPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -52,35 +74,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  middleContent: {
-    flex: 1,
-    justifyContent: 'top',
-    alignItems: 'center',
-  },
-  Text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color:'black',
-    marginBottom: 10,
-  },
-  middleText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    margin: 100,
+  input: {
+    width: '80%',
+    height: 50,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   button: {
-    width: '100%',
+    width: '80%',
     height: 50,
     backgroundColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    marginBottom: 25,
+    marginBottom: 10,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
-    margin: 10,
-    marginHorizontal: 50,
+    fontSize: 18,
   },
 });
+
+export default SettingsPage;
