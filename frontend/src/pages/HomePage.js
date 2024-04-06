@@ -2,7 +2,7 @@ import React from 'react';
 import PageTitle from '../components/PageTitle';
 import LoggedInName from '../components/LoggedInName';
 import TempHome from '../components/TempHome';
-const TempHomePage = () =>
+const HomePage = () =>
 {
     return(
         <div>
@@ -14,4 +14,4 @@ const TempHomePage = () =>
     );
 }
 
-export default TempHomePage;
+export default HomePage;

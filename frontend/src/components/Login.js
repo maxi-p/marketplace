@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Route, {useNavigate} from 'react-router-dom';
 
 function buildPath(route)
 {
@@ -9,6 +10,8 @@ function buildPath(route)
 
 function Login()
 {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState(
         {username: "",password: ""}
     );
@@ -55,12 +58,6 @@ function Login()
 
     };
 
-    const registerRedirect = async event =>
-    {
-        event.preventDefault();
-        window.location.href = '/register'
-    };
-
     return(
         <div id="loginDiv">
             <form onSubmit={doLogin}>
@@ -91,7 +88,7 @@ function Login()
                     value = "Register"
                     id="registerButton"
                     className="buttons"  
-                    onClick={registerRedirect} 
+                    onClick={() => navigate('/register')} 
                 />
             </form>
             <span id="loginResult">{message}</span>

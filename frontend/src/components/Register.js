@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Route, {useNavigate} from 'react-router-dom';
 import validateRegister from '../logic/validator';
 
 function buildPath(route)
@@ -10,6 +11,8 @@ function buildPath(route)
 
 function Register()
 {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState(
         {firstname: "", lastname: "", username: "", password: "", email: "", phoneNumber: ""}
     );
@@ -21,7 +24,7 @@ function Register()
                 [event.target.id]: event.target.value
                 }
             ));
-            
+
             return {
                 ...prevFormData,
                 [event.target.id]: event.target.value
@@ -62,13 +65,6 @@ function Register()
                 return;
             }
         }
-    };
-
-    const backToLogin = async event =>
-    {
-        event.preventDefault();
-        setMessage('');
-        window.location.href = '/';
     };
 
     return(
@@ -130,7 +126,7 @@ function Register()
                     id="backToLogin"
                     className="buttons" 
                     value="Back To Login" 
-                    onClick={backToLogin} 
+                    onClick={() => navigate('/login')} 
                 />
             </form>
             <span id="registerResult">{message}</span>
