@@ -1,17 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import LoginPage from './pages/LoginPage';
-import CardPage from './pages/CardPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
+import UserHomePage from './pages/UserHomePage'
 import EnterCodePage from './pages/EnterCodePage';
-import isLoggedIn from './logic/isLoggedIn';
+import isLogged from './logic/isLoggedIn';
 
 function App()
 {
+  // console.log(isLoggedIn()!=null)
+  const [isLoggedIn, setIsLoggedIn] = useState(isLogged()!=null);
+
+  const loggedHandler = data => {
+    setIsLoggedIn(data)
+  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -20,22 +27,22 @@ function App()
         <Route 
           path="/login" 
           index 
-          element={!isLoggedIn()? <LoginPage/> : <Navigate to="/user-home"/>}
+          element={!isLoggedIn? <LoginPage loggedHandler={loggedHandler}/> : <Navigate to="/user-home"/>}
         />
         <Route 
           path="/register" 
           index 
-          element={!isLoggedIn()? <RegisterPage/>: <Navigate to="/user-home"/>}
+          element={!isLoggedIn? <RegisterPage loggedHandler={loggedHandler}/>: <Navigate to="/user-home"/>}
         />
         <Route 
           path="/user-home"
           index 
-          element={isLoggedIn()? <UserHome/> : <Navigate to="/login"/>}
+          element={isLoggedIn? <UserHomePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
         />
         <Route
           path="/verify-email" 
           index 
-          element={isLoggedIn()? <EnterCodePage/> : <Navigate to="/login"/>}
+          element={isLoggedIn? <EnterCodePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
         />
       </Routes>
     </BrowserRouter>

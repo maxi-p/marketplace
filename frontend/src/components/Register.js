@@ -9,7 +9,7 @@ function buildPath(route)
         return 'https://' + app_name + '.herokuapp.com/' + route;
 }
 
-function Register()
+const Register = props =>
 {
     const navigate = useNavigate();
 
@@ -35,8 +35,7 @@ function Register()
     };
 
     const [message,setMessage] = useState('');
-    const [validationState, setValidationState] = useState(
-            validateRegister(formData))
+    const [validationState, setValidationState] = useState(validateRegister(formData))
 
     const doRegister = async event =>
     {
@@ -54,8 +53,9 @@ function Register()
                 {
                     var user = {firstName:res.firstName, lastName:res.lastName, id:res.id}
                     localStorage.setItem('user_data', JSON.stringify(user));
+                    props.loggedHandler(true)
                     setMessage('');
-                    window.location.href = '/verify-email';
+                    navigate('/verify-email');
                 }
                 
             }
@@ -125,7 +125,7 @@ function Register()
                     type="submit"
                     id="backToLogin"
                     className="buttons" 
-                    value="Back To Login" 
+                    value="Login" 
                     onClick={() => navigate('/login')} 
                 />
             </form>

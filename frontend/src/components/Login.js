@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Route, {useNavigate} from 'react-router-dom';
 
-function buildPath(route)
+const buildPath = route =>
 {
     const app_name = 'cop4331-marketplace-98e1376d9db6'
     // if (process.env.NODE_ENV === 'production')
         return 'https://' + app_name + '.herokuapp.com/' + route;
 }
 
-function Login()
+const Login = props =>
 {
     const navigate = useNavigate();
 
@@ -45,9 +45,9 @@ function Login()
             {
                 var user = {firstName:res.firstName, lastName:res.lastName, id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
-
+                props.loggedHandler(true);
                 setMessage('');
-                window.location.href = '/home';
+                navigate('/home');
             }
 
         }

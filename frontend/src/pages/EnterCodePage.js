@@ -6,7 +6,9 @@ const LoginPage = () =>
 {
     return(
         <div>
-            <PageTitle />
+            <PageTitle 
+                title="Verification Page"
+            />
             <EnterCode />
         </div>
     );

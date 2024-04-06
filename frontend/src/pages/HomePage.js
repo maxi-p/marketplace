@@ -1,15 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PageTitle from '../components/PageTitle';
-import LoggedInName from '../components/LoggedInName';
-import TempHome from '../components/TempHome';
+import Products from '../components/Products';
+import SearchBar from '../components/SearchBar';
+import isLoggedIn from '../logic/isLoggedIn';
 const HomePage = () =>
 {
+    const [user] = useState(isLoggedIn());
     return(
         <div>
-            <PageTitle />
-            <TempHome />
-            <LoggedInName />
-
+            <PageTitle title="Open Market"/>{user && <span>Logged in as: {user.firstName} {user.lastName}</span>}
+            <SearchBar />
+            <Products />
         </div>
     );
 }

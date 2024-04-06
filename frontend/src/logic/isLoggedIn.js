@@ -1,6 +1,6 @@
-const isLoggedIn = () =>{
-    return localStorage.getItem('user_data')
+const isLogged = () =>{
+    return JSON.parse(localStorage.getItem('user_data'))
 }
 
-export default isLoggedIn;
+export default isLogged;
 

@@ -1,9 +1,9 @@
 import React from 'react';
 
-function PageTitle()
+const PageTitle = props =>
 {
     return(
-        <h1 id="title">COP4331 Marketplace</h1>
+        <h1 id="title">{props.title}</h1>
     );
 };
 
