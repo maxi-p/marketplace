@@ -6,11 +6,17 @@ import isLoggedIn from '../logic/isLoggedIn';
 const HomePage = () =>
 {
     const [user] = useState(isLoggedIn());
+    const [allPosts, setAllPosts] = useState([]);
+
+    const handler = data => {
+        setAllPosts(data)
+      }
+
     return(
         <div>
             <PageTitle title="Open Market"/>{user && <span>Logged in as: {user.firstName} {user.lastName}</span>}
-            <SearchBar />
-            <Products />
+            <SearchBar setAllPosts={handler}/>
+            <Products allPosts={allPosts}/>
         </div>
     );
 }

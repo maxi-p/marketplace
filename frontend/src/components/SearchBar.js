@@ -1,12 +1,108 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import buildPath from '../logic/buildPath';
 
-const SearchBar = () =>
+const SearchBar = props =>
 {
-   return(
-    <div>
-        <input></input><button>Search</button>
-    </div>
-   );
+    const [message, setMessage] = useState('');
+    const [formData, setFormData] = useState(
+        {
+            string: "",
+            username: false,
+            name: false,
+            genre: false
+        }
+    );
+
+    useEffect(() => {
+        const getAllPosts = async () => {
+            const json = JSON.stringify({ username:'', name:'', genre:'', searchType:'ALL' });
+            const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+            props.setAllPosts(res.results)
+        };
+        getAllPosts();
+    },[])
+
+    const handleChange = (event) => { 
+        const {name, value, type, checked} = event.target;
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [name]: type === "checkbox"? checked : value
+            }
+        } )
+    }
+
+    const submitHandler = async event => {
+        event.preventDefault();
+        let obj = { username:'', name:'', genre:'', searchType:'ALL' }
+        if(formData.string !== ''){
+            if(formData.name === false && formData.username == false && formData.genre == false){
+                obj = {username:formData.string, name:formData.string, genre:formData.string, searchType:''}
+            }
+            else{
+                obj = {...obj, searchType:''};
+                if(formData.name === true)
+                    obj = {...obj, name:formData.string};
+                if(formData.username === true)
+                    obj = {...obj, username:formData.string};
+                if(formData.genre === true)
+                    obj = {...obj, genre:formData.string};
+            }
+        }
+            
+        const json = JSON.stringify(obj);
+        const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
+        var res = JSON.parse(await response.text());
+        if(res.error === ''){
+            setMessage('')
+            props.setAllPosts(res.results)
+        }
+        else
+            setMessage(res.error)
+
+    }
+
+    // 5 15 84 1
+
+    return(
+        <div>
+            <form onSubmit={submitHandler}>
+                <input
+                    onChange={handleChange}
+                    name="string"
+                    value={formData.string}
+                    placeholder='Search'
+                />
+                <input 
+                    type="checkbox" 
+                    id="username" 
+                    name="username"
+                    checked={formData.username}
+                    onChange={handleChange}
+                />
+                <label htmlFor="username"> author</label>
+                <input 
+                    type="checkbox" 
+                    id="name" 
+                    name="name"
+                    checked={formData.name}
+                    onChange={handleChange}
+                />
+                <label htmlFor="name"> name </label>
+                <input 
+                    type="checkbox" 
+                    id="genre" 
+                    name="genre"
+                    checked={formData.genre}
+                    onChange={handleChange}
+                />
+                <label htmlFor="genre"> genre </label><br/>
+                <button>Search</button>
+                <span>{message}</span><br/>
+            </form>
+        </div>
+    );
 };
 
 export default SearchBar;
