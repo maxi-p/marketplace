@@ -386,7 +386,7 @@ app.post('/api/createPost', upload.single('image'), async function(req, res, nex
             }
         });
     }
-
+  
     var newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage, usersInterested: usersInterested};
     const results = await db.collection('Posts').find({username: username, name: name}).toArray();
 
@@ -520,6 +520,7 @@ app.post('/api/interestDeletion', async(req, res, next) => {
     var ret = {error: err};
     res.status(200).json(ret);
 });
+
 
 app.post('/api/getUser', async(req, res, next) => {
 

@@ -267,6 +267,7 @@ paths:
             $ref: '#/definitions/ErrorOnlyResponse'
         "Non-Empty Error String":
           description: An error occured with updating the database
+
   /getUser:
     post:
       tags:
