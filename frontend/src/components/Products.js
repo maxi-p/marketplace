@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Post from './Post'
 import buildPath from '../logic/buildPath';
+import { Link } from 'react-router-dom'
 
 const Products = () =>
 {
@@ -18,10 +19,11 @@ const Products = () =>
 
     const posts = allPosts.map(post => {
         return (
-            <Post
-                key={post._id}
-                obj={post}
-            />
+            <Link to={post._id.toString()} key={post._id}>
+                <Post
+                    obj={post}
+                />
+            </Link>
         )
     });
 
