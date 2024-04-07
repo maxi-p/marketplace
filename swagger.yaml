@@ -99,15 +99,18 @@ paths:
       operationId: dlEditUser
       description: Takes in the user's unique identifier and edit's their database document with given input fields.
       consumes:
-      - application/json
+      - multipart/form-data
       produces:
       - application/json
       parameters:
-      - in: body
-        name: editUser
-        description: Editing
-        schema:
-          $ref: '#/definitions/EditUser'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/firstName'
+        - $ref: '#/parameters/lastName'
+        - $ref: '#/parameters/username'
+        - $ref: '#/parameters/password'
+        - $ref: '#/parameters/email'
+        - $ref: '#/parameters/phoneNumber'
+        - $ref: '#/parameters/aboutMe'
       responses:
         "Empty Error String":
           description: OK
@@ -264,6 +267,51 @@ paths:
             $ref: '#/definitions/ErrorOnlyResponse'
         "Non-Empty Error String":
           description: An error occured with updating the database
+
+  /getUser:
+    post:
+      tags:
+      - Users
+      summary: Get user object
+      operationId: dlGetUser
+      description: When given an id, return the user object associated with that id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: GetUser
+        description: Returns user objects
+        schema:
+          $ref: '#/definitions/GetUser'
+      responses:
+        "Empty Error String":
+          description: OK
+        "User was not found":
+          description: The given user was not found
+  /getPost:
+    post:
+      tags:
+      - Posts
+      summary: Get post objec
+      operationId: dlGetPost
+      description: When given an id, return the post object associated with that id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: GetPost
+        description: Returns user objects
+        schema:
+          $ref: '#/definitions/GetPost'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Post was not found":
+          description: The given user was not found
           
 
 parameters:
@@ -277,6 +325,36 @@ parameters:
     name: username
     type: string
     example: Fred121
+  password:
+    in: multipart/form-data
+    name: password
+    type: string
+    example: Secret121
+  email:
+    in: multipart/form-data
+    name: email
+    type: string
+    example: fred@doe.com
+  phoneNumber:
+    in: multipart/form-data
+    name: phoneNumber
+    type: string
+    example: 121345323
+  aboutMe:
+    in: multipart/form-data
+    name: aboutMe
+    type: string
+    example: About Me!
+  firstName:
+    in: multipart/form-data
+    name: firstName
+    type: string
+    example: Fred
+  lastName:
+    in: multipart/form-data
+    name: lastName
+    type: string
+    example: Doe
   name:
     in: multipart/form-data
     name: name
@@ -323,6 +401,22 @@ definitions:
       error:
         type: string
         example: ""
+  GetUser:
+    type: object
+    required:
+    - User ID
+    properties:
+      userId:
+        type: string
+        example: 12121fafwfaf103012
+  GetPost:
+    type: object
+    required:
+    - Post ID
+    properties:
+      postId:
+        type: string
+        example: 12121fafwfaf103012
   Login:
     type: object
     required:
