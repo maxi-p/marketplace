@@ -99,3 +99,15 @@ li a:hover {
 .active {
   background-color: #04AA6D;
 }
+
+/* Loading spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* min-height: 100vh; */
+}
+.spinner-loader {
+  margin-top: 100px
+}

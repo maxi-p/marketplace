@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import buildPath from '../logic/buildPath';
+import FadeLoader from 'react-spinners/FadeLoader'
 
 const SearchBar = props =>
 {
@@ -15,10 +16,13 @@ const SearchBar = props =>
 
     useEffect(() => {
         const getAllPosts = async () => {
+            props.setLoading(true);
             const json = JSON.stringify({ username:'', name:'', genre:'', searchType:'ALL' });
             const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
             props.setAllPosts(res.results)
+            // mimicking network request time (0.5 seconds)
+            setTimeout(()=>{props.setLoading(false)}, 250)
         };
         getAllPosts();
     },[])

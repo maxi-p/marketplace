@@ -3,21 +3,26 @@ import PageTitle from '../components/PageTitle';
 import Products from '../components/Products';
 import SearchBar from '../components/SearchBar';
 import isLoggedIn from '../logic/isLoggedIn';
-import NavBar from '../components/NavBar';
+
 const HomePage = () =>
 {
     const [user] = useState(isLoggedIn());
     const [allPosts, setAllPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const handler = data => {
+    const postHandler = data => {
         setAllPosts(data)
-      }
+    }
+
+    const loadingHandler = data => {
+        setLoading(data);
+    }
 
     return(
         <div>
             <PageTitle title="Open Market"/>{user && <span>Logged in as: {user.firstName} {user.lastName}</span>}
-            <SearchBar setAllPosts={handler}/>
-            <Products allPosts={allPosts}/>
+            <SearchBar setLoading={loadingHandler} setAllPosts={postHandler}/>
+            <Products loading={loading} allPosts={allPosts}/>
         </div>
     );
 }
