@@ -3,6 +3,7 @@ import PageTitle from '../components/PageTitle';
 import Products from '../components/Products';
 import SearchBar from '../components/SearchBar';
 import isLoggedIn from '../logic/isLoggedIn';
+import NavBar from '../components/NavBar';
 const HomePage = () =>
 {
     const [user] = useState(isLoggedIn());

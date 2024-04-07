@@ -48,7 +48,7 @@ const Register = props =>
                 {
                     var user = {firstName:res.firstName, lastName:res.lastName, id:res.id}
                     localStorage.setItem('user_data', JSON.stringify(user));
-                    props.loggedHandler(true)
+                    props.loggedHandler(user)
                     setMessage('');
                     navigate('/verify-email');
                 }
@@ -123,7 +123,7 @@ const Register = props =>
                     onClick={doRegister} 
                 />
                 <input 
-                    type="submit"
+                    type="button"
                     id="backToLogin"
                     className="buttons" 
                     value="Login" 

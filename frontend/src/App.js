@@ -10,52 +10,56 @@ import UserHomePage from './pages/UserHomePage'
 import EnterCodePage from './pages/EnterCodePage';
 import isLogged from './logic/isLoggedIn';
 import PostDetails from './components/PostDetails';
+import NavBar from './components/NavBar';
 
 function App()
 {
   // console.log(isLoggedIn()!=null)
-  const [isLoggedIn, setIsLoggedIn] = useState(isLogged()!=null);
+  const [isLoggedIn, setIsLoggedIn] = useState(isLogged());
 
   const loggedHandler = data => {
-    setIsLoggedIn(data)
+    setIsLoggedIn(data);
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/">
-          <Route
-            index
-            element={<HomePage/>}
+    <>
+      <BrowserRouter>
+      <NavBar loggedUser={isLoggedIn} loggedHandler={loggedHandler}/>
+        <Routes>
+          <Route path="/">
+            <Route
+              index
+              element={<HomePage/>}
+            />
+            <Route
+              path=":id"
+              element={<PostDetails/>}
+            />
+          </Route>
+          <Route path="/home" index element={<Navigate to="/"/>}/>
+          <Route 
+            path="/login" 
+            index 
+            element={!isLoggedIn? <LoginPage loggedHandler={loggedHandler}/> : <Navigate to="/user-home"/>}
+          />
+          <Route 
+            path="/register" 
+            index 
+            element={!isLoggedIn? <RegisterPage loggedHandler={loggedHandler}/>: <Navigate to="/user-home"/>}
+          />
+          <Route 
+            path="/user-home"
+            index 
+            element={isLoggedIn? <UserHomePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
           />
           <Route
-            path=":id"
-            element={<PostDetails/>}
+            path="/verify-email" 
+            index 
+            element={isLoggedIn? <EnterCodePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
           />
-        </Route>
-        <Route path="/home" index element={<Navigate to="/"/>}/>
-        <Route 
-          path="/login" 
-          index 
-          element={!isLoggedIn? <LoginPage loggedHandler={loggedHandler}/> : <Navigate to="/user-home"/>}
-        />
-        <Route 
-          path="/register" 
-          index 
-          element={!isLoggedIn? <RegisterPage loggedHandler={loggedHandler}/>: <Navigate to="/user-home"/>}
-        />
-        <Route 
-          path="/user-home"
-          index 
-          element={isLoggedIn? <UserHomePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
-        />
-        <Route
-          path="/verify-email" 
-          index 
-          element={isLoggedIn? <EnterCodePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
-        />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

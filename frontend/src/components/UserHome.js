@@ -10,7 +10,7 @@ const UserHome = props =>
     const logOutHandler = () => 
     {
         localStorage.removeItem("user_data")
-        props.loggedHandler(false);
+        props.loggedHandler(null);
         navigate('/login');
     };
 
