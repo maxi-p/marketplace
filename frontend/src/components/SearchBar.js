@@ -21,7 +21,7 @@ const SearchBar = props =>
             const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
             props.setAllPosts(res.results)
-            // mimicking network request time (0.5 seconds)
+            // TODO: remove this mimicking network request time (0.5 seconds)
             setTimeout(()=>{props.setLoading(false)}, 250)
         };
         getAllPosts();
@@ -38,6 +38,7 @@ const SearchBar = props =>
     }
 
     const submitHandler = async event => {
+        // TODO: check the searching logic once API merges the updated search api
         event.preventDefault();
         let obj = { username:'', name:'', genre:'', searchType:'ALL' }
         if(formData.string !== ''){

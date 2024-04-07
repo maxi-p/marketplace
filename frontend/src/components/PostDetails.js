@@ -15,7 +15,7 @@ export default function PostDetails(){
             const response = await fetch(buildPath('api/getPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
             setPost(res.post)
-            // mimicking network request time (0.5 seconds)
+            // TODO: remove this mimicking network request time (0.5 seconds)
             setTimeout(()=>{setLoading(false)}, 100)
         }
         getPost();

@@ -11,6 +11,7 @@ import EnterCodePage from './pages/EnterCodePage';
 import isLogged from './logic/isLoggedIn';
 import PostDetails from './components/PostDetails';
 import NavBar from './components/NavBar';
+import UploadPage from './pages/UploadPage'
 
 function App()
 {
@@ -56,6 +57,11 @@ function App()
             path="/verify-email" 
             index 
             element={isLoggedIn? <EnterCodePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
+          />
+          <Route
+            path="/post" 
+            index 
+            element={isLoggedIn? <UploadPage loggedUser={isLoggedIn} loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
           />
         </Routes>
       </BrowserRouter>

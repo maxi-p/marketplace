@@ -50,6 +50,15 @@ const NavBar = props => {
           name='logout'
         >Logout</a>
       </li>)
+      }
+      {props.loggedUser &&
+      (<li>
+        <a 
+          className=""
+          onClick={nav}
+          name='post'
+        >Post</a>
+      </li>)
       }  
       {props.loggedUser &&
       (<li>
