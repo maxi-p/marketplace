@@ -133,7 +133,7 @@ app.post('/api/login', async (req, res, next) =>
         err = 'No Records Found';
     }
 
-    var ret = { id:id, firstName:fn, lastName:ln, email: email, error:err};
+    var ret = { id:id, username: username, firstName:fn, lastName:ln, email: email, error:err};
     res.status(200).json(ret);
 });
 
@@ -189,7 +189,7 @@ app.post('/api/register', async (req, res, next) =>
 
     verifyEmail(email, verifyNum);
 
-    var ret = { _id: newId, verifyNum: verifyNum, error: error};
+    var ret = { _id: newId, username: username, verifyNum: verifyNum, error: error};
     res.status(200).json(ret);
 });
 
