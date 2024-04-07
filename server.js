@@ -75,66 +75,25 @@ const imageModel = mongoose.model("imagemodel", imageSchema);
 
 app.post('/api/searchPost', async (req, res, next) => 
 {
-    // incoming: username, name, genre, searchType
+    // incoming: username, name, genre
     // outgoing: results[], error
     var error = '';
     var _ret = [];
 
-    const { username, name, genre, searchType } = req.body;
-    const fields = [username, name, genre, searchType];
+    const { username, name, genre} = req.body;
 
     const db = client.db("oMarketDB");
 
     try{
-        let numFieds = 0;
-        for (let i = 0; i < 3; i++)
-        {
-            if (fields[i] != "")
-                numFieds++;
-        }
+        var usernameTrim = username.trim();
+        var nameTrim = name.trim();
+        var genreTrim = genre.trim();
 
-        if (numFieds > 1)
-            throw new Error('Too many used fields');
-        
-        //since the other fields are empty if your searching by a specific field (i.e. searching by username) you only need to check if the searchType is ALL to indicate
-        //if you need to search any of the fields or just return all the posts.
+        const results = await db.collection('Posts').find({"username": {$regex: usernameTrim + '.*', $options: 'i'},
+                                                           "name": {$regex: nameTrim + '.*', $options: 'i'},
+                                                           "genre": {$regex: genreTrim + '.*', $options: 'i'}}).toArray();
 
-        //the search results returns the post object instead of the post object id. Requested by Maksim.
-
-        if (searchType != 'ALL'){
-            if (username != "")
-            {
-
-                var _search = username.trim()
-                const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-                _ret = results;
-            }
-
-            if (name != "" )
-            {
-                var _search = name.trim()
-                const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-                _ret = results;
-            }
-                
-
-            if (genre != "" )
-            {
-                var _search = genre.trim()
-                const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-                _ret = results;
-            }
-        }
-
-        else if(searchType == 'ALL'){
-            //returns all posts.
-            const results = await db.collection('Posts').find({}).toArray();
-            _ret = results;
-        }
-
+        _ret = results;
     }
     catch(e)
     {
