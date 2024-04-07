@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import Route, {useNavigate} from 'react-router-dom';
 import validateRegister from '../logic/validator';
-
-function buildPath(route)
-{
-    const app_name = 'cop4331-marketplace-98e1376d9db6'
-    // if (process.env.NODE_ENV === 'production')
-        return 'https://' + app_name + '.herokuapp.com/' + route;
-}
+import buildPath from '../logic/validator';
 
 const Register = props =>
 {
@@ -19,15 +13,16 @@ const Register = props =>
 
     const handleChange = (event) =>{
         setFormData(prevFormData => {
+            const {id, value} = event.target;
             setValidationState(validateRegister(
                 {...prevFormData,
-                [event.target.id]: event.target.value
+                [id]: value
                 }
             ));
 
             return {
                 ...prevFormData,
-                [event.target.id]: event.target.value
+                [id]: value
             }
         });
         
@@ -76,6 +71,7 @@ const Register = props =>
                     type="text"
                     id="firstname"
                     placeholder="First Name" 
+                    value={formData.firstname}
                     onChange={handleChange}
                 />
                 <span id="firstNameResult">{validationState.firstNameMessage}</span><br />
@@ -83,6 +79,7 @@ const Register = props =>
                     type="text"
                     id="lastname"
                     placeholder="Last Name" 
+                    value={formData.lastname}
                     onChange={handleChange} 
                 />
                 <span id="lastNameResult">{validationState.lastNameMessage}</span><br />
@@ -90,6 +87,7 @@ const Register = props =>
                     type="text"
                     id="username"
                     placeholder="Username" 
+                    value={formData.username}
                     onChange={handleChange}
                 />
                 <span id="userNameResult">{validationState.userNameMessage}</span><br />
@@ -97,6 +95,7 @@ const Register = props =>
                     type="password"
                     id="password"
                     placeholder="Password" 
+                    value={formData.password}
                     onChange={handleChange} 
                 />
                 <span id="passwordResult">{validationState.passwordMessage}</span><br />
@@ -104,6 +103,7 @@ const Register = props =>
                     type="text"
                     id="email"
                     placeholder="Email" 
+                    value={formData.email}
                     onChange={handleChange}
                 />
                 <span id="emailResult">{validationState.emailMessage}</span><br />
@@ -111,6 +111,7 @@ const Register = props =>
                     type="text"
                     id="phoneNumber"
                     placeholder="Phone number" 
+                    value={formData.phoneNumber}
                     onChange={handleChange} 
                 />
                 <span id="phoneResult">{validationState.phoneMessage}</span><br /> 

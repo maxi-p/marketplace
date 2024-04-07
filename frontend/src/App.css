@@ -1,38 +1,71 @@
-.App {
-  text-align: center;
+* {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.bold {
+  font-weight: bold;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.gray {
+  color: #918E9B;
+}
+
+section {
+  padding: 20px;
+}
+
+.posts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  overflow-x: auto;
+}
+
+.card {
+  width: 175px;
+  font-size: 12px;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.card--image {
+  width: 100%;
+  border-radius: 9px;
+  margin-bottom: 9px;
+}
+
+.card--title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card--stats {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.card--star {
+  height: 14px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* ADD */
+.card--price {
+  margin-top: auto;
+}
+
+.card--badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: white;
+  padding: 5px 7px;
+  border-radius: 2px;
+  font-weight: bold;
 }

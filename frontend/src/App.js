@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage';
 import UserHomePage from './pages/UserHomePage'
 import EnterCodePage from './pages/EnterCodePage';
 import isLogged from './logic/isLoggedIn';
+import PostDetails from './components/PostDetails';
 
 function App()
 {
@@ -22,7 +23,16 @@ function App()
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" index element={<HomePage/>}/>
+        <Route path="/">
+          <Route
+            index
+            element={<HomePage/>}
+          />
+          <Route
+            path=":id"
+            element={<PostDetails/>}
+          />
+        </Route>
         <Route path="/home" index element={<Navigate to="/"/>}/>
         <Route 
           path="/login" 

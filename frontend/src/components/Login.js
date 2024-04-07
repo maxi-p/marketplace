@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import Route, {useNavigate} from 'react-router-dom';
-
-const buildPath = route =>
-{
-    const app_name = 'cop4331-marketplace-98e1376d9db6'
-    // if (process.env.NODE_ENV === 'production')
-        return 'https://' + app_name + '.herokuapp.com/' + route;
-}
+import buildPath from '../logic/buildPath';
 
 const Login = props =>
 {
@@ -15,12 +9,13 @@ const Login = props =>
     const [formData, setFormData] = useState(
         {username: "",password: ""}
     );
-
-    const handleChange = (event) =>{
+    
+    const handleChange = (event) => {
+        const {id, value} = event.target;
         setFormData(prevFormData => {
             return {
                 ...prevFormData,
-                [event.target.id]: event.target.value
+                [id]: value
             }
         })
     };
@@ -52,6 +47,7 @@ const Login = props =>
 
         }
         catch(e){
+            console.log(json)
             alert(e.toString());
             return;
         }
@@ -67,6 +63,7 @@ const Login = props =>
                     placeholder="Username"
                     id="username"
                     onChange={handleChange}
+                    value={formData.username}
                 />
                 <br/>
                 <input 
@@ -74,6 +71,7 @@ const Login = props =>
                     placeholder="Password"
                     id="password"
                     onChange={handleChange} 
+                    value={formData.password}
                 />
                 <br/>
                 <input 
