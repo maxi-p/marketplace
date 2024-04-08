@@ -17,7 +17,7 @@ const SearchBar = props =>
     useEffect(() => {
         const getAllPosts = async () => {
             props.setLoading(true);
-            const json = JSON.stringify({ username:'', name:'', genre:'', searchType:'ALL' });
+            const json = JSON.stringify({ username:'', name:'', genre:''});
             const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
             props.setAllPosts(res.results)
@@ -40,22 +40,19 @@ const SearchBar = props =>
     const submitHandler = async event => {
         // TODO: check the searching logic once API merges the updated search api
         event.preventDefault();
-        let obj = { username:'', name:'', genre:'', searchType:'ALL' }
-        if(formData.string !== ''){
-            if(formData.name === false && formData.username == false && formData.genre == false){
-                obj = {username:formData.string, name:formData.string, genre:formData.string, searchType:''}
-            }
-            else{
-                obj = {...obj, searchType:''};
-                if(formData.name === true)
-                    obj = {...obj, name:formData.string};
-                if(formData.username === true)
-                    obj = {...obj, username:formData.string};
-                if(formData.genre === true)
-                    obj = {...obj, genre:formData.string};
-            }
-        }
-            
+        let obj = { username: '', name: '', genre: '' }
+
+        if(formData.name === true)
+            obj = {...obj, name:formData.string};
+        if(formData.username === true)
+            obj = {...obj, username:formData.string};
+        if(formData.genre === true)
+            obj = {...obj, genre:formData.string};
+        if(formData.string !== '' && formData.name === false && formData.username === false && formData.genre === false)
+            obj = {username: formData.string, name: formData.string, genre: formData.string};
+        
+        console.log(obj)
+        props.setLoading(true);
         const json = JSON.stringify(obj);
         const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
         var res = JSON.parse(await response.text());
@@ -65,6 +62,9 @@ const SearchBar = props =>
         }
         else
             setMessage(res.error)
+
+        // TODO: remove this mimicking network request time (0.5 seconds)
+        setTimeout(()=>{props.setLoading(false)}, 250)
 
     }
 

@@ -46,8 +46,7 @@ const Register = props =>
                     setMessage(res.error);
                 else
                 {
-                    //TODO: username. This should be coming with the request when the API is done
-                    var user = {username: 'maxi-p', firstName:res.firstName, lastName:res.lastName, id:res.id}
+                    var user = {username: res.username, firstName:res.firstName, lastName:res.lastName, id:res.id}
                     localStorage.setItem('user_data', JSON.stringify(user));
                     props.loggedHandler(user)
                     setMessage('');

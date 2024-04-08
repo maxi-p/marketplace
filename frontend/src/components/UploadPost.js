@@ -5,11 +5,8 @@ import buildPath from '../logic/buildPath';
 const UploadForm = props => 
 {
     const navigate = useNavigate();
-    console.log(props.loggedUser);
     const [formData, setFormData] = useState(
-        // 'maxi-p' nick name is hardcoded
-        // TODO: once API adds a username attribute into return of login and register API, fix this
-        {username: 'maxi-p', name:'', genre:'', price:'', desc:'', condition:''}
+        {username: props.loggedUser.username, name:'', genre:'', price:'', desc:'', condition:''}
     );
     
     const handleChange = (event) => {
