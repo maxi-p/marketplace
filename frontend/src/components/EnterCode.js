@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-
-function buildPath(route)
-{
-    const app_name = 'cop4331-marketplace-98e1376d9db6'
-    if (process.env.NODE_ENV === 'production')
-        return 'https://' + app_name + '.herokuapp.com/' + route;
-    else
-        return 'localhost:5000'+ route;
-}
+import buildPath from '../logic/validator';
 
 function EnterCode()
 {

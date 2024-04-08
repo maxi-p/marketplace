@@ -1,35 +1,35 @@
 import React, { useState } from 'react';
+import Route, {useNavigate} from 'react-router-dom';
+import buildPath from '../logic/buildPath';
 
-function buildPath(route)
+const Login = props =>
 {
-    const app_name = 'cop4331-marketplace-98e1376d9db6'
-    if (process.env.NODE_ENV === 'production')
-    {
-    return 'https://' + app_name + '.herokuapp.com/' + route;
-    }
-    else
-    {
-    return 'https://' + app_name + '.herokuapp.com/' + route;
-    }
-}
+    const navigate = useNavigate();
 
-function Login()
-{
-    var loginName;
-    var loginPassword;
+    const [formData, setFormData] = useState(
+        {username: "",password: ""}
+    );
+    
+    const handleChange = (event) => {
+        const {id, value} = event.target;
+        setFormData(prevFormData => {
+            return {
+                ...prevFormData,
+                [id]: value
+            }
+        })
+    };
 
     const [message,setMessage] = useState('');
 
-    const doLogin = async event =>
+    const doLogin = async (event) =>
     {
         event.preventDefault();
-        var obj = {username:loginName.value, password:loginPassword.value};
-        var js = JSON.stringify(obj);
+        var json = JSON.stringify(formData);
 
         try
         {
-            const response = await fetch(buildPath('api/login'), {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
+            const response = await fetch(buildPath('api/login'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
 
             if( res.id <= 0 )
@@ -38,38 +38,56 @@ function Login()
             }
             else
             {
-                var user = {firstName:res.firstName, lastName:res.lastName, id:res.id}
+                var user = {username: res.username, firstName:res.firstName, lastName:res.lastName, id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
-
+                props.loggedHandler(user);
                 setMessage('');
-                window.location.href = '/home';
+                navigate('/home');
             }
 
         }
         catch(e){
+            console.log(json)
             alert(e.toString());
             return;
         }
 
-        // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
-    };
-
-    const registerRedirect = async event =>
-    {
-        event.preventDefault();
-        window.location.href = '/register'
-
-        // alert('doIt() ' + loginName.value + ' ' + loginPassword.value);
     };
 
     return(
         <div id="loginDiv">
             <form onSubmit={doLogin}>
                 <span id="inner-title">PLEASE LOG IN</span><br />
-                <input type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c}/><br />
-                <input type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c} /><br />
-                <input type="submit" id="loginButton" className="buttons" value = "Do It" onClick={doLogin} />
-                <input type="submit" id="registerButton" className="buttons" value = "Register" onClick={registerRedirect} />
+                <input 
+                    type="text"
+                    placeholder="Username"
+                    id="username"
+                    onChange={handleChange}
+                    value={formData.username}
+                />
+                <br/>
+                <input 
+                    type="password" 
+                    placeholder="Password"
+                    id="password"
+                    onChange={handleChange} 
+                    value={formData.password}
+                />
+                <br/>
+                <input 
+                    type="submit" 
+                    value = "Login"
+                    id="loginButton" 
+                    className="buttons"  
+                    onClick={doLogin} 
+                />
+                <input 
+                    type="button" 
+                    value = "Register"
+                    id="registerButton"
+                    className="buttons"  
+                    onClick={() => navigate('/register')} 
+                />
             </form>
             <span id="loginResult">{message}</span>
         </div>

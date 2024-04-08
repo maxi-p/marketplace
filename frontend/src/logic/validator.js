@@ -62,7 +62,7 @@ const validateRegister = (obj) =>
 
     var emailRegex = /^([a-zA-Z0-9_\-]+)@([a-zA-Z0-9_\-]+)\.([a-zA-Z]{2,5})$/;
     if (mailMessage !== "Email cannot be blank." && emailRegex.test(email) === false) {
-        mailMessage = "Email must be in the form address@domain.";
+        mailMessage = "Email must be valid (Ex: example@test.com)";
         statusMsg = "invalid";
     }
 
