@@ -436,6 +436,9 @@ definitions:
       id:
         type: string
         example: 12121fafwfaf103012
+      username:
+        type: string
+        example: Fred1212
       firstName:
         type: string
         example: Fred
@@ -482,6 +485,9 @@ definitions:
       _id:
         type: string
         example: 12121fafwfaf103012
+      username:
+        type: string
+        example: Fred1212
       verifyNum:
         type: integer
         example: 12345
