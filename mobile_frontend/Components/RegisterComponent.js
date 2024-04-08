@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 
 // FileName: RegisterComponent.js, Created by Griffin Zakow 
 

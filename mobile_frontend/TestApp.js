@@ -1,23 +1,26 @@
 import React from 'react';
-import {Modal, View} from 'react-native';
+import {AppRegistry, Appearance, Modal, View} from 'react-native';
 import Search from './Components/SearchBar';
 import ProductList from './Components/newProductList';
 import ProductModal from './pages/Modals/newProductModal';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
 import ImageViewModal from './pages/Modals/ImageViewModal';
+import SellProduct from './Components/SellProduct';
 
 
 const Stack = createNativeStackNavigator();
 const App2 = () => {
+  Appearance.setColorScheme('light');
   return (
     <View>
-      <ImageViewModal />
+      <SellProduct />
     </View>
   );
 };
 
 const App = () => {
+  Appearance.setColorScheme('light');
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -34,4 +37,4 @@ const App = () => {
     </NavigationContainer>
   );
 };
-export default App;
+export default App2;

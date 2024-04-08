@@ -8,13 +8,14 @@ import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
 import {UserContext} from './logic/UserContext';
+import { Appearance } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const App = () => {
   const [username, setUsername] = useState('N/A');
   const UserC = {username, setUsername};
-
+  Appearance.setColorScheme('light');
   /* Old Render
   const renderScreen = () => {
     switch (currentScreen) {
