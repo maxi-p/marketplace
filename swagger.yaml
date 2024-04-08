@@ -111,6 +111,7 @@ paths:
         - $ref: '#/parameters/email'
         - $ref: '#/parameters/phoneNumber'
         - $ref: '#/parameters/aboutMe'
+        - $ref: '#/parameters/image'
       responses:
         "Empty Error String":
           description: OK
@@ -294,7 +295,7 @@ paths:
     post:
       tags:
       - Posts
-      summary: Get post objec
+      summary: Get post object
       operationId: dlGetPost
       description: When given an id, return the post object associated with that id
       consumes:
@@ -435,6 +436,9 @@ definitions:
       id:
         type: string
         example: 12121fafwfaf103012
+      username:
+        type: string
+        example: Fred1212
       firstName:
         type: string
         example: Fred
@@ -481,6 +485,9 @@ definitions:
       _id:
         type: string
         example: 12121fafwfaf103012
+      username:
+        type: string
+        example: Fred1212
       verifyNum:
         type: integer
         example: 12345
@@ -612,7 +619,6 @@ definitions:
     - Username
     - Name of Post
     - Genre
-    - searchType
     properties:
       username:
         type: string
@@ -623,9 +629,6 @@ definitions:
       genre: 
         type: string
         example: Cars
-      searchType:
-        type: string
-        example: ALL
   SearchPostResponse:
     type: object
     properties:
