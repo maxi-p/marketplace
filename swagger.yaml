@@ -103,15 +103,33 @@ paths:
       produces:
       - application/json
       parameters:
-        - $ref: '#/parameters/id'
-        - $ref: '#/parameters/firstName'
-        - $ref: '#/parameters/lastName'
-        - $ref: '#/parameters/username'
-        - $ref: '#/parameters/password'
-        - $ref: '#/parameters/email'
-        - $ref: '#/parameters/phoneNumber'
-        - $ref: '#/parameters/aboutMe'
-        - $ref: '#/parameters/image'
+      - in: formData
+        name: id
+        type: string
+      - in: formData
+        name: firstName
+        type: string
+      - in: formData
+        name: lastName
+        type: string
+      - in: formData
+        name: username
+        type: number
+      - in: formData
+        name: password
+        type: string
+      - in: formData
+        name: email
+        type: string
+      - in: formData
+        name: phoneNumber
+        type: string
+      - in: formData
+        name: aboutMe
+        type: string
+      - in: formData
+        name: image
+        type: file
       responses:
         "Empty Error String":
           description: OK
@@ -131,13 +149,27 @@ paths:
       produces:
       - application/json
       parameters:
-        - $ref: '#/parameters/username'
-        - $ref: '#/parameters/name'
-        - $ref: '#/parameters/genre'
-        - $ref: '#/parameters/price'
-        - $ref: '#/parameters/desc'
-        - $ref: '#/parameters/condition'
-        - $ref: '#/parameters/image'
+      - in: formData
+        name: username
+        type: string
+      - in: formData
+        name: name
+        type: string
+      - in: formData
+        name: genre
+        type: string
+      - in: formData
+        name: price
+        type: number
+      - in: formData
+        name: desc
+        type: string
+      - in: formData
+        name: condition
+        type: string
+      - in: formData
+        name: image
+        type: file
       responses:
         "Empty Error String":
           description: OK
@@ -157,14 +189,30 @@ paths:
       produces:
       - application/json
       parameters:
-        - $ref: '#/parameters/id'
-        - $ref: '#/parameters/username'
-        - $ref: '#/parameters/name'
-        - $ref: '#/parameters/genre'
-        - $ref: '#/parameters/price'
-        - $ref: '#/parameters/desc'
-        - $ref: '#/parameters/condition'
-        - $ref: '#/parameters/image'
+      - in: formData
+        name: id
+        type: string
+      - in: formData
+        name: username
+        type: string
+      - in: formData
+        name: name
+        type: string
+      - in: formData
+        name: genre
+        type: string
+      - in: formData
+        name: price
+        type: number
+      - in: formData
+        name: desc
+        type: string
+      - in: formData
+        name: condition
+        type: string
+      - in: formData
+        name: image
+        type: file
       responses:
         "Empty Error String":
           description: OK
@@ -178,7 +226,7 @@ paths:
       - Posts
       summary: Searches the database for posts given certain input
       operationId: dlsearchPost
-      description: To search for all the posts in the database make sure to set the "searchType" field to "ALL". Otherwise to search for posts set only one of these fields (username, name, or genre) to a value and what gets returned is an array of objects pertaining to that field.
+      description: Place search terms in their respective fields and get back an array that matches the search terms sent. To limit the amount of search results use minIndex and maxIndex to limit the resulting array. minIndex and maxIndex are not required to make the post request work.
       consumes:
       - application/json
       produces:
@@ -317,72 +365,59 @@ paths:
 
 parameters:
   id:
-    in: multipart/form-data
+    in: formData
     name: id
     type: string
-    example: 12121fafwfaf103012
   username:
-    in: multipart/form-data
+    in: formData
     name: username
     type: string
-    example: Fred121
   password:
-    in: multipart/form-data
+    in: formData
     name: password
     type: string
-    example: Secret121
   email:
-    in: multipart/form-data
+    in: formData
     name: email
     type: string
-    example: fred@doe.com
   phoneNumber:
-    in: multipart/form-data
+    in: formData
     name: phoneNumber
     type: string
-    example: 121345323
   aboutMe:
-    in: multipart/form-data
+    in: formData
     name: aboutMe
     type: string
-    example: About Me!
   firstName:
-    in: multipart/form-data
+    in: formData
     name: firstName
     type: string
-    example: Fred
   lastName:
-    in: multipart/form-data
+    in: formData
     name: lastName
     type: string
-    example: Doe
   name:
-    in: multipart/form-data
+    in: formData
     name: name
     type: string
-    example: Fred
   genre:
-    in: multipart/form-data
+    in: formData
     name: genre
     type: string
-    example: Cars
   price:
-    in: multipart/form-data
+    in: formData
     name: prices
-    type: Number
-    example: 22.50
+    type: number
   desc:
-    in: multipart/form-data
+    in: formData
     name: desc
     type: string
-    example: Description
   condition:
-    in: multipart/form-data
+    in: formData
     name: condition
     type: string
-    example: Good
   image:
-    in: multipart/form-data
+    in: formData
     name: image
     type: file
 
@@ -506,101 +541,6 @@ definitions:
       verifyNum:
         type: integer
         example: 458792
-  EditUser:
-    type: object
-    required:
-    - id
-    - New First Name
-    - New Last Name
-    - New Username
-    - New Password
-    - New Email
-    - New Phone Number
-    properties:
-      id:
-        type: string
-        example: 12121fafwfaf103012
-      newFirstName:
-        type: string
-        example: Fred
-      newLastName:
-        type: string
-        example: Doe
-      newUserName:
-        type: string
-        example: fred111
-      newPassword:
-        type: string
-        example: secret
-      newEmail:
-        type: string
-        example: fred@fred.com
-      newPhoneNumber:
-        type: string
-        example: 4079981234
-      newAboutMe:
-        type: string
-        example: Hi I am Fred
-  CreatePost:
-    type: object
-    required:
-    - Username
-    - Name
-    - Genre
-    - Price
-    - Description
-    - Condition
-    properties:
-      username:
-        type: string
-        example: Fred1245
-      name:
-        type: string
-        example: Fred
-      genre:
-        type: string
-        example: Cars
-      price:
-        type: number
-        example: 22.49
-      desc:
-        type: string
-        example: Description
-      condition:
-        type: string
-        example: Good as new
-  EditPost:
-    type: object
-    required:
-    - id
-    - User Name
-    - Name
-    - Genre
-    - Price
-    - Description
-    - Condition
-    properties:
-      id:
-        type: string
-        example: 12121fafwfaf103012
-      username:
-        type: string
-        example: Fred121
-      name:
-        type: string
-        example: Fred Doe
-      genre:
-        type: string
-        example: Cars
-      price:
-        type: number
-        example: 22.49
-      desc:
-        type: string
-        example: Description
-      condition:
-        type: string
-        example: Good as new
   InterestAddition:
     type: object
     required:
@@ -629,6 +569,12 @@ definitions:
       genre: 
         type: string
         example: Cars
+      minIndex:
+        type: integer
+        example: 0
+      maxIndex:
+        type: integer
+        example: 10
   SearchPostResponse:
     type: object
     properties:
