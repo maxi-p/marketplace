@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
-import Route, {useNavigate} from 'react-router-dom';
 import buildPath from '../logic/buildPath';
 
-const UploadForm = props => 
-{
-    const navigate = useNavigate();
-    console.log(props.loggedUser);
-    const [formData, setFormData] = useState(
-        // 'maxi-p' nick name is hardcoded
-        // TODO: once API adds a username attribute into return of login and register API, fix this
-        {username: 'maxi-p', name:'', genre:'', price:'', desc:'', condition:''}
-    );
+export const EditPost = props => {
+    const [formData, setFormData] = useState({...props.post, id:props.post._id});
     
     const handleChange = (event) => {
         const {id, value} = event.target;
@@ -24,24 +16,25 @@ const UploadForm = props =>
 
     const [message,setMessage] = useState('');
 
-    const doPost = async (event) =>
+    const doSave = async (event) =>
     {
         event.preventDefault();
         var json = JSON.stringify(formData);
 
         try
         {
-            const response = await fetch(buildPath('api/createPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
+            const response = await fetch(buildPath('api/editPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
 
             if( res.id <= 0 )
             {
-                setMessage('Post wasn\'t added');
+                setMessage('Post wasn\'t edited');
             }
             else
             {
                 setMessage('');
-                navigate('/'+res._id);
+                props.editHandler('saved')
+                props.saveHandler(formData)
             }
 
         }
@@ -51,11 +44,10 @@ const UploadForm = props =>
             return;
         }
     };
-
-    return(
-        <div id="loginDiv">
-            <form onSubmit={doPost}>
-                <span id="inner-title">Enter Your Post Details</span><br />
+  return (
+    <div id="editPostDiv">
+            <form onSubmit={doSave}>
+                <span id="inner-title">Edit Your Post</span><br />
                 <input 
                     type="text"
                     placeholder="name"
@@ -98,14 +90,20 @@ const UploadForm = props =>
                 <br/>
                 <input 
                     type="submit" 
-                    value = "Post"
-                    id="postButton" 
+                    value = "Save"
+                    id="saveButton" 
                     className="buttons"  
+                />
+                <input 
+                    type="button" 
+                    value = "Discard"
+                    id="saveButton" 
+                    name="discard"
+                    className="buttons"
+                    onClick={props.editHandler}  
                 />
             </form>
             <span id="postResult">{message}</span>
         </div>
-    );
+  )
 }
-
-export default UploadForm;

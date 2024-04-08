@@ -1,6 +1,6 @@
 import React from 'react'
 import PageTitle from '../components/PageTitle';
-import UploadForm from '../components/UploadForm';
+import UploadPost from '../components/UploadPost';
 
 
 const UploadPage = props => {
@@ -9,7 +9,7 @@ const UploadPage = props => {
             <PageTitle 
                 title="Post Page"
             />
-            <UploadForm loggedUser={props.loggedUser} loggedHandler={props.loggedHandler}/>
+            <UploadPost loggedUser={props.loggedUser} loggedHandler={props.loggedHandler}/>
         </div>
     );
 }

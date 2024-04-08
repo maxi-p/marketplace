@@ -30,11 +30,11 @@ function App()
           <Route path="/">
             <Route
               index
-              element={<HomePage/>}
+              element={<HomePage loggedUser={isLoggedIn}/>}
             />
             <Route
               path=":id"
-              element={<PostDetails/>}
+              element={<PostDetails loggedUser={isLoggedIn}/>}
             />
           </Route>
           <Route path="/home" index element={<Navigate to="/"/>}/>

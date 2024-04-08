@@ -39,7 +39,8 @@ const Login = props =>
             else
             {
                 console.log(res)
-                var user = {firstName:res.firstName, lastName:res.lastName, id:res.id}
+                //TODO: username. This should be coming with the request when the API is done
+                var user = {username: 'maxi-p', firstName:res.firstName, lastName:res.lastName, id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
                 props.loggedHandler(user);
                 setMessage('');

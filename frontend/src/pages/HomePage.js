@@ -4,7 +4,7 @@ import Products from '../components/Products';
 import SearchBar from '../components/SearchBar';
 import isLoggedIn from '../logic/isLoggedIn';
 
-const HomePage = () =>
+const HomePage = props =>
 {
     const [user] = useState(isLoggedIn());
     const [allPosts, setAllPosts] = useState([]);
@@ -22,7 +22,7 @@ const HomePage = () =>
         <div>
             <PageTitle title="Open Market"/>{user && <span>Logged in as: {user.firstName} {user.lastName}</span>}
             <SearchBar setLoading={loadingHandler} setAllPosts={postHandler}/>
-            <Products loading={loading} allPosts={allPosts}/>
+            <Products loggedUser={props.loggedUser} loading={loading} allPosts={allPosts} setAllPosts={postHandler}/>
         </div>
     );
 }
