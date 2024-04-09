@@ -9,7 +9,7 @@ const defaultProduct = {
     title: '???',
     seller: 'Seller?',
     condition: 'Condition?',
-    disc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ' +
+    desc: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ' +
     'incididunt ut labore et dolore magna aliqua. Sit amet justo donec enim diam vulputate ' +
     'ut pharetra sit. Nunc congue nisi vitae suscipit tellus mauris a diam. Fermentum posuere ' +
     'urna nec tincidunt praesent. Turpis nunc eget lorem dolor sed viverra ipsum nunc aliquet. ' +
@@ -21,7 +21,7 @@ const defaultProduct = {
 const ProductCard = ({product, onTouch, onSellerTouch}) => {
     product ??= defaultProduct;
     onTouch ??= () => {
-        Alert.alert('Card Touched', product.catagory + '\n' + product.disc);
+        Alert.alert('Card Touched', product.catagory + '\n' + product.dise);
     };
     onSellerTouch ??= () => {
         Alert.alert('Seller Touched', product.seller);
@@ -38,7 +38,14 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
 
                 {/* Image, Catagory and Seller */}
                 <View style={styles.imageBox} >
-                    <Image source={staticImage} style={styles.image}/>
+                    <Image
+                        source={
+                            product?.image?.image ?
+                                `data:${product.image.image.contentType};base64,${product.image.image.data}` : 
+                                staticImage
+                        }
+                        style={styles.image}
+                    />
                     <View style={styles.catagoryBox}>
                         <Text
                         style={[styles.text, styles.catagoryText]}
@@ -87,11 +94,11 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
                         </View>
                     </View>
                     {/* discription */}
-                    <View style={[styles.row, styles.discRow]}>
-                        <Text style={[styles.text, styles.discText]}
+                    <View style={[styles.row, styles.descRow]}>
+                        <Text style={[styles.text, styles.descText]}
                         numberOfLines={3}
                         >
-                            {product.disc ?? 'N/A'}
+                            {product.desc ?? 'N/A'}
                         </Text>
                     </View>
                 </View>
@@ -225,9 +232,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'dimgray',
     },
-    discRow: {
+    descRow: {
     },
-    discText: {
+    descText: {
     },
 });
 

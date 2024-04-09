@@ -8,13 +8,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import ImageViewModal from './pages/Modals/ImageViewModal';
 import SellProduct from './Components/SellProduct';
 
-
 const Stack = createNativeStackNavigator();
 const App2 = () => {
   Appearance.setColorScheme('light');
   return (
     <View>
-      <SellProduct />
+      <ProductList />
     </View>
   );
 };
