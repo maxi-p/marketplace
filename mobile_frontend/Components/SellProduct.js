@@ -5,12 +5,13 @@ import { useForm, SubmitHandeler, Controller } from 'react-hook-form';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {launchImageLibrary} from 'react-native-image-picker';
+import { buildPath } from '../logic/NetworkLogic';
 
 
 const SellProduct = () => {
     // Constants
     const tempImage = require('../Images/PlaceHolder.png');
-
+    const username = 'GzTest';
     // States
     const [ProductData, setProductData] = useState(
         {
@@ -40,10 +41,40 @@ const SellProduct = () => {
     });
 
     // Functions
-    const submitForm = (formData) =>
+    const submitForm = async (inData) =>
     {
-        Alert.alert('Submitted?');
-        console.log(formData);
+        const formData = new FormData();
+        console.log(inData);
+        formData.append('username', username);
+        formData.append('name', inData.title);
+        formData.append('genre', inData.genre);
+        formData.append('prices', inData.price);
+        formData.append('desc', inData.desc);
+        formData.append('photo', {
+            type: inData.photo.type,
+            uri:inData.photo.uri,
+            name:inData.photo.fileName});
+        console.log(formData.toString());
+        console.log('Uploading Files ...');
+
+        try {
+        let response = await fetch(buildPath('api/register'), {
+            method: 'POST',
+            body:formData,
+            headers:{'Content-Type': 'multipart/form-data'},
+        });
+        console.log(response.toString());
+        let result = await response.json();
+        console.log(result);
+        }
+        catch (e) {
+            console.error(e);
+            Alert.alert(e.toString());
+        }
+        finally {
+            console.log('done');
+        }
+
     };
     const getPhoto = () => {
         const options = {
@@ -203,7 +234,7 @@ const SellProduct = () => {
 
                             onBlur={onBlur}
                             onChangeText={onChange}
-                            value={value}
+                            value={value.toString()}
                             error={errors.price}
                         />);
                     }}
@@ -280,7 +311,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
         elevation: 10,
         flexDirection: 'column',
-        flex: 1,
     },
     imageContainer: {
         borderTopRightRadius: 20,
@@ -294,12 +324,11 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        opacity: 0.5
+        opacity: 0.5,
     },
     content: {},
     text: {},
     scroll: {
-        flex: 1,
     },
 
 
