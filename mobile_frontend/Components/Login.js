@@ -10,14 +10,14 @@ function buildPath(route) {
 }
 
 const Login = (props) => {
-  const {username: gUsername, setUsername:gSetUsername} = useContext(UserContext);
+  const {user, setUser} = useContext(UserContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
   const doLogin = async () => {
     try {
-      const obj = { username: username, password: password };
+      const obj = {username: username, password: password};
       const js = JSON.stringify(obj);
 
       const response = await fetch(buildPath('api/login'), {
@@ -29,16 +29,22 @@ const Login = (props) => {
       });
 
       const res = await response.json();
-
+      console.log(res);
       if (res.id <= 0) {
         setMessage('User/Password combination incorrect');
       } else {
-        gSetUsername(username);
+        setUser({
+          id: res.id,
+          firstName: res.firstName,
+          lastName: res.lastName,
+          username: username,
+          email: res.email,
+        });
         props.navigation?.navigate('Post-Login');
         // Navigate to Home screen
         setUsername(''); // Clear username
         setPassword(''); // Clear password
-        setMessage('') // Clear error message
+        setMessage(''); // Clear error message
       }
     } catch (error) {
       console.error(error);

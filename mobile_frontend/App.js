@@ -13,9 +13,9 @@ import { Appearance } from 'react-native';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const App = () => {
-  const [username, setUsername] = useState('N/A');
-  const UserC = {username, setUsername};
-  Appearance.setColorScheme('light');
+  const [user, setUser] = useState(null);
+  const UserC = {user, setUser};
+
   /* Old Render
   const renderScreen = () => {
     switch (currentScreen) {
