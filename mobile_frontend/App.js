@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
 import {UserContext} from './logic/UserContext';
-import { Appearance } from 'react-native';
+import {Appearance} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

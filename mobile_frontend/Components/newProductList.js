@@ -8,21 +8,43 @@ import SearchBar from './SearchBar';
 import { buildPath } from '../logic/NetworkLogic';
 
 // Test Settings
-const localTest = true;
+const localTest = false;
 const DelayTime = 3e3;
 const fetchAmount = 7;
 
 // Test Functions
-// function resolveAfterDelay(Delay, x) {
-//     return new Promise((resolve) => { 
-//         setTimeout(() => {
-//             resolve(x);
-//         }, Delay);
-//      });
-// }
+function resolveAfterDelay(Delay, x) {
+    return new Promise((resolve) => { 
+        setTimeout(() => {
+            resolve(x);
+        }, Delay);
+     });
+ }
+async function fetchDataTest(index) {
+    var retval = {data: [], endReached: false};
+    var datalen = testData.data.length;
+    if (index >= datalen) {
+        retval.endReached = true;
+        return retval;
+    }
+    retval.data = testData.data.slice(index, index + fetchAmount);
+    if (index + fetchAmount >= datalen) {
+        retval.endReached = true;
+    }
+    await resolveAfterDelay(DelayTime, null);
+    return retval;
+
+}
 
 // Functions
 async function fetchData(index, search = '') {
+    if (localTest) {
+        return fetchDataTest(index);
+    }
+    return fetchData_Real(index, search);
+}
+
+async function fetchData_Real(index, search = '') {
     var retval = {data: [], endReached: false, cnt: 0};
     var obj = {
         username: search,

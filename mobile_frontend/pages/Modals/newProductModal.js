@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import { UserContext } from '../../logic/UserContext';
+
 // Debugging settings
-const Debugging = true;
+const Debugging = false;
 const defaultProduct = {
     catagory: 'Catagory??????????????????????????????????',
     price: '$????????????',
@@ -55,9 +57,18 @@ function goToImage(navigation, image) {
 const ProductModal = ({route, navigation}) => {
     // Const Values
     const tempImage = require('../../Images/PlaceHolder.png');
-    const isSeller = true;
 
-    const product = route?.params.product ?? defaultProduct;
+    const {user, setUser} = useContext(UserContext);
+
+    const Reload = route?.params.relaod ?? false;
+    const inDataPart = route?.params.product ?? defaultProduct;
+    const inData = {
+            isSeller: Debugging ? true : (inDataPart.seller == user.username),
+            ...inDataPart,
+    };
+
+    const [product, setProduct] = useState(inData);
+
 
     // Events TODO
     const addIntrest = (event) => {
@@ -80,9 +91,20 @@ const ProductModal = ({route, navigation}) => {
         <View style={styles.container}>
             {/* Image View */}
             <Pressable style={styles.imageBox}
-             onPress={() => goToImage(navigation, tempImage)}
+             onPress={() => goToImage(navigation,
+                product?.image?.image ?
+                    `data:${product.image.image.contentType};base64,${product.image.image.data}` :
+                    tempImage
+             )}
             >
-                <Image source={tempImage} style={styles.image} />
+                <Image
+                 source={
+                    product?.image?.image ?
+                        `data:${product.image.image.contentType};base64,${product.image.image.data}` :
+                        tempImage
+                 }
+                 style={styles.image}
+                />
             </Pressable>
 
             {/* Back Button */}
@@ -93,7 +115,7 @@ const ProductModal = ({route, navigation}) => {
             </Pressable>
 
             {/* Edit Item */}
-            {isSeller && (
+            {product?.isSeller && (
                 <Pressable style={styles.editBox}
                 onPress={editItem}
                 >
@@ -163,8 +185,8 @@ const ProductModal = ({route, navigation}) => {
             <View style={[styles.buttonRow]}>
                 <View style={styles.button}>
                 <Button
-                    onPress={isSeller ? getIntrest : addIntrest}
-                    title={isSeller ? 'Get Intrest' : "I'm Interested"}
+                    onPress={product?.isSeller ? getIntrest : addIntrest}
+                    title={product?.isSeller ? 'Get Intrest' : "I'm Interested"}
                     color={'purple'}
                 />
                 </View>
