@@ -8,11 +8,12 @@ function buildPath(route) {
 }
 
 const Login = (props) => {
-  const { setId, setUsername, setFirstName, setLastName, setEmail, setPhoneNumber, setAboutMe } = useContext(UserContext);
   const [username, setUsernameState] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPasswordState] = useState('');
   const [message, setMessage] = useState('');
-
+  const { setUsername } = useContext(UserContext); 
+  console.log("Username in login page before update:", username);
+  
   const doLogin = async () => {
     try {
       const obj = { username, password };
@@ -31,20 +32,15 @@ const Login = (props) => {
       if (res.id <= 0) {
         setMessage('User/Password combination incorrect');
       } else {
-        // Update user context with user information
-        setId(res.id);
+        // Set username in context
         setUsername(res.username);
-        setFirstName(res.firstName);
-        setLastName(res.lastName);
-        setEmail(res.email);
-        setPhoneNumber(res.phoneNumber);
-        setAboutMe(res.aboutMe);
-
+        
         // Navigate to Home screen
-        props.navigation?.navigate('Post-Login');
+        console.log("Username in login page:", username);
+        props.navigation?.navigate('Post-Login', username);
         // Clear form fields and error message
         setUsernameState('');
-        setPassword('');
+        setPasswordState('');
         setMessage('');
       }
     } catch (error) {
@@ -71,7 +67,7 @@ const Login = (props) => {
         placeholder="Password"
         secureTextEntry
         value={password}
-        onChangeText={setPassword}
+        onChangeText={setPasswordState}
       />
       <TouchableOpacity style={styles.button} onPress={doLogin}>
         <Text style={styles.buttonText}>Login</Text>

@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 const HomePage = (props) => {
   const {username, setUsername} = useContext( UserContext );
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  console.log("Username in HomePage: ",username);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);

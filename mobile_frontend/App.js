@@ -1,51 +1,21 @@
 
-import React, { useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { UserContext } from './logic/UserContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
 import SettingsPage from './pages/SettingsPage';
-import { UserContext } from './logic/UserContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
-  const [user, setUser] = useState({
-    id: null,
-    username: null,
-    firstName: null,
-    lastName: null,
-    email: null,
-    phoneNumber: null,
-    aboutMe: null,
-  });
-
-  const setId = (id) => setUser((prevUser) => ({ ...prevUser, id }));
-  const setUsername = (username) => setUser((prevUser) => ({ ...prevUser, username }));
-  const setFirstName = (firstName) => setUser((prevUser) => ({ ...prevUser, firstName }));
-  const setLastName = (lastName) => setUser((prevUser) => ({ ...prevUser, lastName }));
-  const setEmail = (email) => setUser((prevUser) => ({ ...prevUser, email }));
-  const setPhoneNumber = (phoneNumber) => setUser((prevUser) => ({ ...prevUser, phoneNumber }));
-  const setAboutMe = (aboutMe) => setUser((prevUser) => ({ ...prevUser, aboutMe }));
-
-  // Define other setter functions here
-
-  const userContextValue = {
-    user,
-    setId,
-    setUsername,
-    setFirstName,
-    setLastName,
-    setEmail,
-    setPhoneNumber,
-    setAboutMe
-    // Include other setter functions here
-  };
+  const [username, setUsername] = useState('');
 
   /* Old Render
   const renderScreen = () => {
@@ -60,23 +30,22 @@ const App = () => {
     }
   };
 
-
   return renderScreen();
    */
 // TODO: Secure Post-Login Pages
 // TODO: Add Keyring and state to store credentials
   return (
     <NavigationContainer>
-    <UserContext.Provider value={userContextValue}>
-      <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="Register" component={RegisterPage} />
-        <Stack.Screen name="Settings" component={SettingsPage} />
-        <Stack.Screen name="Post-Login" component={PostLogin}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </UserContext.Provider>
+      <UserContext.Provider value={{ username, setUsername }}>
+        <Stack.Navigator initialRouteName='Login'>
+          <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="Register" component={RegisterPage} />
+          <Stack.Screen name="Settings" component={SettingsPage} />
+          <Stack.Screen name="Post-Login" component={PostLogin}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </UserContext.Provider>
     </NavigationContainer>
   );
 };
@@ -90,5 +59,7 @@ const PostLogin = () => {
       <Tab.Screen name="Browse" component={BrowsePage} />
     </Tab.Navigator>
   );
-}
+};
+
+
 export default App;
