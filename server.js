@@ -43,6 +43,7 @@ app.use((req, res, next) =>
 // Image Storage
 const multer = require('multer');
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -326,7 +327,7 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
         newImage = new imageModel({
             name: req.file.filename,
             image: {
-                data: req.file.filename,
+                data: fs.readFileSync(path.join(req.file.path)),
                 contentType: req.file.mimetype
             }
         });
@@ -366,12 +367,12 @@ app.post('/api/createPost', upload.single('image'), async function(req, res, nex
     let usersInterested = [];
     var newImage = null;
 
-    if (req.file !== undefined) // If we have an image process it
+    if (req.file !== undefined)
     {
         newImage = new imageModel({
             name: req.file.filename,
             image: {
-                data: req.file.filename,
+                data: fs.readFileSync(path.join(req.file.path)),
                 contentType: req.file.mimetype
             }
         });
@@ -418,7 +419,7 @@ app.post('/api/editPost', upload.single('image'), async(req, res, next) => {
         newImage = new imageModel({
             name: req.file.filename,
             image: {
-                data: req.file.filename,
+                data: fs.readFileSync(path.join(req.file.path)),
                 contentType: req.file.mimetype
             }
         });
