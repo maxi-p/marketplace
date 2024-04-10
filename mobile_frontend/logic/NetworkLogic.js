@@ -31,6 +31,6 @@ export async function getProductFromID(id) {
     console.error(e);
   } finally {
     console.log('Finished Getting Product From ID');
-    return Retval;
+    console.log(JSON.stringify(Retval, null, 4));
   }
 }

@@ -3,6 +3,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import { UserContext } from '../../logic/UserContext';
+import { getProductFromID } from '../../logic/NetworkLogic';
 
 // Debugging settings
 const Debugging = false;
@@ -57,10 +58,11 @@ function goToImage(navigation, image) {
 const ProductModal = ({route, navigation}) => {
     // Const Values
     const tempImage = require('../../Images/PlaceHolder.png');
+    const updateMode = null;
 
     const {user, setUser} = useContext(UserContext);
 
-    const Reload = route?.params.relaod ?? false;
+    const Reload = route?.params.reload ?? false;
     const inDataPart = route?.params.product ?? defaultProduct;
     const inData = {
             isSeller: Debugging ? true : (inDataPart.seller == user.username),
@@ -80,8 +82,9 @@ const ProductModal = ({route, navigation}) => {
         console.log('TODO: Get Intrest');
     };
     const editItem = (event) => {
-        Alert.alert('Edit Item', 'TODO');
-        console.log('TODO: edit Intrest');
+        navigation.navigate('SellUpdateModal', {
+            product: product,
+        });
     };
 
     if (!product) {
@@ -93,14 +96,14 @@ const ProductModal = ({route, navigation}) => {
             <Pressable style={styles.imageBox}
              onPress={() => goToImage(navigation,
                 product?.image?.image ?
-                    `data:${product.image.image.contentType};base64,${product.image.image.data}` :
+                    {uri: `data:${product.image.image.contentType};base64,${product.image.image.data}` } :
                     tempImage
              )}
             >
                 <Image
                  source={
                     product?.image?.image ?
-                        `data:${product.image.image.contentType};base64,${product.image.image.data}` :
+                    {uri: `data:${product.image.image.contentType};base64,${product.image.image.data}` } :
                         tempImage
                  }
                  style={styles.image}

@@ -71,7 +71,7 @@ async function fetchData_Real(index, search = '') {
                 _id: element._id,
                 seller: element.username,
                 title: element.name,
-                catagory: element.genere,
+                catagory: element.genre,
                 price: element.price,
                 desc: element.desc,
                 condition: element.condition,
@@ -130,14 +130,14 @@ function ProductList(props) {
     // Render Functions
     const renderItem = ({item}) => {
         var onTouchEvent = () => OpenProduct(item);
-        var onSellerTouchEvent=null;
+        var onSellerTouchEvent = null;
         if (props.onTouch)
         {
-            onTouchEvent = () => {props.onTouch(item)};
+            onTouchEvent = () => {props.onTouch(item);};
         }
         if (props.onSellerTouch)
         {
-            onSellerTouchEvent = () => {props.onTouch(item)};
+            onSellerTouchEvent = () => {props.onTouch(item);};
         }
         return (
             <ProductCard product={item}

@@ -41,7 +41,7 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
                     <Image
                         source={
                             product?.image?.image ?
-                                `data:${product.image.image.contentType};base64,${product.image.image.data}` : 
+                                {uri: `data:${product.image.image.contentType};base64,${product.image.image.data}`} :
                                 staticImage
                         }
                         style={styles.image}

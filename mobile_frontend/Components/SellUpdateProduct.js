@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useForm, SubmitHandeler, Controller } from 'react-hook-form';
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -8,57 +8,72 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import { buildPath } from '../logic/NetworkLogic';
 
 
-const SellProduct = () => {
+const SellUpdateProduct = ({product, route, navigation}) => {
     // Constants
     const tempImage = require('../Images/PlaceHolder.png');
     const username = 'GzTest';
+
+    const uProduct = product ?? route?.params?.product ?? null;
+
     // States
-    const [ProductData, setProductData] = useState(
-        {
-            id: null,
-            title: '',
-            genere: '',
-            condition: '',
-            price: 0,
-            desc: '',
-    });
-    const [ImageData, setImageData] = useState(null);
     // Form
     const {
         handleSubmit,
         formState: {errors},
         control,
+        setValue,
     } = useForm({
         defaultValues: {
-            id: null,
             title: '',
-            genere: '',
+            genre: '',
             condition: '',
             price: 0.0,
-            disc: '',
+            desc: '',
             photo: null,
         },
     });
 
+    // Effects
+    // Prefill Data if editing Post
+    useEffect( () => {
+        if (uProduct) {
+            setValue('title', uProduct.title);
+            setValue('genere', uProduct.catagory);
+            setValue('condition', uProduct.condition);
+            setValue('price', uProduct.price);
+            setValue('desc', uProduct.desc);
+            if (uProduct.image) {
+                setValue('photo', {
+                    type: uProduct.image.image.contentType,
+                    uri: `data:${uProduct.image.image.contentType};base64,${uProduct.image.image.data}`,
+                    name: uProduct.image.name,
+                });
+            }
+        }
+    }, [uProduct, setValue]);
+
     // Functions
-    const submitForm = async (inData) =>
+    const createPost = async (inData) =>
     {
         const formData = new FormData();
         console.log(inData);
         formData.append('username', username);
         formData.append('name', inData.title);
         formData.append('genre', inData.genre);
-        formData.append('prices', inData.price);
+        formData.append('price', inData.price);
         formData.append('desc', inData.desc);
-        formData.append('photo', {
+        formData.append('condition', inData.condition);
+        formData.append('image', inData.photo ? {
             type: inData.photo.type,
             uri:inData.photo.uri,
-            name:inData.photo.fileName});
+            name:inData.photo.fileName} :
+            null
+        );
         console.log(formData.toString());
         console.log('Uploading Files ...');
 
         try {
-        let response = await fetch(buildPath('api/register'), {
+        let response = await fetch(buildPath('api/createPost'), {
             method: 'POST',
             body:formData,
             headers:{'Content-Type': 'multipart/form-data'},
@@ -76,6 +91,44 @@ const SellProduct = () => {
         }
 
     };
+    const updatePost = async (inData) =>
+    {
+        const formData = new FormData();
+        console.log(inData);
+        formData.append('id', uProduct._id);
+        formData.append('username', username);
+        formData.append('name', inData.title);
+        formData.append('genre', inData.genre);
+        formData.append('price', inData.price);
+        formData.append('desc', inData.desc);
+        formData.append('condition', inData.condition);
+        formData.append('image', {
+            type: inData.photo.type,
+            uri:inData.photo.uri,
+            name:inData.photo.fileName});
+        console.log(formData.toString());
+        console.log('Uploading Files ...');
+
+        try {
+        let response = await fetch(buildPath('api/editPost'), {
+            method: 'POST',
+            body:formData,
+            headers:{'Content-Type': 'multipart/form-data'},
+        });
+        console.log(response.toString());
+        let result = await response.json();
+        console.log(result);
+        }
+        catch (e) {
+            console.error(e);
+            Alert.alert(e.toString());
+        }
+        finally {
+            console.log('done');
+        }
+
+    };
+
     const getPhoto = () => {
         const options = {
             mediaType: 'photo',
@@ -97,7 +150,7 @@ const SellProduct = () => {
         });
     };
 
-    function goBack(navigation) {
+    function goBack() {
         let active = 1;
         if (!navigation || (!active) ) {
             Alert.alert('Backbutton Pressed');
@@ -174,9 +227,9 @@ const SellProduct = () => {
                 </View>
             )}
             <ScrollView style={styles.scroll}>
-                {/* Genere */}
+                {/* Genee */}
                 <Controller
-                    name="genere"
+                    name="genre"
                     control={control}
                     rules={{
                         required: 'This Value is Required',
@@ -185,7 +238,7 @@ const SellProduct = () => {
                     {
                         return (
                         <RegInput
-                            header="Genere"
+                            header="Genre"
                             placeholder="HERE"
 
                             onBlur={onBlur}
@@ -242,7 +295,7 @@ const SellProduct = () => {
 
                 {/* Description */}
                 <Controller
-                    name="disc"
+                    name="desc"
                     control={control}
                     rules={{
                         required: 'This Value is Required',
@@ -263,7 +316,10 @@ const SellProduct = () => {
                 />
             </ScrollView>
             <View style={styles.submitButton}>
-                <Button title="Submit" onPress={handleSubmit(submitForm)} />
+                <Button
+                    title={uProduct ? 'Update Product' : 'Create Product'}
+                    onPress={handleSubmit(uProduct ? updatePost : createPost)}
+                />
             </View>
         </View>
     );
@@ -367,4 +423,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SellProduct;
+export default SellUpdateProduct;
