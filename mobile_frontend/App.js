@@ -1,21 +1,21 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { UserContext } from './logic/UserContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
+import { UserContext } from './logic/UserContext';
 import SettingsPage from './pages/SettingsPage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
 const App = () => {
-  const [username, setUsername] = useState('');
+  const [user, setUser] = useState(null);
+  const UserC = {user, setUser};
 
   /* Old Render
   const renderScreen = () => {
@@ -30,22 +30,23 @@ const App = () => {
     }
   };
 
+
   return renderScreen();
    */
 // TODO: Secure Post-Login Pages
 // TODO: Add Keyring and state to store credentials
   return (
     <NavigationContainer>
-      <UserContext.Provider value={{ username, setUsername }}>
-        <Stack.Navigator initialRouteName='Login'>
-          <Stack.Screen name="Login" component={LoginPage} />
-          <Stack.Screen name="Register" component={RegisterPage} />
-          <Stack.Screen name="Settings" component={SettingsPage} />
-          <Stack.Screen name="Post-Login" component={PostLogin}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </UserContext.Provider>
+    <UserContext.Provider value={UserC}>
+      <Stack.Navigator initialRouteName='Login'>
+        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="Register" component={RegisterPage} />
+        <Stack.Screen name="Post-Login" component={PostLogin}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="Settings" component={SettingsPage} />
+      </Stack.Navigator>
+    </UserContext.Provider>
     </NavigationContainer>
   );
 };
@@ -59,7 +60,5 @@ const PostLogin = () => {
       <Tab.Screen name="Browse" component={BrowsePage} />
     </Tab.Navigator>
   );
-};
-
-
+}
 export default App;

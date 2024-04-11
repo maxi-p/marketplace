@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
-import { UserContext } from '../logic/UserContext';
+import HomePage from '../pages/HomePage';
+import {UserContext} from '../logic/UserContext';
+
 
 function buildPath(route) {
   const app_name = 'cop4331-marketplace-98e1376d9db6';
@@ -8,15 +10,14 @@ function buildPath(route) {
 }
 
 const Login = (props) => {
-  const [username, setUsernameState] = useState('');
-  const [password, setPasswordState] = useState('');
+  const {user, setUser} = useContext(UserContext);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const { setUsername } = useContext(UserContext); 
-  console.log("Username in login page before update:", username);
-  
+
   const doLogin = async () => {
     try {
-      const obj = { username, password };
+      const obj = {username: username, password: password};
       const js = JSON.stringify(obj);
 
       const response = await fetch(buildPath('api/login'), {
@@ -28,20 +29,24 @@ const Login = (props) => {
       });
 
       const res = await response.json();
-
+      console.log(res);
       if (res.id <= 0) {
         setMessage('User/Password combination incorrect');
       } else {
-        // Set username in context
-        setUsername(res.username);
-        
+        setUser({
+          id: res.id,
+          firstName: res.firstName,
+          lastName: res.lastName,
+          username: username,
+          email: res.email,
+          phoneNumber : '',
+          aboutMe: '',
+        });
+        props.navigation?.navigate('Post-Login');
         // Navigate to Home screen
-        console.log("Username in login page:", username);
-        props.navigation?.navigate('Post-Login', username);
-        // Clear form fields and error message
-        setUsernameState('');
-        setPasswordState('');
-        setMessage('');
+        setUsername(''); // Clear username
+        setPassword(''); // Clear password
+        setMessage(''); // Clear error message
       }
     } catch (error) {
       console.error(error);
@@ -50,9 +55,18 @@ const Login = (props) => {
   };
 
   const registerRedirect = () => {
+    // Handle redirection to register screen here
+    console.log('Redirecting to register screen');
     props.navigation.navigate('Register');
   };
 
+  const handleLogout = () => {
+    setUsername(''); // Clear username
+    setPassword(''); // Clear password
+    setMessage('') // Clear error message
+  };
+
+  // Render the login page if isLoggedIn is false
   return (
     <View style={styles.container}>
       <Text style={styles.title}>LOGIN</Text>
@@ -60,14 +74,14 @@ const Login = (props) => {
         style={styles.input}
         placeholder="Username"
         value={username}
-        onChangeText={setUsernameState}
+        onChangeText={setUsername}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry
         value={password}
-        onChangeText={setPasswordState}
+        onChangeText={setPassword}
       />
       <TouchableOpacity style={styles.button} onPress={doLogin}>
         <Text style={styles.buttonText}>Login</Text>
@@ -83,16 +97,16 @@ const Login = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'top',
     alignItems: 'center',
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "black",
     marginTop: 50,
     marginBottom: 150,
-    marginVertical: 0,
+    marginVertical: 0, 
   },
   input: {
     width: '80%',
@@ -102,7 +116,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 10,
     paddingLeft: 10,
-    paddingRight: 60,
+    paddingRight: 60, 
   },
   button: {
     width: '80%',

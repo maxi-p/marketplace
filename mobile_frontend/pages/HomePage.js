@@ -3,9 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, BackHandler, Touchable
 import { UserContext } from '../logic/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
 const HomePage = (props) => {
-  const {username, setUsername} = useContext( UserContext );
+  const { user } = useContext( UserContext );
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  console.log("Username in HomePage: ",username);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -13,7 +12,7 @@ const HomePage = (props) => {
 
   const handleLogout = () => {
     // Handle logout logic here
-    setUsername(null);
+    // setUsername(null);
     props.navigation.navigate('Login');
   };
 
@@ -42,7 +41,7 @@ const HomePage = (props) => {
       <View style={styles.banner}>
         <View style={styles.usernameContainer}>
         <TouchableOpacity onPress={toggleDropdown}>
-          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.username}>{user.username}</Text>
         </TouchableOpacity>
 
         <Modal
