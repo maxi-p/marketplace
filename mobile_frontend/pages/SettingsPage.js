@@ -1,9 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, ScrollView } from 'react-native';
+import { useForm, Controller } from "react-hook-form";
 import { UserContext } from '../logic/UserContext';
+import R_Validation_Data from "../logic/RegisterValidation";
 
 const SettingsPage = () => {
   const { user } = useContext(UserContext);
+  const [curUsername, setCurUsername] = useState('');
+  const [curPassword, setCurPassword] = useState('');
+  const [curFirstName, setCurFirstName] = useState('');
+  const [curLastName, setCurLastName] = useState('');
+  const [curEmail, setCurEmail] = useState('');
+  const [curPhoneNumber, setCurPhoneNumber] = useState('');
+  const [curAboutMe, setCurAboutMe] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newFirstName, setNewFirstName] = useState('');
@@ -11,6 +20,8 @@ const SettingsPage = () => {
   const [newEmail, setNewEmail] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [newAboutMe, setNewAboutMe] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
 
   useEffect(() => {
     getUser();
@@ -24,7 +35,7 @@ const SettingsPage = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ userId: user.id })
-        
+
       });
 
       const userData = await response.json();
@@ -33,13 +44,28 @@ const SettingsPage = () => {
         throw new Error(userData.error);
       } else {
         // Update state with user data
-        setNewUsername(userData.username || '');
-        setNewPassword(userData.password || '');
-        setNewFirstName(userData.firstName || '');
-        setNewLastName(userData.lastName || '');
-        setNewEmail(userData.email || '');
-        setNewPhoneNumber(userData.phoneNumber || '');
-        setNewAboutMe(userData.aboutMe || '');
+        setCurUsername(userData.user.username || '');
+        setCurPassword(userData.user.password || '');
+        setCurFirstName(userData.user.firstname || '');
+        setCurLastName(userData.user.lastname || '');
+        setCurEmail(userData.user.email || '');
+        setCurPhoneNumber(userData.user.phoneNumber || '');
+        setCurAboutMe(userData.user.aboutme || '');
+        setNewUsername(userData.user.username || '');
+        setNewPassword(userData.user.password || '');
+        setNewFirstName(userData.user.firstname || '');
+        setNewLastName(userData.user.lastname || '');
+        setNewEmail(userData.user.email || '');
+        setNewPhoneNumber(userData.user.phoneNumber || '');
+        setNewAboutMe(userData.user.aboutme || '');
+        console.log(user.id);
+        console.log("userData: ", userData.user.username);
+        console.log("userData: ", userData.user.password);
+        console.log("userData: ", userData.user.firstname);
+        console.log("userData: ", userData.user.lastname);
+        console.log("userData: ", userData.user.email);
+        console.log("userData: ", userData.user.phoneNumber);
+        console.log("userData: ", userData.user.aboutme);
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
@@ -47,26 +73,36 @@ const SettingsPage = () => {
     }
   };
 
-  console.log("old username: ", user.username)
-  console.log("old password: ", user.password)
-  console.log("old first name: ", user.firstName)
-  console.log("old last name: ", user.lastName)
-  console.log("old email: ", user.email)
-  console.log("old phone number: ", user.phoneNumber)
-  console.log("old about me: ", user.aboutMe)
+  console.log("curUsername: ", curUsername);
+  console.log("curPassword: ", curPassword);
+  console.log("curFirstName: ", curFirstName);
+  console.log("curLastName: ", curLastName);
+  console.log("curEmail: ", curEmail);
+  console.log("curPhoneNumber: ", curPhoneNumber);
+  console.log("curAboutMe: ", curAboutMe);
 
-  console.log("new username: ", newUsername)
-  console.log("new password: ", newPassword)
-  console.log("new first name: ", newFirstName)
-  console.log("new last name: ", newLastName)
-  console.log("new email: ", newEmail)
-  console.log("new phone number: ", newPhoneNumber)
-  console.log("new about me: ", newAboutMe)
-
+  console.log("newUsername: ", newUsername);
+  console.log("newPassword: ", newPassword);
+  console.log("newFirstName: ", newFirstName);
+  console.log("newLastName: ", newLastName);
+  console.log("newEmail: ", newEmail);
+  console.log("newPhoneNumber: ", newPhoneNumber);
+  console.log("newAboutMe: ", newAboutMe);
 
   const editUser = async () => {
+    if (newPassword != '' && !validatePassword(newPassword)) {
+      setPasswordError('Password must be 8-32 characters long, with at least 1 digit, 1 letter, and 1 special character');
+      return;
+    }
+
+    if (!validateUsername(newUsername)) {
+      setUsernameError("Username must be 4-18 characters (Alphanumeric, -, _) and start with a character");
+      return;
+    }
+
     try {
       const formData = new FormData();
+
       formData.append('id', user.id);
       formData.append('firstName', newFirstName);
       formData.append('lastName', newLastName);
@@ -87,6 +123,8 @@ const SettingsPage = () => {
       if (responseData.error) {
         throw new Error(responseData.error);
       } else {
+        setPasswordError('');
+        console.log("User Info Updated Successfully");
         return responseData;
       }
     } catch (error) {
@@ -94,7 +132,14 @@ const SettingsPage = () => {
       throw new Error('Failed to edit user. Please try again.');
     }
   };
-  
+
+  const validatePassword = (password) => {
+    return R_Validation_Data.passwordRegex.test(password);
+  };
+
+  const validateUsername = (username) => {
+    return R_Validation_Data.userNameRegex.test(username);
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -103,49 +148,52 @@ const SettingsPage = () => {
         <Text style={styles.labelText}>Username</Text>
         <TextInput
           style={styles.input}
-          placeholder={user.username}
+          placeholder={curUsername}
           value={newUsername}
           onChangeText={setNewUsername}
         />
+        {usernameError ? <Text style={styles.errorText}>{usernameError}</Text> : null}
         <Text style={styles.labelText}>Password</Text>
         <TextInput
           style={styles.input}
-          placeholder="password"
+          placeholder=""
           value={newPassword}
           onChangeText={setNewPassword}
+          secureTextEntry
         />
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
         <Text style={styles.labelText}>First Name</Text>
         <TextInput
           style={styles.input}
-          placeholder={user.firstName}
+          placeholder={curFirstName}
           value={newFirstName}
           onChangeText={setNewFirstName}
         />
         <Text style={styles.labelText}>Last Name</Text>
         <TextInput
           style={styles.input}
-          placeholder={user.lastName}
+          placeholder={curLastName}
           value={newLastName}
           onChangeText={setNewLastName}
         />
         <Text style={styles.labelText}>Email</Text>
         <TextInput
           style={styles.input}
-          placeholder={user.email}
+          placeholder={curEmail}
           value={newEmail}
           onChangeText={setNewEmail}
         />
         <Text style={styles.labelText}>Phone Number</Text>
         <TextInput
           style={styles.input}
-          placeholder={user.phoneNumber}
+          placeholder={curPhoneNumber}
           value={newPhoneNumber}
           onChangeText={setNewPhoneNumber}
         />
         <Text style={styles.labelText}>About Me</Text>
         <TextInput
           style={styles.input}
-          placeholder={user.aboutMe}
+          placeholder={curAboutMe}
           value={newAboutMe}
           onChangeText={setNewAboutMe}
         />
@@ -198,6 +246,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+  },
+  errorText: {
+    color: 'red',
+    alignSelf: 'flex-start',
   },
 });
 

@@ -29,7 +29,6 @@ const Login = (props) => {
       });
 
       const res = await response.json();
-      console.log(res);
       if (res.id <= 0) {
         setMessage('User/Password combination incorrect');
       } else {
@@ -39,8 +38,8 @@ const Login = (props) => {
           lastName: res.lastName,
           username: username,
           email: res.email,
-          phoneNumber : '',
-          aboutMe: '',
+          phoneNumber : res.phoneNumber,
+          aboutMe: res.aboutMe,
         });
         props.navigation?.navigate('Post-Login');
         // Navigate to Home screen
