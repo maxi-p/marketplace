@@ -43,6 +43,7 @@ app.use((req, res, next) =>
 // Image Storage
 const multer = require('multer');
 const mongoose = require('mongoose');
+const fs = require('fs');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -73,80 +74,70 @@ const imageSchema = new mongoose.Schema({ // Defines image objects
 });
 const imageModel = mongoose.model("imagemodel", imageSchema);
 
-app.post('/api/searchPost', async (req, res, next) => 
+app.post('/api/searchPost', async (req, res, next) =>
 {
-    // incoming: username, name, genre, searchType
+    // incoming: username, name, genre, minIndex (optional), maxIndex (optional)
     // outgoing: results[], error
     var error = '';
-    var _ret = [];
+    var searches = [];
 
-    const { username, name, genre, searchType } = req.body;
-    const fields = [username, name, genre, searchType];
+    var userResults = [];
+    var nameResults = [];
+    var genreResults = [];
+
+    const {username, name, genre} = req.body;
 
     const db = client.db("oMarketDB");
 
     try{
-        let numFieds = 0;
-        for (let i = 0; i < 3; i++)
+        var usernameTrim = username.trim();
+        var nameTrim = name.trim();
+        var genreTrim = genre.trim();
+
+        if (username === '' && name === '' && genre === '')
         {
-            if (fields[i] != "")
-                numFieds++;
+            searches = await db.collection('Posts').find({}).toArray();
         }
+        else
+        {
+            if (username !== '')
+                userResults = await db.collection('Posts').find({username: {$regex: usernameTrim + '.*', $options: 'i'}}).toArray();
 
-        if (numFieds > 1)
-            throw new Error('Too many used fields');
-        
-        //since the other fields are empty if your searching by a specific field (i.e. searching by username) you only need to check if the searchType is ALL to indicate
-        //if you need to search any of the fields or just return all the posts.
+            if (name !== '')
+                nameResults = await db.collection('Posts').find({name: {$regex: nameTrim + '.*', $options: 'i'}}).toArray();
 
-        //the search results returns the post object instead of the post object id. Requested by Maksim.
+            if (genre !== '')
+                genreResults = await db.collection('Posts').find({genre: {$regex: genreTrim + '.*', $options: 'i'}}).toArray();
 
-        if (searchType != 'ALL'){
-            if (username != "")
-            {
-
-                var _search = username.trim()
-                const results = await db.collection('Posts').find({"username":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-                _ret = results;
-            }
-
-            if (name != "" )
-            {
-                var _search = name.trim()
-                const results = await db.collection('Posts').find({"name":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-                _ret = results;
-            }
-                
-
-            if (genre != "" )
-            {
-                var _search = genre.trim()
-                const results = await db.collection('Posts').find({"genre":{$regex:_search+'.*', $options:'i'}}).toArray();
-
-                _ret = results;
-            }
+            searches = [...userResults, ...nameResults, ...genreResults];
         }
-
-        else if(searchType == 'ALL'){
-            //returns all posts.
-            const results = await db.collection('Posts').find({}).toArray();
-            _ret = results;
-        }
-
     }
     catch(e)
     {
         error = e.toString();
     }
-    
 
-    var ret = {results:_ret, error:error};
+    var paginatedSearches = [];
+
+    if ((req.body.minIndex !== undefined && req.body.minIndex !== '') && (req.body.maxIndex !== undefined && req.body.maxIndex !== ''))
+    {
+        if (req.body.minIndex <= searches.length - 1)
+        {
+            let max = (req.body.maxIndex > searches.length - 1) ? searches.length - 1 : req.body.maxIndex;
+            for(var i = req.body.minIndex; i <= max; i++)
+            {
+                paginatedSearches.push(searches[i]);
+            }
+        }
+    }
+    else
+        paginatedSearches = searches
+
+    var ret = {results: paginatedSearches, error:error};
     res.status(200).json(ret);
 });
 
-app.post('/api/login', async (req, res, next) => 
+app.post('/api/login', async (req, res, next) =>
 {
     // incoming: username, password
     // outgoing: userInfo, error
@@ -174,11 +165,11 @@ app.post('/api/login', async (req, res, next) =>
         err = 'No Records Found';
     }
 
-    var ret = { id:id, firstName:fn, lastName:ln, email: email, error:err};
+    var ret = { id:id, username: username, firstName:fn, lastName:ln, email: email, error:err};
     res.status(200).json(ret);
 });
 
-app.post('/api/register', async (req, res, next) => 
+app.post('/api/register', async (req, res, next) =>
 {
     // incoming: firstname, lastname, username, password, email, phoneNumber
     // outgoing: error, newUserId
@@ -192,6 +183,7 @@ app.post('/api/register', async (req, res, next) =>
     let aboutMe = '';
     let newId = -1;
     let interested = [];
+    let profilePic = null;
 
 
     const currentTime = Date.now();
@@ -199,13 +191,14 @@ app.post('/api/register', async (req, res, next) =>
     const TTL = oneHour + currentTime;
 
 
-    const newRegister = {firstname: firstname, 
-                         lastname: lastname, 
-                         username: username, 
-                         password: password.hashCode(), 
-                         email: email, 
-                         phoneNumber: phoneNumber, 
-                         aboutme: aboutMe, 
+    const newRegister = {firstname: firstname,
+                         lastname: lastname,
+                         username: username,
+                         password: password.hashCode(),
+                         email: email,
+                         phoneNumber: phoneNumber,
+                         aboutme: aboutMe,
+                         profilePic: profilePic,
                          verifyNum: verifyNum,
                          ttl: TTL,
                          interestedIn: interested};
@@ -228,7 +221,7 @@ app.post('/api/register', async (req, res, next) =>
 
     verifyEmail(email, verifyNum);
 
-    var ret = { _id: newId, verifyNum: verifyNum, error: error};
+    var ret = { _id: newId, username: username, verifyNum: verifyNum, error: error};
     res.status(200).json(ret);
 });
 
@@ -258,7 +251,7 @@ async function verifyEmail(email, verifyNum)
             subject: 'Verification Code',
             text: message
         };
-        
+
         const result = await transport.sendMail(mailOptions);
     }
     catch(e)
@@ -272,7 +265,7 @@ app.post('/api/emailVerify', async (req, res, next) =>
 {
     // incoming: id, verifyNum
     // outgoing: id, error
-    
+
     const {id, verifyNum} = req.body;
     const db = client.db('oMarketDB');
 
@@ -290,7 +283,7 @@ app.post('/api/emailVerify', async (req, res, next) =>
 
         if (TTL <= 0) // If the database says TTL is 0 or negative then we already verified the user
             throw new Error('User is already verified');
-        
+
         if (TTL >= currentTime && verifyNum == userNum) // If the user verified in time and has the correct number verify them in the db
         {
             const newUser = await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {verifyNum: 0, ttl: -1}})
@@ -318,38 +311,52 @@ app.post('/api/emailVerify', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
-app.post('/api/editUser', async (req, res, next) => 
+app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
 {
     // incoming: id, newUserInfo
     // outgoing: id, error
-    
-    const {id, newFirstName, newLastName, newUserName, newPassword, newEmail, newPhoneNumber, newAboutMe} = req.body;
+
+    const {id, firstName, lastName, username, password, email, phoneNumber, aboutMe} = req.body;
 
     const db = client.db("oMarketDB");
+
+    var newImage = null;
+
+    if (req.file !== undefined)
+    {
+        newImage = new imageModel({
+            name: req.file.filename,
+            image: {
+                data: fs.readFileSync(path.join(req.file.path)),
+                contentType: req.file.mimetype
+            }
+        });
+    }
 
     var error = '';
 
     try{
         const newUser = await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set:
-                                                               {firstname: newFirstName,
-                                                                lastname: newLastName, 
-                                                                username: newUserName,
-                                                                password: newPassword.hashCode(),
-                                                                email: newEmail,
-                                                                phoneNumber: newPhoneNumber, 
-                                                                aboutme: newAboutMe}});
+                                                               {firstname: firstName,
+                                                                lastname: lastName,
+                                                                username: username,
+                                                                password: password.hashCode(),
+                                                                email: email,
+                                                                profilePic: newImage,
+                                                                phoneNumber: phoneNumber,
+                                                                aboutme: aboutMe}});
     }
     catch(e)
     {
         error = e.toString();
     }
-    
+
 
     var ret = {_id: id, error: error};
     res.status(200).json(ret);
 });
 
-app.post('/api/createPost', upload.single('image'), async function(req, res, next) { 
+app.post('/api/createPost', upload.single('image'), async function(req, res, next) {
     //incoming: username, name, condition, genre, price, desc, image
     //outgoing: newPost, error
 
@@ -360,12 +367,12 @@ app.post('/api/createPost', upload.single('image'), async function(req, res, nex
     let usersInterested = [];
     var newImage = null;
 
-    if (req.file !== undefined) // If we have an image process it
+    if (req.file !== undefined)
     {
         newImage = new imageModel({
             name: req.file.filename,
             image: {
-                data: req.file.filename,
+                data: fs.readFileSync(path.join(req.file.path)),
                 contentType: req.file.mimetype
             }
         });
@@ -412,18 +419,18 @@ app.post('/api/editPost', upload.single('image'), async(req, res, next) => {
         newImage = new imageModel({
             name: req.file.filename,
             image: {
-                data: req.file.filename,
+                data: fs.readFileSync(path.join(req.file.path)),
                 contentType: req.file.mimetype
             }
         });
     }
 
-    
+
     //just updates all the fields and if they're unchanged they just update from the prev value.
     try{
-        const user = db.collection('Posts').updateOne({_id: new ObjectId(id)}, 
+        const user = db.collection('Posts').updateOne({_id: new ObjectId(id)},
         {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage}});
-        
+
     }
     catch(e){
         err = e.toString();
@@ -442,7 +449,7 @@ app.post('/api/deletePost', async(req, res, next) => {
 
     const {id} = req.body;
     const db = client.db("oMarketDB");
-    
+
     try{
         const post = await db.collection('Posts').findOneAndDelete({_id: new ObjectId(id)})
 
@@ -466,12 +473,12 @@ app.post('/api/interestAddition', async(req, res, next) => {
 
     const {userId, postId} = req.body;
     const db = client.db("oMarketDB");
-    
-    
+
+
     try {
         const post = db.collection('Posts').updateOne({_id: new ObjectId(postId)}, {$push: {usersInterested: userId}});
         const user = db.collection('Users').updateOne({_id: new ObjectId(userId)}, {$push: {interestedIn: postId}});
-        
+
     }
     catch(e){
         err = e.toString();
@@ -490,12 +497,12 @@ app.post('/api/interestDeletion', async(req, res, next) => {
 
     const {userId, postId} = req.body;
     const db = client.db("oMarketDB");
-    
-    
+
+
     try {
         const post = db.collection('Posts').updateOne({_id: new ObjectId(postId)}, {$pull: {usersInterested: userId}});
         const user = db.collection('Users').updateOne({_id: new ObjectId(userId)}, {$pull: {interestedIn: postId}});
-        
+
     }
     catch(e){
         err = e.toString();
@@ -505,14 +512,59 @@ app.post('/api/interestDeletion', async(req, res, next) => {
     res.status(200).json(ret);
 });
 
+
+app.post('/api/getUser', async(req, res, next) => {
+
+    const {userId} = req.body;
+
+    const db = client.db('oMarketDB');
+    var user = null;
+    var error = '';
+
+    try{
+        user = await db.collection('Users').findOne({_id: new ObjectId(userId)});
+
+        if (!user)
+            throw new Error('User was not found');
+    }
+    catch(e){
+        error = e.toString();
+    }
+
+    var ret = {user: user, error: error};
+    res.status(200).json(ret);
+});
+
+app.post('/api/getPost', async(req, res, next) => {
+
+    const {postId} = req.body;
+
+    const db = client.db('oMarketDB');
+    var post = null;
+    var error = '';
+
+    try{
+        post = await db.collection('Posts').findOne({_id: new ObjectId(postId)});
+
+        if (!post)
+            throw new Error('Post was not found');
+    }
+    catch(e){
+        error = e.toString();
+    }
+
+    var ret = {post: post, error: error};
+    res.status(200).json(ret);
+});
+
 // Hash Function for Password
-String.prototype.hashCode = function() 
+String.prototype.hashCode = function()
 {
     var hash = 0, i, chr;
-    
+
     if (this.length === 0) return hash;
 
-    for (i = 0; i < this.length; i++) 
+    for (i = 0; i < this.length; i++)
     {
         chr = this.charCodeAt(i);
         hash = ((hash << 5) - hash) + chr;
