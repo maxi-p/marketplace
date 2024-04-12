@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
+import UserPage from './pages/UserPage';
 import { UserContext } from './logic/UserContext';
 import SettingsPage from './pages/SettingsPage';
 
@@ -58,6 +59,7 @@ const PostLogin = () => {
       <Tab.Screen name="Home" component={HomePage} />
       <Tab.Screen name="Sell" component={SellPage} />
       <Tab.Screen name="Browse" component={BrowsePage} />
+      <Tab.Screen name="User" component={UserPage} />
     </Tab.Navigator>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { useForm, Controller } from "react-hook-form";
 import { UserContext } from '../logic/UserContext';
 import R_Validation_Data from "../logic/RegisterValidation";
@@ -22,6 +22,9 @@ const SettingsPage = () => {
   const [newAboutMe, setNewAboutMe] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [usernameError, setUsernameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
+
 
   useEffect(() => {
     getUser();
@@ -100,6 +103,14 @@ const SettingsPage = () => {
       return;
     }
 
+    if (!validateEmail(newEmail)) {
+      setEmailError("Improper email format");
+    }
+
+    if (!validatePhoneNumber(newPhoneNumber)) {
+      setPhoneNumberError("Improper phone number format");
+    }
+
     try {
       const formData = new FormData();
 
@@ -123,8 +134,11 @@ const SettingsPage = () => {
       if (responseData.error) {
         throw new Error(responseData.error);
       } else {
+        setUsernameError('');
         setPasswordError('');
+        setEmailError('');
         console.log("User Info Updated Successfully");
+        Alert.alert('Info Updated Successfully');
         return responseData;
       }
     } catch (error) {
@@ -141,67 +155,78 @@ const SettingsPage = () => {
     return R_Validation_Data.userNameRegex.test(username);
   }
 
+  const validateEmail = (email) => {
+    if (email == null) {
+      return false;
+    }
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
+    return emailRegex.test(email.toString());
+  }
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Account Settings</Text>
-        <Text style={styles.labelText}>Username</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={curUsername}
-          value={newUsername}
-          onChangeText={setNewUsername}
-        />
-        {usernameError ? <Text style={styles.errorText}>{usernameError}</Text> : null}
-        <Text style={styles.labelText}>Password</Text>
-        <TextInput
-          style={styles.input}
-          placeholder=""
-          value={newPassword}
-          onChangeText={setNewPassword}
-          secureTextEntry
-        />
-        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
-        <Text style={styles.labelText}>First Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={curFirstName}
-          value={newFirstName}
-          onChangeText={setNewFirstName}
-        />
-        <Text style={styles.labelText}>Last Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={curLastName}
-          value={newLastName}
-          onChangeText={setNewLastName}
-        />
-        <Text style={styles.labelText}>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={curEmail}
-          value={newEmail}
-          onChangeText={setNewEmail}
-        />
-        <Text style={styles.labelText}>Phone Number</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={curPhoneNumber}
-          value={newPhoneNumber}
-          onChangeText={setNewPhoneNumber}
-        />
-        <Text style={styles.labelText}>About Me</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={curAboutMe}
-          value={newAboutMe}
-          onChangeText={setNewAboutMe}
-        />
-        <TouchableOpacity style={styles.button} onPress={editUser}>
-          <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <KeyboardAvoidingView>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Account Settings</Text>
+          <Text style={styles.labelText}>Username</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={curUsername}
+            value={newUsername}
+            onChangeText={setNewUsername}
+          />
+          {usernameError ? <Text style={styles.errorText}>{usernameError}</Text> : null}
+          <Text style={styles.labelText}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            value={newPassword}
+            onChangeText={setNewPassword}
+            secureTextEntry
+          />
+          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+          <Text style={styles.labelText}>First Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={curFirstName}
+            value={newFirstName}
+            onChangeText={setNewFirstName}
+          />
+          <Text style={styles.labelText}>Last Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={curLastName}
+            value={newLastName}
+            onChangeText={setNewLastName}
+          />
+          <Text style={styles.labelText}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={curEmail}
+            value={newEmail}
+            onChangeText={setNewEmail}
+          />
+          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          <Text style={styles.labelText}>Phone Number</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={curPhoneNumber}
+            value={newPhoneNumber}
+            onChangeText={setNewPhoneNumber}
+          />
+          <Text style={styles.labelText}>About Me</Text>
+          <TextInput
+            style={styles.input}
+            placeholder={curAboutMe}
+            value={newAboutMe}
+            onChangeText={setNewAboutMe}
+          />
+          <TouchableOpacity style={styles.button} onPress={editUser}>
+            <Text style={styles.buttonText}>Update</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

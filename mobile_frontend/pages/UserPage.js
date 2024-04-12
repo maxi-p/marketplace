@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { UserContext } from '../logic/UserContext';
 
 const UserPage = () => {
   const { user } = useContext(UserContext);
   const [curUsername, setCurUsername] = useState('');
-  const [curPassword, setCurPassword] = useState('');
   const [curFirstName, setCurFirstName] = useState('');
   const [curLastName, setCurLastName] = useState('');
   const [curEmail, setCurEmail] = useState('');
@@ -13,7 +13,7 @@ const UserPage = () => {
 
   useEffect(() => {
     // Fetch user data when component mounts
-    fetchUserData();
+    getUser();
   }, []);
 
   const getUser = async () => {
@@ -24,49 +24,51 @@ const UserPage = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ userId: user.id })
-
       });
-
+  
       const userData = await response.json();
-
+  
       if (userData.error) {
         throw new Error(userData.error);
       } else {
         setCurUsername(userData.user.username || '');
-        setCurPassword(userData.user.password || '');
         setCurFirstName(userData.user.firstname || '');
         setCurLastName(userData.user.lastname || '');
         setCurEmail(userData.user.email || '');
         setCurPhoneNumber(userData.user.phoneNumber || '');
         setCurAboutMe(userData.user.aboutme || '');
-        }
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      Alert.alert('Error', 'Failed to fetch user data. Please try again.');
     }
-    catch (error) {
-        console.error('Error fetching user data:', error);
-        Alert.alert('Error', 'Failed to fetch user data. Please try again.');
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>User Information</Text>
+      <Text style={styles.title}>{curUsername}'s Information</Text>
       <View style={styles.userInfo}>
-        <Text style={styles.label}>Username:</Text>
-        <Text>{userData.username}</Text>
+        <Text style={styles.label}>Username</Text>
+        <Text>{curUsername}</Text>
       </View>
       <View style={styles.userInfo}>
-        <Text style={styles.label}>Email:</Text>
-        <Text>{userData.email}</Text>
+        <Text style={styles.label}>Name</Text>
+        <Text>{curFirstName + " " + curLastName}</Text>
       </View>
       <View style={styles.userInfo}>
-        <Text style={styles.label}>Phone Number:</Text>
-        <Text>{userData.phoneNumber}</Text>
+        <Text style={styles.label}>Email</Text>
+        <Text>{curEmail}</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={fetchUserData}>
-        <Text style={styles.buttonText}>Refresh</Text>
-      </TouchableOpacity>
+      <View style={styles.userInfo}>
+        <Text style={styles.label}>Phone Number</Text>
+        <Text>{curPhoneNumber}</Text>
+      </View>
+      <View style={styles.userInfo}>
+        <Text style={styles.label}>About Me</Text>
+        <Text>{curAboutMe}</Text>
+      </View>
     </ScrollView>
     );
-};
 };
 
 const styles = StyleSheet.create({
@@ -74,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'top',
   },
   title: {
     fontSize: 24,
@@ -82,7 +84,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   userInfo: {
+    fontSize: 20,
     marginBottom: 10,
+    alignSelf: 'flex-start', // Align text to the left
   },
   label: {
     fontWeight: 'bold',
