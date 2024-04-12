@@ -16,7 +16,7 @@ const Post = props => {
                 onClick={() => props.openEditHandler(props.obj)}
             ><img src="./edit.jpg" className="card--star" />
             </button>}
-            <Link to={props.obj._id.toString()}>
+            <Link to={props.obj._id.toString()} style={{ textDecoration: 'none' }}>
             <img src={'./post.png'} className="card--image" />
             <div className="card--stats">
                 <img src="./star.png" className="card--star" />
