@@ -18,7 +18,13 @@ const UserHome = props =>
       <div id="loggedInDiv">
         <img src='./avatar.png' style={{width:100,height:100}} alt="avatar"></img><br />
         {user && <span id="userName">{user.firstName} {user.lastName}</span>}<br />
-        <button>Link</button><br/>
+        <input 
+            type="button" 
+            id="verifyButton" 
+            className="buttons" 
+            value="Verify Email"
+            onClick={() => navigate("/verify-email")}
+        /> 
         <button>Link</button><br/>
         <button>Link</button><br/>
         <input 

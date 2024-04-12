@@ -3,7 +3,7 @@ import PageTitle from '../components/PageTitle';
 import EnterCode from '../components/EnterCode';
 import NavBar from '../components/NavBar';
 //trying to fix heroku error
-const LoginPage = () =>
+const EnterCodePage = () =>
 {
     return(
         <div>
@@ -15,4 +15,4 @@ const LoginPage = () =>
     );
 };
 
-export default LoginPage;
+export default EnterCodePage;
