@@ -24,7 +24,7 @@ const UserHome = props =>
             className="buttons" 
             value="Verify Email"
             onClick={() => navigate("/verify-email")}
-        /> 
+        /> <br/>
         <button>Link</button><br/>
         <button>Link</button><br/>
         <input 
