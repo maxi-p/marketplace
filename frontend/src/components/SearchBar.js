@@ -77,10 +77,10 @@ const SearchBar = props =>
                     onChange={handleChange}
                     name="string"
                     value={formData.string}
-                    placeholder='Search'
+                    placeholder='Search-Open-Market'
                     className="search-Bar"
                 />
-                <button>Search</button>
+                <button className="search-Button">Search</button>
                 <input 
                     type="checkbox" 
                     id="username" 

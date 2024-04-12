@@ -38,6 +38,10 @@ section {
   height: 20%;
 }
 
+.search-Button {
+  border-radius: 20px;
+}
+
 .search-Bar {
   border-radius: 20px;
   width: 60%;
