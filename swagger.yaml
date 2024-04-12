@@ -97,7 +97,7 @@ paths:
       - Users
       summary: Edits the user's account info with given fields
       operationId: dlEditUser
-      description: Takes in the user's unique identifier and edit's their database document with given input fields.
+      description: Takes in the user's unique identifier and edit's their database document with given input fields. If the input field is empty, the database will not change that field.
       consumes:
       - multipart/form-data
       produces:
@@ -183,7 +183,7 @@ paths:
       - Posts
       summary: Edits the user's post with given fields
       operationId: dlEditPost
-      description: Takes in the new post details and edits the post at the given id in the database.
+      description: Takes in the new post details and edits the post at the given id in the database. If the input field is empty, the database will not change that field.
       consumes:
       - multipart/form-data
       produces:
@@ -361,8 +361,78 @@ paths:
           description: OK
         "Post was not found":
           description: The given user was not found
-          
-
+  /passwordRequest:
+    post:
+      tags:
+      - Server
+      summary: Aid in password recovery
+      operationId: dlpasswordRequest
+      description: Takes in the username of the user and searches the database for them. If they exists then grab their email and send them a verification code to verify it is them. While that happens update the DB to have this verification code.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Password Request
+        description: Aid in password recovery
+        schema:
+          $ref: '#/definitions/PasswordRequest'
+      responses:
+        "Empty Error String":
+          description: OK
+          schema:
+            $ref: '#/definitions/PasswordRequestResponse'
+        "User is not in Database":
+          description: The given user was not found
+  /passwordChange:
+    post:
+      tags:
+      - Server
+      summary: Changes the password of a given user
+      operationId: dlpasswordChange
+      description: Takes in the username of the user, verification number, and the new password. It checks the DB to see if the verification number is correct. If so change the user's password.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Password Change
+        description: Changes the password of a given user
+        schema:
+          $ref: '#/definitions/PasswordChange'
+      responses:
+        "Empty Error String":
+          description: OK
+          schema:
+            $ref: '#/definitions/PasswordChangeResponse'
+        "User is not in Database":
+          description: The given user was not found
+        "Verify Num doesn't match Database":
+          description: The given verification number was different from the database
+  /searchUser:
+    post:
+      tags:
+      - Users
+      summary: Searches for a user
+      operationId: dlsearhUser
+      description: Searches a user via their username
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Password Change
+        description: Changes the password of a given user
+        schema:
+          $ref: '#/definitions/SearchUser'
+      responses:
+        "Empty Error String":
+          description: OK
+        "Non-Empty Error String":
+          description: There was an error with the database when searching for the users
 parameters:
   id:
     in: formData
@@ -615,6 +685,62 @@ definitions:
       id:
         type: string
         example: 1313131fwasdwad131
+  PasswordRequest:
+    type: object
+    required:
+    - username
+    properties:
+      username:
+        type: string
+        example: Fred121
+  PasswordRequestResponse:
+    type: object
+    properties:
+      username:
+        type: string
+        example: Fred121
+      email: 
+        type: string
+        example: fred@fred.com
+      verifyNum:
+        type: number
+        example: 12345
+      error: 
+        type: string
+        example: ''
+  PasswordChange:
+    type: object
+    required:
+    - username
+    - verifyNum
+    - newPassword
+    properties:
+      username:
+        type: string
+        example: Fred121
+      verifyNum:
+        type: number
+        example: 12345
+      newPassword:
+        type: string
+        example: secret
+  PasswordChangeResponse:
+    type: object
+    properties:
+      username:
+        type: string
+        example: Fred121
+      error: 
+        type: string
+        example: ''
+  SearchUser:
+    type: object
+    required:
+    - username
+    properties:
+      username:
+        type: string
+        example: Fred121
 
 host: cop4331-marketplace-98e1376d9db6.herokuapp.com
 basePath: /api
