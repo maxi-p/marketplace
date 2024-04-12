@@ -29,6 +29,20 @@ section {
   padding: 20px
 }
 
+.search {
+  padding: 10px;
+  background-color: #82099c;
+  border-radius: 20px;
+  margin-inline: auto;
+  width: 75%;
+  height: 20%;
+}
+
+.search-Bar {
+  border-radius: 20px;
+  width: 60%;
+}
+
 .posts-list {
   display: flex;
   flex-wrap: wrap;

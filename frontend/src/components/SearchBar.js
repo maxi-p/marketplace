@@ -80,6 +80,7 @@ const SearchBar = props =>
                     placeholder='Search'
                     className="search-Bar"
                 />
+                <button>Search</button>
                 <input 
                     type="checkbox" 
                     id="username" 
@@ -104,7 +105,6 @@ const SearchBar = props =>
                     onChange={handleChange}
                 />
                 <label htmlFor="genre"> genre </label><br/>
-                <button>Search</button>
                 <span>{message}</span><br/>
             </form>
         </div>
