@@ -87,6 +87,8 @@ const SearchBar = props =>
                     name="username"
                     checked={formData.username}
                     onChange={handleChange}
+                    className="search-box"
+                    
                 />
                 <label htmlFor="username"> author</label>
                 <input 
@@ -95,6 +97,7 @@ const SearchBar = props =>
                     name="name"
                     checked={formData.name}
                     onChange={handleChange}
+                    className="search-box"
                 />
                 <label htmlFor="name"> name </label>
                 <input 
@@ -103,6 +106,7 @@ const SearchBar = props =>
                     name="genre"
                     checked={formData.genre}
                     onChange={handleChange}
+                    className="search-box"
                 />
                 <label htmlFor="genre"> genre </label><br/>
                 <span>{message}</span><br/>
