@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Link } from 'react-router-dom';
+import isLoggedIn from '../logic/isLoggedIn';
 
 const Post = props => {
     const [user] = useState(isLoggedIn());
