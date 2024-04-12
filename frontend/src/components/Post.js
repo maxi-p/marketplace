@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useState } from "react"
 import { Link } from 'react-router-dom';
 
 const Post = props => {
+    const [user] = useState(isLoggedIn());
+    const isUserInterested = props.obj.usersInterested.includes(user._id);
     return (
         <div className="card">
             {props.obj.username === props.loggedNick && 
@@ -19,7 +21,8 @@ const Post = props => {
             <Link to={props.obj._id.toString()} style={{ textDecoration: 'none' }}>
             <img src={'./post.png'} className="card--image" />
             <div className="card--stats">
-                <img src="./star.png" className="card--star" />
+                {isUserInterested && <img src="./star.png" className="card--star" />}
+                {/* <img src="./star.png" className="card--star" /> */}
                 <span className="gray"> • </span>
                 <span className="gray">{props.obj.name}</span>
             </div>
