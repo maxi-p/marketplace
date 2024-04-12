@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import isLoggedIn from '../logic/isLoggedIn';
 
 const Post = props => {
-    const [user] = useState(isLoggedIn());
-    const isUserInterested = props.obj.usersInterested.includes(user._id);
+    // const [user] = useState(isLoggedIn());
+    // const isUserInterested = props.obj.usersInterested.includes(user._id);
     return (
         <div className="card">
             {props.obj.username === props.loggedNick && 
@@ -22,15 +22,14 @@ const Post = props => {
             <Link to={props.obj._id.toString()} style={{ textDecoration: 'none' }}>
             <img src={'./post.png'} className="card--image" />
             <div className="card--stats">
-                {isUserInterested && <img src="./star.png" className="card--star" />}
-                {/* <img src="./star.png" className="card--star" /> */}
+                {/* {isUserInterested && <img src="./star.png" className="card--star" />} */}
+                <img src="./star.png" className="card--star" />
                 <span className="gray"> • </span>
                 <span className="gray">{props.obj.name}</span>
             </div>
             <p className="card--title">{props.obj.username}</p>
             <p className="card--price"><span className="bold">${props.obj.price}</span></p>
             <p className="card--title">{props.obj.genre}</p>
-            <p className="card--id">{props.obj._id}</p>
             </Link>
         </div>
     )

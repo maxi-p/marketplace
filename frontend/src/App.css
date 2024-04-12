@@ -68,6 +68,7 @@ section {
   position: relative;
   background-color: #82099c;
   width: 175px;
+  color: white;
 }
 
 .card--image {
@@ -94,6 +95,7 @@ section {
 .card--price {
   margin-top: auto
 }
+
 
 .edit--badge {
   left: 6px
