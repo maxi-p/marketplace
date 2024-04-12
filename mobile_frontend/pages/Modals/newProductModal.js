@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, useCallback} from 'react';
 import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { UserContext } from '../../logic/UserContext';
-import { getProductFromID } from '../../logic/NetworkLogic';
+import { buildPath } from '../../logic/NetworkLogic';
 
 // Debugging settings
 const Debugging = false;
@@ -58,11 +59,9 @@ function goToImage(navigation, image) {
 const ProductModal = ({route, navigation}) => {
     // Const Values
     const tempImage = require('../../Images/PlaceHolder.png');
-    const updateMode = null;
 
     const {user, setUser} = useContext(UserContext);
 
-    const Reload = route?.params.reload ?? false;
     const inDataPart = route?.params.product ?? defaultProduct;
     const inData = {
             isSeller: Debugging ? true : (inDataPart.seller == user.username),
@@ -71,8 +70,20 @@ const ProductModal = ({route, navigation}) => {
 
     const [product, setProduct] = useState(inData);
 
+    //EFFFECTS
+    useEffect(() => {
+        const updateID = route.params.updateID;
+        console.log("TEST UPdateID: " + updateID);
+        if (updateID) {
+            const Post = GetPostFromID(updateID, user.username);
+            Post.then((retVal) => {
+            setProduct(retVal);
+            });
+        }
+    }, [route.params, GetPostFromID, user.username]);
 
     // Events TODO
+
     const addIntrest = (event) => {
         Alert.alert('Add Intrest', 'TODO');
         console.log('TODO: Add Intrest');
@@ -86,6 +97,51 @@ const ProductModal = ({route, navigation}) => {
             product: product,
         });
     };
+
+
+    const GetPostFromID = useCallback(async (ID, username) => {
+        var obj = {
+            postId: ID.toString(),
+        };
+        console.log("ID: " + ID);
+        var js = JSON.stringify(obj);
+        try {
+            const result = await fetch(buildPath('api/getPost'),
+                {
+                    method: 'POST',
+                    body:js,
+                    headers:{'Content-Type': 'application/json'},
+                });
+            console.log(JSON.stringify(result, null, 4));
+            const response = JSON.parse(await result.text());
+            console.log(JSON.stringify(response, null, 4));
+            if (response.error){
+                throw new Error(response.error);
+            }
+            var retval = {
+                _id: ID,
+                seller: response.post.username,
+                title: response.post.name,
+                catagory: response.post.genre,
+                price: response.post.price,
+                desc: response.post.desc,
+                condition: response.post.condition,
+                image: response.post.image,
+                isSeller: Debugging ? true : (response.post.username == username),
+                usersIntrested: response.post.usersIntrested,
+            };
+        }
+        catch (e) {
+            console.error(e.name + '\n\t' + e.message);
+            Alert.alert(e.name, e.message);
+            goBack(navigation);
+            return null;
+        }
+        finally {
+            console.log('Post Fectch  Finished');
+            return retval;
+        }
+    }, [navigation]);
 
     if (!product) {
         goBack(navigation);
@@ -122,9 +178,10 @@ const ProductModal = ({route, navigation}) => {
                 <Pressable style={styles.editBox}
                 onPress={editItem}
                 >
-                    <Text style={[styles.text, styles.editText]}>
-                        Edit Product
-                    </Text>
+                    <FontAwesome name="pencil"
+                        size={30}
+                        color="black"
+                    />
                 </Pressable>
             )}
 
@@ -180,7 +237,7 @@ const ProductModal = ({route, navigation}) => {
                  fadingEdgeLength={40}
                 >
                     <Text style={[styles.text, styles.discText]}>
-                        {product.disc ?? 'N/A'}
+                        {product.desc ?? 'N/A'}
                     </Text>
                 </ScrollView>
             </View>
@@ -227,17 +284,19 @@ const styles = StyleSheet.create({
     },
     editBox: {
         position: 'absolute',
-        backgroundColor: 'lavender',
+        backgroundColor: '#AF9FC9',
+
         margin: 5,
         padding: 3,
         right: 0,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems:'center',
+
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 50,
-        alignItems: 'center',
-    },
-    editText: {
-        fontSize: 15,
     },
     content: {
     },

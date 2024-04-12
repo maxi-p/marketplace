@@ -120,7 +120,7 @@ function ProductList(props) {
     const [refreshing, setRefreshing] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [searchClicked, setSearchClicked] = useState(false);
-    const [end, setEnd] = useState(false);
+    const [momentum, setMomentum] = useState(false);
 
      const OpenProduct = (item) => {
         props.navigation.navigate('ProductModal', {
@@ -172,21 +172,23 @@ function ProductList(props) {
     );};
 
 
-    // Fetch Data -- First Load
+    // Fetch Data -- First Load and Refoucs
     useEffect(() => {
-        const addData = async () => {
-            var inData = await fetchData(0, searchText);
-            setData(inData.data);
-            setLoading(false);
-            setIndex(inData.cnt);
-            setEnd(inData.endReached);
-        };
-        setLoading(true);
-        addData();
-    }, [searchText]);
+        const Reload = props.navigation.addListener('focus', () => {
+            const addData = async () => {
+                var inData = await fetchData(0, searchText);
+                setData(inData.data);
+                setLoading(false);
+                setIndex(inData.cnt);
+            };
+            setLoading(true);
+            addData();
+        });
+        return Reload;
+    }, [searchText, props.navigation]);
 
     const getData = async () => {
-        if (loading === false && end === false) {
+        if (loading === false && momentum === true) {
             setLoading(true);
             var inData = await fetchData(index, searchText);
             setData([...data, ...(await inData).data]);
@@ -203,7 +205,6 @@ function ProductList(props) {
             setIndex(inData.cnt);
             setRefreshing(false);
             setLoading(false);
-            setEnd(inData.endReached);
         }
     };
 
@@ -217,8 +218,12 @@ function ProductList(props) {
                 renderItem={renderItem}
                 extraData={[loading, data]}
                 ListFooterComponent={footer}
+
                 onEndReached={getData}
-                onEndReachedThreshold={1}
+                onEndReachedThreshold={0.5}
+                onMomentumScrollBegin={() => setMomentum(true)}
+                onMomentumScrollEnd={() => setMomentum(false)}
+
                 onRefresh={refresh}
                 refreshing={refreshing}
                 style={props.style}

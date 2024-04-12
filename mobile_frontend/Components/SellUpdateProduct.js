@@ -1,27 +1,30 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
-import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { Alert, Button, Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useForm, SubmitHandeler, Controller } from 'react-hook-form';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { buildPath } from '../logic/NetworkLogic';
-
+import { UserContext } from '../logic/UserContext';
 
 const SellUpdateProduct = ({product, route, navigation}) => {
     // Constants
     const tempImage = require('../Images/PlaceHolder.png');
-    const username = 'GzTest';
+    const {user, setUser} = useContext(UserContext);
+    const username = user.username ?? 'N/A';
 
     const uProduct = product ?? route?.params?.product ?? null;
 
     // States
+    const [PhotoUpdate, setPhotoUpdate] = useState(false);
     // Form
     const {
         handleSubmit,
         formState: {errors},
         control,
         setValue,
+        getValues,
     } = useForm({
         defaultValues: {
             title: '',
@@ -38,7 +41,7 @@ const SellUpdateProduct = ({product, route, navigation}) => {
     useEffect( () => {
         if (uProduct) {
             setValue('title', uProduct.title);
-            setValue('genere', uProduct.catagory);
+            setValue('genre', uProduct.catagory);
             setValue('condition', uProduct.condition);
             setValue('price', uProduct.price);
             setValue('desc', uProduct.desc);
@@ -63,33 +66,33 @@ const SellUpdateProduct = ({product, route, navigation}) => {
         formData.append('price', inData.price);
         formData.append('desc', inData.desc);
         formData.append('condition', inData.condition);
-        formData.append('image', inData.photo ? {
+        formData.append('image', (inData.photo && PhotoUpdate) ? {
             type: inData.photo.type,
             uri:inData.photo.uri,
             name:inData.photo.fileName} :
             null
         );
-        console.log(formData.toString());
-        console.log('Uploading Files ...');
 
-        try {
-        let response = await fetch(buildPath('api/createPost'), {
-            method: 'POST',
-            body:formData,
-            headers:{'Content-Type': 'multipart/form-data'},
-        });
-        console.log(response.toString());
-        let result = await response.json();
-        console.log(result);
-        }
-        catch (e) {
-            console.error(e);
-            Alert.alert(e.toString());
-        }
-        finally {
-            console.log('done');
-        }
-
+        Alert.alert('Upload Product: ' + inData.title + '?', null,
+        [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK',
+                onPress: async () => {
+                    try {
+                        await Upload(formData, 'api/createPost');
+                        Alert.alert('Upload Successful');
+                        goBack(false);
+                    } catch (error) {
+                        Alert.alert(error.toString());
+                    }
+                },
+                style: 'default',
+        }]);
     };
     const updatePost = async (inData) =>
     {
@@ -102,31 +105,62 @@ const SellUpdateProduct = ({product, route, navigation}) => {
         formData.append('price', inData.price);
         formData.append('desc', inData.desc);
         formData.append('condition', inData.condition);
-        formData.append('image', {
+        console.log('Update: ' + PhotoUpdate);
+        formData.append('image', (inData.photo && PhotoUpdate) ? {
             type: inData.photo.type,
             uri:inData.photo.uri,
-            name:inData.photo.fileName});
+            name:inData.photo.fileName} :
+            null
+        );
+
+        Alert.alert('Update Product ' + inData.title + '?', null,
+        [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK',
+                onPress: async () => {
+                    try {
+                        await Upload(formData, 'api/editPost');
+                        Alert.alert('Update Successful');
+                        goBack(true);
+                    } catch (error) {
+                        Alert.alert(error.toString());
+                    }
+                },
+                style: 'default',
+        }]);
+
+    };
+    const Upload = async (formData, ApiPath) => {
         console.log(formData.toString());
         console.log('Uploading Files ...');
 
         try {
-        let response = await fetch(buildPath('api/editPost'), {
-            method: 'POST',
-            body:formData,
-            headers:{'Content-Type': 'multipart/form-data'},
-        });
-        console.log(response.toString());
-        let result = await response.json();
-        console.log(result);
+            let response = await fetch(buildPath('api/editPost'), {
+                method: 'POST',
+                body:formData,
+                headers:{'Content-Type': 'multipart/form-data'},
+            });
+            console.log(response.toString());
+            let result = await response.json();
+            console.log(result);
+            if (result.error)
+            {
+                throw new Error(result.error);
+            }
         }
         catch (e) {
             console.error(e);
             Alert.alert(e.toString());
+            throw e;
         }
         finally {
-            console.log('done');
+            console.log('done uploading to ' + ApiPath);
         }
-
     };
 
     const getPhoto = () => {
@@ -150,12 +184,18 @@ const SellUpdateProduct = ({product, route, navigation}) => {
         });
     };
 
-    function goBack() {
+    function goBack( Update) {
         let active = 1;
         if (!navigation || (!active) ) {
             Alert.alert('Backbutton Pressed');
             console.log('Backbutton Pressed');
             return;
+        }
+        if (Update) {
+        navigation.navigate('ProductModal', {
+            updateID: uProduct._id,
+        });
+        return;
         }
         navigation.goBack();
         return;
@@ -164,163 +204,173 @@ const SellUpdateProduct = ({product, route, navigation}) => {
     // HTML
     return (
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
-                {/* Photo Picker */}
-                <Controller 
-                    name="photo"
-                    control={control}
-                    render={({field: {onChange, value}}) => {
-                        return (
-                            <>
-                            <Image source={value?.uri ? {uri: value.uri} : tempImage} style={styles.image}/>
-                            <View style={styles.loadImageButton}>
-                                <Pressable style={{transform:[{rotate: '90deg'}]}}
-                                onPress={() => {
-                                    getPhoto().then( (retval) => {
-                                        onChange(retval[0]);
-                                        });
-                                    }}
-                                >
-                                    <AntDesign name="upload" size={40} color="white"/>
-                                </Pressable>
-                            </View>
-                            </>
-                    );}}
-                />
-
-
-                {/* Back Button */}
-                <Pressable style={styles.backButton}
-                onPress={() => goBack()}
-                >
-                    <IonIcons name="arrow-back" size={30}/>
-                </Pressable>
-            </View>
-
-            {/* Title */}
-            <View style={[styles.row, styles.titleRow]}>
-                <Controller
-                    name="title"
-                    control={control}
-                    rules={{
-                        required: 'This Value is Required',
-                    }}
-                    render={({field: {onChange, onBlur, value} }) => {
-                        return (
-                        <TextInput
-                            style={[styles.textInput, styles.title]}
-                            placeholder="TITLE"
-
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
+            <KeyboardAvoidingView
+                behavior="padding"
+                keyboardVerticalOffset={30}
+            >
+                <ScrollView style={styles.scroll}>
+                    <View style={styles.imageContainer}>
+                        {/* Photo Picker */}
+                        <Controller
+                            name="photo"
+                            control={control}
+                            render={({field: {onChange, value}}) => {
+                                return (
+                                    <>
+                                    <Image source={value?.uri ? {uri: value.uri} : tempImage} style={styles.image}/>
+                                    <View style={styles.loadImageButton}>
+                                        <Pressable style={{transform:[{rotate: '90deg'}]}}
+                                        onPress={() => {
+                                            getPhoto().then( (retval) => {
+                                                onChange(retval[0]);
+                                                setPhotoUpdate(true);
+                                                });
+                                            }}
+                                        >
+                                            <AntDesign name="upload" size={40} color="white"/>
+                                        </Pressable>
+                                    </View>
+                                    </>
+                            );}}
                         />
-                        );
-                    }}
-                />
-            </View>
-            {errors.title && (
-                <View style={[styles.row, styles.errorRow, styles.titleRowError]}>
-                    <Text style={[styles.text, styles.errorText, styles.titleErrorText]}>
-                    {errors.title.message || "ERROR HERE"}
-                    </Text>
+
+
+                        {/* Back Button */}
+                        <Pressable style={styles.backButton}
+                        onPress={() => goBack()}
+                        >
+                            <IonIcons name="arrow-back" size={30}/>
+                        </Pressable>
+                    </View>
+
+                    {/* Title */}
+                    <View style={[styles.row, styles.titleRow]}>
+                        <Controller
+                            name="title"
+                            control={control}
+                            rules={{
+                                required: 'This Value is Required',
+                            }}
+                            render={({field: {onChange, onBlur, value} }) => {
+                                return (
+                                <TextInput
+                                    style={[styles.textInput, styles.title]}
+                                    placeholder="TITLE"
+                                    numberOfLines={1}
+                                    autoCapitalize="sentences"
+                                    textAlign="center"
+                                    borderBottomWidt={5}
+
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                />
+                                );
+                            }}
+                        />
+                    </View>
+                    {errors.title && (
+                        <View style={[styles.row, styles.errorRow, styles.titleRowError]}>
+                            <Text style={[styles.text, styles.errorText, styles.titleErrorText]}>
+                            {errors.title.message || "ERROR HERE"}
+                            </Text>
+                        </View>
+                    )}
+                    {/* Genee */}
+                    <Controller
+                        name="genre"
+                        control={control}
+                        rules={{
+                            required: 'This Value is Required',
+                        }}
+                        render={({field: {onChange, onBlur, value}}) =>
+                        {
+                            return (
+                            <RegInput
+                                header="Genre"
+                                placeholder="HERE"
+
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                error={errors.genre}
+                            />);
+                        }}
+                    />
+
+                    {/* Condition */}
+                    <Controller
+                        name="condition"
+                        control={control}
+                        rules={{
+                            required: 'This Value is Required',
+                        }}
+                        render={({field: {onChange, onBlur, value}}) =>
+                        {
+                            return (
+                            <RegInput
+                                header="Condition"
+                                placeholder="HERE"
+
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                error={errors.condition}
+                            />);
+                        }}
+                    />
+
+                    {/* Price */}
+                    <Controller
+                        name="price"
+                        control={control}
+                        rules={{
+                            required: 'This Value is Required',
+                        }}
+                        render={({field: {onChange, onBlur, value}}) =>
+                        {
+                            return (
+                            <RegInput
+                                header="Price"
+                                placeholder="HERE"
+
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value.toString()}
+                                error={errors.price}
+                            />);
+                        }}
+                    />
+
+                    {/* Description */}
+                    <Controller
+                        name="desc"
+                        control={control}
+                        rules={{
+                            required: 'This Value is Required',
+                        }}
+                        render={({field: {onChange, onBlur, value}}) =>
+                        {
+                            return (
+                            <RegInput
+                                header="Description"
+                                placeholder="HERE"
+
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                error={errors.desc}
+                            />);
+                        }}
+                    />
+                <View style={styles.submitButton}>
+                    <Button
+                        title={uProduct ? 'Update Product' : 'Create Product'}
+                        onPress={handleSubmit(uProduct ? updatePost : createPost)}
+                    />
                 </View>
-            )}
-            <ScrollView style={styles.scroll}>
-                {/* Genee */}
-                <Controller
-                    name="genre"
-                    control={control}
-                    rules={{
-                        required: 'This Value is Required',
-                    }}
-                    render={({field: {onChange, onBlur, value}}) =>
-                    {
-                        return (
-                        <RegInput
-                            header="Genre"
-                            placeholder="HERE"
-
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            error={errors.genere}
-                        />);
-                    }}
-                />
-
-                {/* Condition */}
-                <Controller
-                    name="condition"
-                    control={control}
-                    rules={{
-                        required: 'This Value is Required',
-                    }}
-                    render={({field: {onChange, onBlur, value}}) =>
-                    {
-                        return (
-                        <RegInput
-                            header="Condition"
-                            placeholder="HERE"
-
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            error={errors.condition}
-                        />);
-                    }}
-                />
-
-                {/* Price */}
-                <Controller
-                    name="price"
-                    control={control}
-                    rules={{
-                        required: 'This Value is Required',
-                    }}
-                    render={({field: {onChange, onBlur, value}}) =>
-                    {
-                        return (
-                        <RegInput
-                            header="Price"
-                            placeholder="HERE"
-
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value.toString()}
-                            error={errors.price}
-                        />);
-                    }}
-                />
-
-                {/* Description */}
-                <Controller
-                    name="desc"
-                    control={control}
-                    rules={{
-                        required: 'This Value is Required',
-                    }}
-                    render={({field: {onChange, onBlur, value}}) =>
-                    {
-                        return (
-                        <RegInput
-                            header="Description"
-                            placeholder="HERE"
-
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            error={errors.disc}
-                        />);
-                    }}
-                />
-            </ScrollView>
-            <View style={styles.submitButton}>
-                <Button
-                    title={uProduct ? 'Update Product' : 'Create Product'}
-                    onPress={handleSubmit(uProduct ? updatePost : createPost)}
-                />
-            </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </View>
     );
 };
@@ -342,6 +392,7 @@ const RegInput = ({header, onBlur, onChangeText, value, error, placeholder, ...p
                 onBlur={onBlur}
                 onChangeText={onChangeText}
                 value={value}
+                style={error ? styles.textInputError : styles.textInput}
             />
             {error && (
                 <View style={[styles.row, styles.errorRow, props.errorRowStyle]}>
@@ -383,21 +434,59 @@ const styles = StyleSheet.create({
         opacity: 0.5,
     },
     content: {},
-    text: {},
+    text: {
+        color: 'black',
+        fontSize: 17,
+    },
     scroll: {
     },
 
 
-    row: {},
+    row: {
+        marginBottom: 10,
+    },
     header: {},
     headerText: {},
 
-    errorRow: {},
-    errorText: {},
-    textInput: {},
+    errorRow: {
+        margin: 5,
+        marginTop: 0,
+        marginLeft: 40,
+        paddingTop: 0,
+        textAlignVertical: 'top',
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 12,
 
-    titleRow: {},
-    title: {},
+    },
+    textInput: {
+        backgroundColor: 'white',
+        paddingVertical: -10,
+        borderWidth: 1,
+        margin: 10,
+    },
+    textInputError: {
+        backgroundColor: 'white',
+        borderColor: 'red',
+        color: 'red',
+        paddingVertical: -10,
+        borderWidth: 1,
+        margin: 10,
+    },
+
+    titleRow: {
+        alignItems: 'center',
+        paddingBottom: 10,
+    },
+    title: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        borderWidth: 0,
+        borderBottomWidth: 1,
+        width: '75%',
+        backgroundColor: 'floralwhite',
+    },
     titleRowError: {},
     titleErrorText: {},
 
@@ -409,8 +498,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     submitButton: {
-        marginBottom: 20,
-        marginHorizontal: 10,
+        marginHorizontal: 10
     },
     loadImageButton: {
         position: 'absolute',
@@ -420,6 +508,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
+
     },
 });
 
