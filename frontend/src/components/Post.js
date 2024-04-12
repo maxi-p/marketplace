@@ -30,7 +30,7 @@ const Post = props => {
             <p className="card--title">{props.obj.username}</p>
             <p className="card--price"><span className="bold">${props.obj.price}</span></p>
             <p className="card--title">{props.obj.genre}</p>
-            <p className="card--id">{props.obj.genre}</p>
+            <p className="card--id">{props.obj._id}</p>
             </Link>
         </div>
     )

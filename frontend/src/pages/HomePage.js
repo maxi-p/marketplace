@@ -20,7 +20,7 @@ const HomePage = props =>
 
     return(
         <div>
-            <PageTitle title="Open Market"/>{user && <span>Logged in as: {user.firstName} {user.lastName}</span>}
+            <PageTitle title="Open Market"/>{user && <span>Logged in as: {user.firstName} {user.lastName} ID: {user.id}</span>}
             <SearchBar setLoading={loadingHandler} setAllPosts={postHandler}/>
             <Products loggedUser={props.loggedUser} loading={loading} allPosts={allPosts} setAllPosts={postHandler}/>
         </div>

@@ -7,8 +7,6 @@ function LoggedInName()
     // var userId = ud.id;
     var firstName = ud.firstName;
     var lastName = ud.lastName;
-    var _id = ud._id;
-
 
     const doLogout = event => 
     {
@@ -20,7 +18,7 @@ function LoggedInName()
 
     return(
       <div id="loggedInDiv">
-        <span id="userName">Logged In As {firstName} {lastName} ID: {_id} </span><br />
+        <span id="userName">Logged In As {firstName} {lastName}</span><br />
         <button type="button" id="logoutButton" className="buttons" onClick={doLogout}> Log Out </button>
       </div>
     );
