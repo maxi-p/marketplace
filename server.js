@@ -74,6 +74,68 @@ const imageSchema = new mongoose.Schema({ // Defines image objects
 });
 const imageModel = mongoose.model("imagemodel", imageSchema);
 
+app.post('/api/passwordRequest', async (req, res, next) => 
+{
+    const {username} = req.body;
+    const db = client.db('oMarketDB');
+    let email = '';
+    let verifyNum = randomNum();
+    let error = '';
+
+
+    try{
+        const user = await db.collection('Users').findOne({username: username});
+
+        if (!user)
+            throw new Error('User is not in Database');
+        
+        email = user.email;
+
+        await verifyEmail(email, verifyNum);
+
+        const update = await db.collection('Users').updateOne({username: username}, {$set: {verifyNum: verifyNum}});
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = {username: username, email: email, verifyNum: verifyNum, error: error};
+    res.status(200).json(ret);
+});
+
+app.post('/api/passwordChange', async (req, res, next) => 
+{
+    const {username, verifyNum, newPassword} = req.body;
+    const db = client.db('oMarketDB');
+    let error = '';
+
+    try{
+        const user = await db.collection('Users').findOne({username: username});
+
+        if (!user)
+            throw new Error('User is not in Database');
+        
+        var dbVerifyNum = user.verifyNum;
+
+        if (dbVerifyNum == verifyNum)
+        {
+            const change = await db.collection('Users').updateOne({username: username}, {$set: {password: newPassword.hashCode(), verifyNum: 0}});
+        }
+        else
+        {
+            throw new Error('Verify Num doesn\'t match database');
+        }
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = {username: username, error: error};
+    res.status(200).json(ret);
+});
+
 app.post('/api/searchPost', async (req, res, next) =>
 {
     // incoming: username, name, genre, minIndex (optional), maxIndex (optional)
@@ -124,7 +186,7 @@ app.post('/api/searchPost', async (req, res, next) =>
         if (req.body.minIndex <= searches.length - 1)
         {
             let max = (req.body.maxIndex > searches.length - 1) ? searches.length - 1 : req.body.maxIndex;
-            for(var i = req.body.minIndex; i <= max; i++)
+            for(var i = req.body.minIndex; i < max; i++)
             {
                 paginatedSearches.push(searches[i]);
             }
@@ -136,6 +198,29 @@ app.post('/api/searchPost', async (req, res, next) =>
     var ret = {results: paginatedSearches, error:error};
     res.status(200).json(ret);
 });
+
+app.post('/api/searchUser', async (req, res, next) => 
+{
+    //incoming: username
+    //outgoing: userInfo, error
+
+    const { username } = req.body;
+
+    const db = client.db("oMarketDB");
+    var error = '';
+
+    var userResults = [];
+
+    try{
+        userResults = await db.collection('Users').find({username: username}).toArray();
+    }
+    catch(e){
+        error = e.toString();
+    }
+
+    var ret = {results: userResults, error:error};
+    res.status(200).json(ret);
+})
 
 app.post('/api/login', async (req, res, next) =>
 {
@@ -151,14 +236,20 @@ app.post('/api/login', async (req, res, next) =>
     var fn = '';
     var ln = '';
     var email = '';
+    var userTTL = -1;
     var err = '';
 
-    if( results.length != 0 )
+    if( results.length !== 0 )
     {
         id = results[0]._id;
         fn = results[0].firstname;
         ln = results[0].lastname;
         email = results[0].email;
+        userTTL = results[0].ttl;
+
+        if(userTTL > 0){
+            err = 'User is not verified!';
+        }
     }
     else
     {
@@ -203,7 +294,7 @@ app.post('/api/register', async (req, res, next) =>
                          ttl: TTL,
                          interestedIn: interested};
 
-    const results = await db.collection('Users').find({username: username, email: email}).toArray();
+    const results = await db.collection('Users').find({username: username}).toArray();
 
     try
     {
@@ -321,6 +412,7 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
     const db = client.db("oMarketDB");
 
     var newImage = null;
+    var oldImage = 0;
 
     if (req.file !== undefined)
     {
@@ -332,19 +424,36 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
             }
         });
     }
+    else
+        oldImage = 1;
 
     var error = '';
 
     try{
-        const newUser = await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set:
-                                                               {firstname: firstName,
-                                                                lastname: lastName,
-                                                                username: username,
-                                                                password: password.hashCode(),
-                                                                email: email,
-                                                                profilePic: newImage,
-                                                                phoneNumber: phoneNumber,
-                                                                aboutme: aboutMe}});
+
+        if (firstName)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {firstname: firstName}});
+
+        if (lastName)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {lastname: lastName}});
+
+        if (username)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {username: username}});
+
+        if (password)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {password: password.hashCode()}});
+
+        if (email)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {email: email}});
+
+        if (phoneNumber)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {phoneNumber: phoneNumber}});
+
+        if (aboutMe)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutMe: aboutMe}});
+
+        if (!oldImage)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {profilePic: newImage}});
     }
     catch(e)
     {
@@ -413,6 +522,7 @@ app.post('/api/editPost', upload.single('image'), async(req, res, next) => {
     const db = client.db("oMarketDB");
 
     var newImage = null;
+    var oldImage = 0;
 
     if (req.file !== undefined)
     {
@@ -424,13 +534,32 @@ app.post('/api/editPost', upload.single('image'), async(req, res, next) => {
             }
         });
     }
+    else
+        oldImage = 1;
 
 
     //just updates all the fields and if they're unchanged they just update from the prev value.
     try{
-        const user = db.collection('Posts').updateOne({_id: new ObjectId(id)},
-        {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage}});
+        if (username)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {username: username}});
 
+        if (name)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {name: name}});
+
+        if (genre)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {genre: genre}});
+
+        if (price)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {price: price}});
+
+        if (desc)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {desc: desc}});
+
+        if (condition)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {condition: condition}});
+
+        if (!oldImage)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {image: newImage}});
     }
     catch(e){
         err = e.toString();
