@@ -78,6 +78,7 @@ const SearchBar = props =>
                     name="string"
                     value={formData.string}
                     placeholder='Search'
+                    className="search-Bar"
                 />
                 <input 
                     type="checkbox" 
