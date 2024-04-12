@@ -48,14 +48,13 @@ const SettingsPage = () => {
       } else {
         // Update state with user data
         setCurUsername(userData.user.username || '');
-        setCurPassword(userData.user.password || '');
         setCurFirstName(userData.user.firstname || '');
         setCurLastName(userData.user.lastname || '');
         setCurEmail(userData.user.email || '');
         setCurPhoneNumber(userData.user.phoneNumber || '');
         setCurAboutMe(userData.user.aboutme || '');
         setNewUsername(userData.user.username || '');
-        setNewPassword(userData.user.password || '');
+        setNewPassword('');
         setNewFirstName(userData.user.firstname || '');
         setNewLastName(userData.user.lastname || '');
         setNewEmail(userData.user.email || '');
@@ -63,7 +62,6 @@ const SettingsPage = () => {
         setNewAboutMe(userData.user.aboutme || '');
         console.log(user.id);
         console.log("userData: ", userData.user.username);
-        console.log("userData: ", userData.user.password);
         console.log("userData: ", userData.user.firstname);
         console.log("userData: ", userData.user.lastname);
         console.log("userData: ", userData.user.email);
@@ -93,10 +91,13 @@ const SettingsPage = () => {
   console.log("newAboutMe: ", newAboutMe);
 
   const editUser = async () => {
-    if (newPassword != '' && !validatePassword(newPassword)) {
-      setPasswordError('Password must be 8-32 characters long, with at least 1 digit, 1 letter, and 1 special character');
-      return;
-    }
+      if (!validatePassword(newPassword)) {
+        if (newPassword != '') {
+          setPasswordError('Password must be 8-32 characters long, with at least 1 digit, 1 letter, and 1 special character');
+          return;
+        }
+      }
+    //}
 
     if (!validateUsername(newUsername)) {
       setUsernameError("Username must be 4-18 characters (Alphanumeric, -, _) and start with a character");
@@ -105,10 +106,12 @@ const SettingsPage = () => {
 
     if (!validateEmail(newEmail)) {
       setEmailError("Improper email format");
+      return;
     }
 
     if (!validatePhoneNumber(newPhoneNumber)) {
       setPhoneNumberError("Improper phone number format");
+      return;
     }
 
     try {
@@ -137,6 +140,7 @@ const SettingsPage = () => {
         setUsernameError('');
         setPasswordError('');
         setEmailError('');
+        setPhoneNumberError('');
         console.log("User Info Updated Successfully");
         Alert.alert('Info Updated Successfully');
         return responseData;
@@ -161,6 +165,10 @@ const SettingsPage = () => {
     }
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/;
     return emailRegex.test(email.toString());
+  }
+
+  const validatePhoneNumber = (phoneNumber) => {
+    return R_Validation_Data.phoneRegex.test(phoneNumber);
   }
 
   return (
@@ -214,6 +222,7 @@ const SettingsPage = () => {
             value={newPhoneNumber}
             onChangeText={setNewPhoneNumber}
           />
+          {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
           <Text style={styles.labelText}>About Me</Text>
           <TextInput
             style={styles.input}
