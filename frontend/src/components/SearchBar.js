@@ -71,7 +71,7 @@ const SearchBar = props =>
     // 5 15 84 1
 
     return(
-        <div>
+        <div className="card">
             <form onSubmit={submitHandler}>
                 <input
                     onChange={handleChange}

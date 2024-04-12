@@ -80,13 +80,18 @@ section {
   font-weight: bold;
 }
 
+.search {
+  color: #180066;
+  
+}
+
 
 ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
+  background-color: #351010;
 }
 
 li {
