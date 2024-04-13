@@ -29,6 +29,21 @@ section {
   padding: 20px
 }
 
+.login {
+  text-align: center;
+  background-color: #82099c;
+
+}
+.userDetails {
+  text-align: center;
+  border-radius: 20px;
+}
+
+.buttons {
+  text-align: center;
+  border-radius: 20px;
+}
+
 .search {
   background-color: #82099c;
   height: 20%;
