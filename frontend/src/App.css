@@ -38,8 +38,7 @@ section {
 
 .search,.search-Bar,.search-box {
   border-radius: 20px;
-  text-align: center;
-
+  text-align: center
 }
 
 .search-Button {
@@ -59,8 +58,41 @@ section {
   color: #fff
 }
 
+.buttons {
+  background-color: #fff;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  display: inline-block;
+  padding: 10px 24px;
+  
+  text-align: center;
+  text-decoration: none;
+  transition-duration: .4s;
+  border: 1px solid black; /* Green */
+
+}
+
+.buttons:hover {
+  background-color: #c739e6;
+  color: #fff
+}
+
 .search-Bar {
   width: 90%
+}
+
+input[type=text], input[type=password] {
+  padding: 0;
+  height: 30px;
+  position: relative;
+  left: 0;
+  outline: none;
+  border: 1px solid #cdcdcd;
+  border-color: rgba(0, 0, 0, .15);
+  background-color: white;
+  font-size: 16px;
+  width: 180px;
 }
 
 .posts-list {
@@ -234,4 +266,4 @@ a {
   z-index: 2147483647
 }
 
-/*# sourceMappingURL=main.f63cc198.css.map*/
+/*# sourceMappingURL=main.df0dc071.css.map*/
