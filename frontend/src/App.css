@@ -37,29 +37,30 @@ section {
 }
 
 .search,.search-Bar,.search-box {
-  border-radius: 20px
+  border-radius: 20px;
+  text-align: center;
+
 }
-.search-Button
-{
-  background-color: white; /* Green */
+
+.search-Button {
+  background-color: #fff;
   border: none;
-  color: black;
+  border-radius: 6px;
+  color: #000;
+  display: inline-block;
   padding: 5px 12px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
-  border-radius: 6px;
-  transition-duration: 0.4s;
+  transition-duration: .4s
 }
 
-.search-Button:hover
-{
-  background-color: #c739e6; /* Green */
-  color: white;
+.search-Button:hover {
+  background-color: #c739e6;
+  color: #fff
 }
 
 .search-Bar {
-  width: 60%
+  width: 90%
 }
 
 .posts-list {
@@ -136,42 +137,48 @@ li {
 }
 
 label {
-  display: inline-block;
+  color: #fff;
   cursor: pointer;
-  position: relative;
-  padding-left: 25px;
-  margin-right: 15px;
-  margin-left: 5px;
   font-size: 11px;
-  color: white;
-}
-label:before {
-  content: "";
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: 10px;
-  position: absolute;
-  left: 0;
-  bottom: 1px;
-  background-color: #c739e6;
-  border-radius: 2px;
-  box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
-}
-input[type=checkbox] {
-display: none;
-}
-.checkbox label:before {
-border-radius: 3px;
+  margin-left: 5px;
+  margin-right: 15px;
+  padding-left: 25px;
+  position: relative
 }
 
-input[type=checkbox]:checked + label:before {
-  content: "\2713";
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
-  font-size: 12px;
-  color: #fff;
-  text-align: center;
+label,label:before {
+  display: inline-block
 }
+
+label:before {
+  background-color: #c739e6;
+  border-radius: 2px;
+  bottom: 1px;
+  box-shadow: inset 0 2px 3px 0 #0000004d,0 1px 0 0 #fffc;
+  content: "";
+  height: 16px;
+  left: 0;
+  margin-right: 10px;
+  position: absolute;
+  width: 16px
+}
+
+input[type=checkbox] {
+  display: none
+}
+
+.checkbox label:before {
+  border-radius: 3px
+}
+
+input[type=checkbox]:checked+label:before {
+  color: #fff;
+  content: "\2713";
+  font-size: 12px;
+  text-align: center;
+  text-shadow: 1px 1px 1px #0003
+}
+
 #title {
   color: #82099c
 }
@@ -227,4 +234,4 @@ a {
   z-index: 2147483647
 }
 
-/*# sourceMappingURL=main.47fcddd0.css.map*/
+/*# sourceMappingURL=main.f63cc198.css.map*/
