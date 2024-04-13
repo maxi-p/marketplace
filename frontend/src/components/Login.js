@@ -56,13 +56,14 @@ const Login = props =>
 
     return(
         <div id="loginDiv">
-            <form onSubmit={doLogin}>
+            <form  className="login" onSubmit={doLogin}>
                 <span id="inner-title">PLEASE LOG IN</span><br />
                 <input 
                     type="text"
                     placeholder="Username"
                     id="username"
                     onChange={handleChange}
+                    className="userDetails" 
                     value={formData.username}
                 />
                 <br/>
@@ -70,8 +71,10 @@ const Login = props =>
                     type="password" 
                     placeholder="Password"
                     id="password"
-                    onChange={handleChange} 
+                    onChange={handleChange}
+                    className="userDetails"  
                     value={formData.password}
+                    
                 />
                 <br/>
                 <input 
