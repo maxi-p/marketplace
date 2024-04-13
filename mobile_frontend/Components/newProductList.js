@@ -76,6 +76,7 @@ async function fetchData_Real(index, search = '') {
                 desc: element.desc,
                 condition: element.condition,
                 image: element.image,
+                usersInterested:element.usersInterested,
                });
             });
     }

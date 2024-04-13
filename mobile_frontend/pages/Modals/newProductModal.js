@@ -5,6 +5,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { UserContext } from '../../logic/UserContext';
 import { buildPath } from '../../logic/NetworkLogic';
+import IntrestList from '../../Components/IntrestList';
 
 // Debugging settings
 const Debugging = false;
@@ -60,15 +61,18 @@ const ProductModal = ({route, navigation}) => {
     // Const Values
     const tempImage = require('../../Images/PlaceHolder.png');
 
-    const {user, setUser} = useContext(UserContext);
+    // const {user, setUser} = useContext(UserContext);
+    const user = {username: 'use'};
 
     const inDataPart = route?.params.product ?? defaultProduct;
     const inData = {
             isSeller: Debugging ? true : (inDataPart.seller == user.username),
             ...inDataPart,
     };
+    
 
     const [product, setProduct] = useState(inData);
+    const [interested, setInterested] = useState(product.usersInterested.includes(user.id));
 
     //EFFFECTS
     useEffect(() => {
@@ -85,12 +89,45 @@ const ProductModal = ({route, navigation}) => {
     // Events TODO
 
     const addIntrest = (event) => {
-        Alert.alert('Add Intrest', 'TODO');
-        console.log('TODO: Add Intrest');
+        console.log('Adding Intrest');
+        if (!interested){
+            addIntrestFetch(product._id, user.id);
+            product.usersInterested.push(user.id);
+            setInterested(true);
+            console.log("Intrest Added");
+        }
     };
-    const getIntrest = (event) => {
-        Alert.alert('Get Intrest', 'TODO');
-        console.log('TODO: Get Intrest');
+
+    const addIntrestFetch = async (postID, userID) => {
+        var js = JSON.stringify({
+            userId: userID,
+            postId: postID,
+        });
+        try {
+            console.log('Adding Interest Fetch');
+            const result = await fetch(buildPath('api/interestAddition'),
+                {
+                    method: 'POST',
+                    body:js,
+                    headers:{'Content-Type': 'application/json'},
+                });
+            console.log(JSON.stringify(result, null, 4));
+            const response = JSON.parse(await result.text());
+            console.log(JSON.stringify(response, null, 4));
+            if (response.error){
+                throw new Error(response.error);
+            }
+        }
+        catch (e) {
+            console.error(e.name + '\n\t' + e.message);
+            Alert.alert(e.name, e.message);
+            goBack(navigation);
+            return null;
+        }
+        finally {
+            console.log('IntrestAddition Finished');
+        }
+
     };
     const editItem = (event) => {
         navigation.navigate('SellUpdateModal', {
@@ -103,7 +140,6 @@ const ProductModal = ({route, navigation}) => {
         var obj = {
             postId: ID.toString(),
         };
-        console.log("ID: " + ID);
         var js = JSON.stringify(obj);
         try {
             const result = await fetch(buildPath('api/getPost'),
@@ -128,7 +164,7 @@ const ProductModal = ({route, navigation}) => {
                 condition: response.post.condition,
                 image: response.post.image,
                 isSeller: Debugging ? true : (response.post.username == username),
-                usersIntrested: response.post.usersIntrested,
+                usersInterested: response.post.usersInterested,
             };
         }
         catch (e) {
@@ -242,15 +278,33 @@ const ProductModal = ({route, navigation}) => {
                 </ScrollView>
             </View>
             {/*Button*/}
-            <View style={[styles.buttonRow]}>
-                <View style={styles.button}>
-                <Button
-                    onPress={product?.isSeller ? getIntrest : addIntrest}
-                    title={product?.isSeller ? 'Get Intrest' : "I'm Interested"}
-                    color={'purple'}
-                />
+            {
+                !(product?.isSeller) &&
+                <View style={[styles.buttonRow]}>
+                    <View style={styles.button}>
+                    <Button
+                        onPress={addIntrest}
+                        title={
+                            interested ?
+                            "I'm Interested" :
+                            'Add Interest'
+                            }
+                        color={'purple'}
+                        disabled={interested}
+                    />
+                    </View>
                 </View>
-            </View>
+            }
+            {/* Intrest List */}
+            {
+                product?.isSeller &&
+                <View style={styles.intrestListRow}>
+                    <IntrestList
+                        UserIDs={product.usersInterested}
+                        style={styles.intrestList}
+                    />
+                </View>
+            }
         </View>
     );
 };
@@ -362,6 +416,8 @@ const styles = StyleSheet.create({
     button: {
         maxWidth: 250,
     },
+    intrestListRow: {},
+    intrestList: {},
 });
 
 export default ProductModal;

@@ -1,11 +1,10 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "include": ["."],
+  "ts-node": {},
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@logic/*": ["logic/*"],
-      "@components/*": ["Components/*"]
     },
   }
 }

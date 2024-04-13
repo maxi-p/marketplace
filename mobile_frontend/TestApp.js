@@ -9,6 +9,7 @@ import ImageViewModal from './pages/Modals/ImageViewModal';
 import {UserContext} from './logic/UserContext';
 import SellUpdateProduct from './Components/SellUpdateProduct';
 import ProductListPage from './pages/ProductListPage';
+import IntrestList from './Components/IntrestList';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +17,7 @@ const App2 = () => {
   Appearance.setColorScheme('light');
   return (
     <View>
-      <SellUpdateProduct />
+      <IntrestList />
     </View>
   );
 };
