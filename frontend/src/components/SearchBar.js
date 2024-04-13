@@ -81,35 +81,38 @@ const SearchBar = props =>
                     className="search-Bar"
                 />
                 <button className="search-Button">Search</button>
-                <input 
-                    type="checkbox" 
-                    id="username" 
-                    name="username"
-                    checked={formData.username}
-                    onChange={handleChange}
-                    className="search-box"
-                    
-                />
-                <label htmlFor="username"> author</label>
-                <input 
-                    type="checkbox" 
-                    id="name" 
-                    name="name"
-                    checked={formData.name}
-                    onChange={handleChange}
-                    className="search-box"
-                />
-                <label htmlFor="name"> name </label>
-                <input 
-                    type="checkbox" 
-                    id="genre" 
-                    name="genre"
-                    checked={formData.genre}
-                    onChange={handleChange}
-                    className="search-box"
-                />
-                <label htmlFor="genre"> genre </label><br/>
-                <span>{message}</span><br/>
+                <div>
+                    <input 
+                        type="checkbox" 
+                        id="username" 
+                        name="username"
+                        checked={formData.username}
+                        onChange={handleChange}
+                        className="search-box"
+                        
+                    />
+                    <label htmlFor="username"> author</label>
+                    <input 
+                        type="checkbox" 
+                        id="name" 
+                        name="name"
+                        checked={formData.name}
+                        onChange={handleChange}
+                        className="search-box"
+                    />
+                    <label htmlFor="name"> name </label>
+                    <input 
+                        type="checkbox" 
+                        id="genre" 
+                        name="genre"
+                        checked={formData.genre}
+                        onChange={handleChange}
+                        className="search-box"
+                    />
+                    <label htmlFor="genre"> genre </label><br/>
+                    <span>{message}</span><br/>
+                </div>
+                
             </form>
         </div>
     );

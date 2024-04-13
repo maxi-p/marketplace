@@ -13,7 +13,7 @@ code {
 }
 
 body {
-  font-family: 'Helvetica', sans-serif;
+  font-family: Helvetica,sans-serif;
   margin: 0
 }
 
@@ -22,7 +22,7 @@ body {
 }
 
 .gray {
-  color: #918e9b;
+  color: #918e9b
 }
 
 section {
@@ -30,25 +30,36 @@ section {
 }
 
 .search {
-  padding: 10px;
   background-color: #82099c;
-  border-radius: 20px;
-  margin-inline: auto;
-  width: 75%;
   height: 20%;
+  margin-inline:auto;padding: 10px;
+  width: 95%
 }
 
-.search-Button {
-  border-radius: 20px;
+.search,.search-Bar,.search-box {
+  border-radius: 20px
+}
+.search-Button
+{
+  background-color: white; /* Green */
+  border: none;
+  color: black;
+  padding: 5px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 6px;
+  transition-duration: 0.4s;
 }
 
-.search-box {
-  border-radius: 20px;
+.search-Button:hover
+{
+  background-color: #c739e6; /* Green */
+  color: white;
 }
 
 .search-Bar {
-  border-radius: 20px;
-  width: 60%;
+  width: 60%
 }
 
 .posts-list {
@@ -59,16 +70,16 @@ section {
 }
 
 .card {
-  padding: 10px; 
+  background-color: #82099c;
   border-radius: 20px;
+  color: #fff;
   display: flex;
   flex: 10 10 auto;
   flex-direction: column;
   font-size: 14px;
+  padding: 10px;
   position: relative;
-  background-color: #82099c;
-  width: 175px;
-  color: white;
+  width: 175px
 }
 
 .card--image {
@@ -85,7 +96,7 @@ section {
 .card--stats {
   align-items: center;
   display: flex;
-  font-size: 16px;
+  font-size: 16px
 }
 
 .card--star {
@@ -95,7 +106,6 @@ section {
 .card--price {
   margin-top: auto
 }
-
 
 .edit--badge {
   left: 6px
@@ -111,31 +121,61 @@ section {
 }
 
 .delete--badge {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background-color: white;
-  padding: 5px 7px;
-  border-radius: 2px;
-  font-weight: bold;
+  right: 6px
 }
 
-
 ul {
+  background-color: #82099c;
   list-style-type: none;
   margin: 0;
-  overflow: hidden;
-  background-color: #82099c;
+  overflow: hidden
 }
 
 li {
   float: left
 }
 
-#title
-{
-  color: #82099c   
+label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 25px;
+  margin-right: 15px;
+  margin-left: 5px;
+  font-size: 11px;
+  color: white;
 }
+label:before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  background-color: #c739e6;
+  border-radius: 2px;
+  box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+}
+input[type=checkbox] {
+display: none;
+}
+.checkbox label:before {
+border-radius: 3px;
+}
+
+input[type=checkbox]:checked + label:before {
+  content: "\2713";
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+}
+#title {
+  color: #82099c
+}
+
 li a {
   color: #fff;
   display: block;
@@ -152,11 +192,9 @@ li a:hover {
   background-color: #04aa6d
 }
 
-a
-{
-  color: white   
+a {
+  color: #fff
 }
-
 
 .spinner-container {
   align-items: center;
@@ -188,3 +226,5 @@ a
   width: auto;
   z-index: 2147483647
 }
+
+/*# sourceMappingURL=main.47fcddd0.css.map*/
