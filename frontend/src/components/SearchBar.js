@@ -81,7 +81,7 @@ const SearchBar = props =>
                     className="search-Bar"
                 />
                 <button className="search-Button">Search</button>
-                <div>
+                <div className='search-Checkboxes'>
                     <input 
                         type="checkbox" 
                         id="username" 
