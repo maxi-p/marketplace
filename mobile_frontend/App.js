@@ -2,13 +2,20 @@ import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {UserContext} from './logic/UserContext';
+import {Appearance} from 'react-native';
+
+import ProductModal from './pages/Modals/newProductModal';
+import ImageViewModal from './pages/Modals/ImageViewModal';
+import SellUpdateProduct from './Components/SellUpdateProduct';
+import ProductListPage from './pages/ProductListPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+
+
 import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
-import {UserContext} from './logic/UserContext';
-import {Appearance} from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,12 +58,22 @@ const App = () => {
   );
 };
 
+// <Tab.Screen name="Home" component={HomePage} />
+// <Tab.Screen name="Sell" component={SellPage} />
+// <Tab.Screen name="Browse" component={BrowsePage} />
 const PostLogin = () => {
   return (
     <Tab.Navigator initialRouteName="Home">
-      <Tab.Screen name="Home" component={HomePage} />
-      <Tab.Screen name="Sell" component={SellPage} />
-      <Tab.Screen name="Browse" component={BrowsePage} />
+      <Stack.Screen name="List" component={ProductListPage} />
+      <Stack.Group
+        screenOptions={{
+          presentation: 'modal',
+          headerShown: false,
+        }}>
+        <Stack.Screen name="ProductModal" component={ProductModal} />
+        <Stack.Screen name="ImageModal" component={ImageViewModal} />
+        <Stack.Screen name="SellUpdateModal" component={SellUpdateProduct} />
+      </Stack.Group>
     </Tab.Navigator>
   );
 };

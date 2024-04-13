@@ -58,12 +58,6 @@ const Login = (props) => {
     props.navigation.navigate('Register');
   };
 
-  const handleLogout = () => {
-    setUsername(''); // Clear username
-    setPassword(''); // Clear password
-    setMessage(''); // Clear error message
-  };
-
   // Render the login page if isLoggedIn is false
   return (
     <View style={styles.container}>
