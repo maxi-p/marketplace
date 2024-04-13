@@ -61,8 +61,8 @@ const ProductModal = ({route, navigation}) => {
     // Const Values
     const tempImage = require('../../Images/PlaceHolder.png');
 
-    // const {user, setUser} = useContext(UserContext);
-    const user = {username: 'use'};
+    const {user, setUser} = useContext(UserContext);
+    // const user = {username: 'use'};
 
     const inDataPart = route?.params.product ?? defaultProduct;
     const inData = {
@@ -91,21 +91,33 @@ const ProductModal = ({route, navigation}) => {
     const addIntrest = (event) => {
         console.log('Adding Intrest');
         if (!interested){
-            addIntrestFetch(product._id, user.id);
+            IntrestFetch(product._id, user.id, 'api/interestAddition');
             product.usersInterested.push(user.id);
             setInterested(true);
             console.log("Intrest Added");
         }
     };
+    const remIntrest = (event) => {
+        console.log('Removing Intrest');
+        if (interested){
+            IntrestFetch(product._id, user.id, 'api/interestDeletion');
+            var Index = product.usersInterested.indexOf(user.id);
+            if (Index > -1) {
+                product.usersInterested.splice(Index ,1);
+            }
+            setInterested(false);
+            console.log("Intrest Remove");
+        }
+    };
 
-    const addIntrestFetch = async (postID, userID) => {
+    const IntrestFetch = async (postID, userID, path) => {
         var js = JSON.stringify({
             userId: userID,
             postId: postID,
         });
         try {
-            console.log('Adding Interest Fetch');
-            const result = await fetch(buildPath('api/interestAddition'),
+            console.log(path + ' Fetch');
+            const result = await fetch(buildPath(path),
                 {
                     method: 'POST',
                     body:js,
@@ -125,7 +137,7 @@ const ProductModal = ({route, navigation}) => {
             return null;
         }
         finally {
-            console.log('IntrestAddition Finished');
+            console.log(path + ' Finished');
         }
 
     };
@@ -283,14 +295,13 @@ const ProductModal = ({route, navigation}) => {
                 <View style={[styles.buttonRow]}>
                     <View style={styles.button}>
                     <Button
-                        onPress={addIntrest}
+                        onPress={interested ? remIntrest : addIntrest}
                         title={
                             interested ?
-                            "I'm Interested" :
+                            'Remove Interest' :
                             'Add Interest'
                             }
-                        color={'purple'}
-                        disabled={interested}
+                        color={interested? 'purple' : 'blue'}
                     />
                     </View>
                 </View>

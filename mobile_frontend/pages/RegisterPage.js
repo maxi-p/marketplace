@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // Register Page created by Griffin Zakow on 03/21/24
 
 import React from "react";
@@ -11,7 +12,7 @@ export default function RegisterPage(props) {
 
     return (
         <ScrollView>
-            <RegisterComponent 
+            <RegisterComponent
                 {...props}
             />
         </ScrollView>

@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 
-// FileName: RegisterComponent.js, Created by Griffin Zakow 
+// FileName: RegisterComponent.js, Created by Griffin Zakow
 
 // TODO add Comments
-import React, {useState} from "react"; 
-import { 
+import React, {useState} from 'react';
+import {
   Alert,
   View,
   Text,
@@ -14,16 +14,15 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Button,
-  ScrollView,
-} from "react-native"; 
-import { useForm, Controller } from "react-hook-form";
-import R_Validation_Data from "../logic/RegisterValidation";
+} from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import R_Validation_Data from '../logic/RegisterValidation';
 
 
 // Helper functions
 function buildPath(route)
 {
-    const app_name = 'cop4331-marketplace-98e1376d9db6'
+    const app_name = 'cop4331-marketplace-98e1376d9db6';
     if (process.env.NODE_ENV === 'production')
     {
     return 'https://' + app_name + '.herokuapp.com/' + route;
@@ -35,7 +34,7 @@ function buildPath(route)
 }
 
   // Component Functions
-function RegisterComponent() {
+function RegisterComponent({navigation}) {
 
   const [message, setMessage] = useState('');
   const doRegister = async (regData) =>
@@ -46,39 +45,44 @@ function RegisterComponent() {
       username: regData.username,
       password: regData.pass,
       email: regData.email,
-      phoneNumber: R_Validation_Data.dePhoneify(regData.phone)
+      phoneNumber: R_Validation_Data.dePhoneify(regData.phone),
     };
     var js = JSON.stringify(obj);
 
     try {
       const response = await fetch(buildPath('api/register'),
       {
-        method: 'POST', 
-        body:js, 
-        headers:{'Content-Type': 'application/json'}
+        method: 'POST',
+        body:js,
+        headers:{'Content-Type': 'application/json'},
       });
       var res = JSON.parse(await response.text());
+
+      console.log(JSON.stringify(res, null, 4));
       if (res.error)
       {
-        setMessage(res.error);
+        throw new Error(res.error)
       }
       else
       {
-        setMessage("");
-        props.navigation?.navigate('Login');
+        setMessage('');
+        navigation?.navigate('eVerifyModel', {
+          UserID: res._id,
+        });
       }
     }
-    catch(e){
+    catch (e){
       Alert.alert(e.toString());
       console.log(e.toString());
       return;
     }
-  }
+  };
+
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   return (
     <View style={styles.root}>
@@ -88,13 +92,13 @@ function RegisterComponent() {
           {/* Component Starts Here*/}
           <View>
           {/* First Name*/}
-          <Controller 
+          <Controller
             name="firstName"
             defaultValue=""
-            rules={{ required: "This field is required", 
+            rules={{ required: 'This field is required',
             }}
             render={({field: { onChange, onBlur, value}}) => (
-              <RegInput 
+              <RegInput
                 label="First Name"
                 error={errors.firstName}
                 errorText={errors.firstName?.message}
@@ -118,12 +122,12 @@ function RegisterComponent() {
           />
 
           {/* Last Name*/}
-          <Controller 
+          <Controller
             name="lastName"
             defaultValue=""
-            rules={{required: "This field is required",}}
+            rules={{required: 'This field is required'}}
             render={({field: {onChange, onBlur, value}}) => (
-              <RegInput 
+              <RegInput
                 label="Last Name"
                 error={errors.lastName}
                 errorText={errors.lastName?.message}
@@ -141,24 +145,24 @@ function RegisterComponent() {
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
-                
+
               />
             )}
             control={control}
           />
           {/* Username*/}
-          <Controller 
+          <Controller
             name="username"
             defaultValue=""
             rules={{
               pattern: {
                 value: R_Validation_Data.userNameRegex,
-                message: "Username must be 4-18 characters (Alphanumeric, -, _) and start with a character"
+                message: 'Username must be 4-18 characters (Alphanumeric, -, _) and start with a character'
               },
-              required: "This field is required",
-            }} 
+              required: 'This field is required',
+            }}
             render={({field: {onChange, onBlur, value}}) => (
-              <RegInput 
+              <RegInput
                 label="Username"
                 error={errors.username}
                 errorText={errors.username?.message}
@@ -181,18 +185,18 @@ function RegisterComponent() {
             control={control}
           />
           {/* Email*/}
-          <Controller 
+          <Controller
             name="email"
             defaultValue=""
             rules={{
               pattern: {
-                value:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$/,
-                message: "This must be formatted as an email"
+                value:/^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/,
+                message: 'This must be formatted as an email'
               },
-              required: "This field is required",
-            }} 
+              required: 'This field is required',
+            }}
             render={({field: {onChange, onBlur, value}}) => (
-              <RegInput 
+              <RegInput
                 label="Email"
                 error={errors.email}
                 errorText={errors.email?.message}
@@ -215,18 +219,18 @@ function RegisterComponent() {
             control={control}
           />
           {/* Phone Number*/}
-          <Controller 
+          <Controller
             name="phone"
             defaultValue=""
             rules={{
               pattern:{
                 value: R_Validation_Data.phoneRegex,
-                message: "This must be a valid phone number"
+                message: 'This must be a valid phone number'
               },
-              required: "This field is required",
-            }} 
+              required: 'This field is required',
+            }}
             render={({field: {onChange, onBlur, value}}) => (
-              <RegInput 
+              <RegInput
                 label="Phone Number"
                 error={errors.phone}
                 errorText={errors.phone?.message}
@@ -249,18 +253,18 @@ function RegisterComponent() {
             control={control}
           />
           {/* Password*/}
-          <Controller 
+          <Controller
             name="pass"
             defaultValue=""
-            rules={{ 
+            rules={{
               pattern:{
                 value: R_Validation_Data.passwordRegex,
-                message: "Passwords must be 8-32 long, with at least 1 digit, 1 letter, 1 special character"
+                message: 'Passwords must be 8-32 long, with at least 1 digit, 1 letter, 1 special character'
               },
-              required: "This field is required"
+              required: 'This field is required'
             }}
             render={({field: {onChange, onBlur, value}}) => (
-              <RegInput 
+              <RegInput
                 label="Password"
                 error={errors.pass}
                 errorText={errors.pass?.message}
@@ -273,7 +277,7 @@ function RegisterComponent() {
                 returnKeyType="done"
 
                 inputRef={(r) => this.PWRef = r}
-                
+
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -282,7 +286,7 @@ function RegisterComponent() {
             control={control}
           />
           <View style={[styles.form, styles.formButton]}>
-            <Button 
+            <Button
               onPress={handleSubmit(doRegister)}
               title="Submit"
             />
@@ -294,7 +298,7 @@ function RegisterComponent() {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </View>
-  ) };
+  ); }
 
 
 
@@ -317,14 +321,14 @@ function RegInput(props) {
       <TextInput
         style={[styles.textInput, props.error && styles.errorInput, props.style]}
         {...props}
-        ref={(r) => {props.inputRef && props.inputRef(r)}}
+        ref={(r) => {props.inputRef && props.inputRef(r);}}
         />
         {props.errorText && (
           <Text style={styles.errorText}>{props.errorText}</Text>
         )}
 
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -340,10 +344,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   errorInput: {
-    borderColor: "red",
+    borderColor: 'red',
   },
   errorText: {
-    color: "red",
+    color: 'red',
   },
 });
 
