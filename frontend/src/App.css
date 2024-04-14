@@ -1,11 +1,11 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif
 }
 
 code {
-  font-family: source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace
+  font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace
 }
 
 * {
@@ -13,7 +13,7 @@ code {
 }
 
 body {
-  font-family: Helvetica,sans-serif;
+  font-family: Helvetica, sans-serif;
   margin: 0
 }
 
@@ -34,6 +34,7 @@ section {
   background-color: #82099c;
 
 }
+
 .userDetails {
   text-align: center;
   border-radius: 20px;
@@ -47,11 +48,14 @@ section {
 .search {
   background-color: #82099c;
   height: 20%;
-  margin-inline:auto;padding: 10px;
+  margin-inline: auto;
+  padding: 10px;
   width: 95%
 }
 
-.search,.search-Bar,.search-box {
+.search,
+.search-Bar,
+.search-box {
   border-radius: 20px;
   text-align: center
 }
@@ -80,11 +84,12 @@ section {
   color: #000;
   display: inline-block;
   padding: 10px 24px;
-  
+
   text-align: center;
   text-decoration: none;
   transition-duration: .4s;
-  border: 1px solid black; /* Green */
+  border: 1px solid black;
+  /* Green */
 
 }
 
@@ -97,7 +102,9 @@ section {
   width: 90%
 }
 
-input[type=text], input[type=password], input[type=price] {
+input[type=text],
+input[type=password],
+input[type=price] {
   padding: 0;
   height: 30px;
   position: relative;
@@ -159,7 +166,8 @@ input[type=text], input[type=password], input[type=price] {
   left: 6px
 }
 
-.delete--badge,.edit--badge {
+.delete--badge,
+.edit--badge {
   background-color: #fff;
   border-radius: 2px;
   font-weight: 700;
@@ -193,7 +201,8 @@ label {
   position: relative
 }
 
-label,label:before {
+label,
+label:before {
   display: inline-block
 }
 
@@ -201,7 +210,7 @@ label:before {
   background-color: #c739e6;
   border-radius: 2px;
   bottom: 1px;
-  box-shadow: inset 0 2px 3px 0 #0000004d,0 1px 0 0 #fffc;
+  box-shadow: inset 0 2px 3px 0 #0000004d, 0 1px 0 0 #fffc;
   content: "";
   height: 16px;
   left: 0;
@@ -279,6 +288,142 @@ a {
   position: absolute;
   width: auto;
   z-index: 2147483647
+}
+
+.form_wrapper {
+  background: floralwhite;
+  width: 400px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 25px;
+  margin: 0 auto 0;
+  position: relative;
+  z-index: 1;
+  border-top: 5px solid #82099c;
+
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 1.5em;
+    line-height: 1.5em;
+    margin: 0;
+  }
+
+  .title_container {
+    text-align: center;
+    padding-bottom: 15px;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    font-weight: normal;
+    line-height: 1.5em;
+    margin: 0;
+  }
+
+  label {
+    font-size: 12px;
+  }
+
+  .input_field {
+    position: relative;
+    margin-bottom: 20px;
+
+    >span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #333;
+      height: 100%;
+      border-right: 1px solid #cccccc;
+      text-align: center;
+      width: 30px;
+
+      >i {
+        padding-top: 10px;
+      }
+    }
+  }
+
+  .textarea_field {
+    >span {
+      >i {
+        padding-top: 10px;
+      }
+    }
+  }
+
+  input {
+
+    &[type="text"],
+    &[type="email"],
+    &[type="password"] {
+      width: 100%;
+      padding: 8px 10px 9px 35px;
+      height: 35px;
+      border: 1px solid #cccccc;
+      box-sizing: border-box;
+      outline: none;
+      -webkit-transition: all 0.30s ease-in-out;
+      -moz-transition: all 0.30s ease-in-out;
+      -ms-transition: all 0.30s ease-in-out;
+      transition: all 0.30s ease-in-out;
+    }
+
+    &[type="text"]:hover,
+    &[type="email"]:hover,
+    &[type="password"]:hover {
+      background: #fafafa;
+    }
+
+    &[type="text"]:focus,
+    &[type="email"]:focus,
+    &[type="password"]:focus {
+      -webkit-box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
+      -moz-box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
+      box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
+      border: 1px solid #82099c;
+      background: #fafafa;
+    }
+
+    &[type="submit"] {
+      background: #82099c;
+      height: 35px;
+      line-height: 35px;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      -webkit-transition: all 0.30s ease-in-out;
+      -moz-transition: all 0.30s ease-in-out;
+      -ms-transition: all 0.30s ease-in-out;
+      transition: all 0.30s ease-in-out;
+
+      &:hover {
+        background: darken(#82099c, 7%);
+      }
+
+      &:focus {
+        background: darken(#82099c, 7%);
+      }
+    }
+
+    &[type="checkbox"],
+    &[type="radio"] {
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+  }
 }
 
 /*# sourceMappingURL=main.df0dc071.css.map*/
