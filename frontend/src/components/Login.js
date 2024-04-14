@@ -60,7 +60,7 @@ const Login = props => {
 
                 <div class="">
                     <form className="login" onSubmit={doLogin}>
-                        <div class="input_field"> <span><FontAwesomeIcon icon={faUser}/></span>
+                        <div class="input_field"> <span><FontAwesomeIcon icon={faUser} transform="down-10"/></span>
                             <input
                                 type="text"
                                 placeholder="Username"
@@ -70,7 +70,7 @@ const Login = props => {
                                 value={formData.username}
                             />
                         </div>
-                        <div class="input_field"> <span> <FontAwesomeIcon icon={faLock}/></span>
+                        <div class="input_field"> <span> <FontAwesomeIcon icon={faLock} transform="down-10"/></span>
                             <input
                                 type="password"
                                 placeholder="Password"
