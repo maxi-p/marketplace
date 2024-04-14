@@ -77,8 +77,9 @@ const Register = props => {
                                 value={formData.firstname}
                                 onChange={handleChange}
                             />
-                            <span id="firstNameResult">{validationState.firstNameMessage}</span><br />
                         </div>
+                        <span id="firstNameResult">{validationState.firstNameMessage}</span><br />
+
                     </div>
                     <div className="col_half">
                         <div className="input_field"> <span><i aria-hidden="true" className="fa fa-user"></i></span>
@@ -89,9 +90,9 @@ const Register = props => {
                                 value={formData.lastname}
                                 onChange={handleChange}
                             />
-                            <span id="lastNameResult">{validationState.lastNameMessage}</span><br />
 
                         </div>
+                        <span id="lastNameResult">{validationState.lastNameMessage}</span><br />
                     </div>
                 </div>
                 <div className="row clearfix">
