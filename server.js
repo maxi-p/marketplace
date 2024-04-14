@@ -42,6 +42,7 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const { send } = require('process');
+const { gmail } = require('googleapis/build/src/apis/gmail');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -338,9 +339,15 @@ async function sendEmail(email, verifyNum)
 
         const transport = nodemailer.createTransport({
             service: 'gmail',
+            name: 'gmail.com',
+            pool: true,
+            host: 'gmail.com',
+            port: 587,
+            secure: false,
             auth: {
                 type: 'OAuth2',
                 user: 'emailsenderopenmarket@gmail.com',
+                pass: process.env.MAILER_PASSWORD,
                 clientId: CLIENT_ID,
                 clientSecret:  CLIENT_SECRET,
                 refreshToken: REFRESH_TOKEN,
