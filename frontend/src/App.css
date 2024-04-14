@@ -161,9 +161,10 @@ input[type=price] {
 }
 
 .card {
-  background-color: #82099c;
+  background-color: floralwhite;
+  border: 1px solid #82099c;
   border-radius: 20px;
-  color: #fff;
+  color: #000;
   display: flex;
   flex: 10 10 auto;
   flex-direction: column;
@@ -205,6 +206,7 @@ input[type=price] {
 .delete--badge,
 .edit--badge {
   background-color: #fff;
+  border-color: #c739e6;
   border-radius: 2px;
   font-weight: 700;
   padding: 5px 7px;
@@ -292,7 +294,7 @@ li a:hover {
 }
 
 a {
-  color: #fff
+  color: #000
 }
 
 .spinner-container {
