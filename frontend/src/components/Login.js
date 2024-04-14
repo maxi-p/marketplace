@@ -88,6 +88,13 @@ const Login = props => {
                             className="loginButton"
                             onClick={doLogin}
                         />
+                        <input
+                            type="submit"
+                            id="registerButton"
+                            className="registerButton"
+                            value="Register"
+                            onClick={() => navigate('/register')}
+                        />
                     </form>
                 </div>
             </div>
