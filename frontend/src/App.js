@@ -51,12 +51,12 @@ function App()
           <Route 
             path="/user-home"
             index 
-            element={isLoggedIn? <UserHomePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
+            element={isLoggedIn? <UserHomePage loggedUser={isLoggedIn} loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
           />
           <Route
             path="/verify-email" 
             index 
-            element={isLoggedIn? <EnterCodePage loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
+            element={isLoggedIn? <EnterCodePage loggedUser={isLoggedIn} loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
           />
           <Route
             path="/post" 

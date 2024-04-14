@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import buildPath from '../logic/validator';
+import buildPath from '../logic/buildPath';
 
 function EnterCode()
 {
@@ -10,8 +10,8 @@ function EnterCode()
     {  
         event.preventDefault();
         
-        // user == {firstName: string, lastName: string, id: int}
-        const user = JSON.parse(localStorage.getItem('user_data'));
+        // TODO: FIX THE IMPERATIVE REDIRECT
+        const user = JSON.parse(props.loggedUser);
         if(user == null)
             window.location.href = '/register';
 

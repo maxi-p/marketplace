@@ -8,7 +8,7 @@ const UserHomePage = props =>
     return(
         <div>
             <PageTitle title="User Home Page"/>
-            <UserHome loggedHandler={props.loggedHandler}/>
+            <UserHome loggedUser={props.loggedUser} loggedHandler={props.loggedHandler}/>
         </div>
     );
 }

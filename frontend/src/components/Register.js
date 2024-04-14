@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Route, {useNavigate} from 'react-router-dom';
 import validateRegister from '../logic/validator';
-import buildPath from '../logic/validator';
+import buildPath from '../logic/buildPath';
 
 const Register = props =>
 {
@@ -40,13 +40,15 @@ const Register = props =>
             var json = JSON.stringify(formData);
             try
             {
+                console.log(json)
                 const response = await fetch(buildPath('api/register'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
                 var res = JSON.parse(await response.text());
+                console.log(res)
                 if(res.error)
                     setMessage(res.error);
                 else
                 {
-                    var user = {username: res.username, firstName:res.firstName, lastName:res.lastName, id:res.id}
+                    var user = {username: res.username, firstName: res.firstName, lastName: res.lastName, id: res.id}
                     localStorage.setItem('user_data', JSON.stringify(user));
                     props.loggedHandler(user)
                     setMessage('');
@@ -55,7 +57,6 @@ const Register = props =>
                 
             }
             catch(e){
-                alert(e.toString());
                 console.log(e.toString());
                 return;
             }

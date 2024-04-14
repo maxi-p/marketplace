@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Route, {useNavigate} from 'react-router-dom';
-import isLoggedIn from '../logic/isLoggedIn';
+import React from 'react';
+import {useNavigate} from 'react-router-dom';
 
 const UserHome = props =>
 {
-    const [user] = useState(isLoggedIn());
+    console.log(props.loggedUser)
     const navigate = useNavigate();
 
     const logOutHandler = () => 
@@ -17,7 +16,7 @@ const UserHome = props =>
     return(
       <div id="loggedInDiv">
         <img src='./avatar.png' style={{width:100,height:100}} alt="avatar"></img><br />
-        {user && <span id="userName">{user.firstName} {user.lastName}</span>}<br />
+        {props.loggedUser && <span id="userName">{props.loggedUser.firstName} {props.loggedUser.lastName}</span>}<br />
         <input 
             type="button" 
             id="verifyButton" 
