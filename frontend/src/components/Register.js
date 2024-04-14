@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Route, { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faEnvelope, faPhone} from '@fortawesome/free-solid-svg-icons';
 import validateRegister from '../logic/validator';
 import buildPath from '../logic/validator';
 
@@ -69,7 +69,7 @@ const Register = props => {
                 </div>
                 <div className="row clearfix">
                     <div className="col_half">
-                        <div className="input_field"> <span><i aria-hidden="true" className="fa fa-user"></i></span>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser}/></span>
                             <input
                                 type="text"
                                 id="firstname"
@@ -79,10 +79,9 @@ const Register = props => {
                             />
                         </div>
                         <span id="firstNameResult">{validationState.firstNameMessage}</span><br />
-
                     </div>
                     <div className="col_half">
-                        <div className="input_field"> <span><i aria-hidden="true" className="fa fa-user"></i></span>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser}/></span>
                             <input
                                 type="text"
                                 id="lastname"
@@ -99,7 +98,7 @@ const Register = props => {
                     <div className="">
                         <form>
                             <div className="input_field">
-                                <span><i aria-hidden="true" className="fa fa-user"></i></span>
+                                <span><FontAwesomeIcon icon={faUser} /></span>
                                 <input
                                     type="text"
                                     id="username"
@@ -110,7 +109,9 @@ const Register = props => {
                                 <span id="userNameResult">{validationState.userNameMessage}</span><br />
 
                             </div>
-                            <div className="input_field"> <span><i aria-hidden="true" className="fa fa-envelope"></i></span>
+                            <span id="userNameResult">{validationState.userNameMessage}</span><br />
+
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faEnvelope} /></span>
                                 <input
                                     type="text"
                                     id="email"
@@ -118,10 +119,11 @@ const Register = props => {
                                     value={formData.email}
                                     onChange={handleChange}
                                 />
-                                <span id="emailResult">{validationState.emailMessage}</span><br />
 
                             </div>
-                            <div className="input_field"> <span><i aria-hidden="true" className="fa fa-phone"></i></span>
+                            <span id="emailResult">{validationState.emailMessage}</span><br />
+
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faPhone} /></span>
                                 <input
                                     type="text"
                                     id="phoneNumber"
@@ -129,9 +131,10 @@ const Register = props => {
                                     value={formData.phoneNumber}
                                     onChange={handleChange}
                                 />
-                                <span id="phoneResult">{validationState.phoneMessage}</span><br />
                             </div>
-                            <div className="input_field"> <span><i aria-hidden="true" className="fa fa-lock"></i></span>
+                            <span id="phoneResult">{validationState.phoneMessage}</span><br />
+
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faLock} /></span>
                                 <input
                                     type="password"
                                     id="password"
@@ -139,8 +142,9 @@ const Register = props => {
                                     value={formData.password}
                                     onChange={handleChange}
                                 />
-                                <span id="passwordResult">{validationState.passwordMessage}</span><br />
                             </div>
+                            <span id="passwordResult">{validationState.passwordMessage}</span><br />
+
                             <input
                                 type="submit"
                                 id="registerButton"
