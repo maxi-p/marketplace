@@ -86,6 +86,7 @@ const Login = props =>
                     className="login-buttons"  
                     onClick={doLogin} 
                 />
+                <h1>already registerd?</h1>
                 <input 
                     type="button" 
                     value = "Register"

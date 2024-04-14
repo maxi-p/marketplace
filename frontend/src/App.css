@@ -31,27 +31,35 @@ section {
 
 .login {
   background-color: #82099c;
-  height: 30%;
-  margin-inline:auto; padding: 100px;
-  width: 35%;
-  border-radius: 10px;
-  text-align: center
+    border-radius: 10px;
+    height: 30%;
+    margin-inline:auto;padding: 100px;
+    width: 35%
 
 }
 
 .LoginTitle {
-  background-color: #000000;
-}
-
-.userdetails {
-    border-radius: 5px;
-    padding: 10px;
+  background-color: #000;
+    color: white;
+    display:block;
+    font-size: xx-large;
+    margin-inline:auto;
     text-align: center;
 }
 
+.userdetails {
+  border-radius: 5px;
+    margin-inline:auto;
+    padding: 10px;
+    display: flex;
+    text-align: center
+}
+
 .login-buttons{
-  border-radius: 20px;
+  display: flex;
+  margin-inline:auto;
   background-color: #fff;
+  border-radius: 5px
 }
 
 
