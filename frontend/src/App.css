@@ -29,11 +29,11 @@ section {
   padding: 20px
 }
 
-.login {
+/* .login {
   text-align: center;
   background-color: #82099c;
 
-}
+} */
 
 .userDetails {
   text-align: center;
@@ -77,25 +77,32 @@ section {
   color: #fff
 }
 
-.buttons {
-  background-color: #fff;
+.loginButton {
+  background: #82099c;
+  height: 35px;
+  line-height: 35px;
+  width: 100%;
+  border-radius: 5px;
   border: none;
-  border-radius: 6px;
-  color: #000;
-  display: inline-block;
-  padding: 10px 24px;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  transition: all 0.30s ease-in-out;
 
-  text-align: center;
-  text-decoration: none;
-  transition-duration: .4s;
-  border: 1px solid black;
-  /* Green */
 
 }
 
-.buttons:hover {
-  background-color: #c739e6;
-  color: #fff
+.loginButton:hover {
+  background: darken(#82099c, 7%);
+}
+
+.loginButton:focus {
+  background: darken(#82099c, 7%);
 }
 
 .search-Bar {

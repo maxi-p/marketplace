@@ -85,7 +85,7 @@ const Login = props => {
                             type="submit"
                             value="Login"
                             id="loginButton"
-                            className="buttons"
+                            className="loginButton"
                             onClick={doLogin}
                         />
                     </form>
