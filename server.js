@@ -42,7 +42,6 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const { send } = require('process');
-const { gmail } = require('googleapis/build/src/apis/gmail');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -319,7 +318,7 @@ app.post('/api/register', async (req, res, next) =>
         error = e.toString();
     }
 
-    await sendEmail(email, verifyNum).then(result => console.log('Email sent...')).catch(error => console.log(error.message));
+    await sendEmail(email, verifyNum).then(result => console.log('Email sent...', result)).catch(error => console.log(error.message));
 
     var ret = {_id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
     res.status(200).json(ret);
@@ -338,12 +337,10 @@ async function sendEmail(email, verifyNum)
         //console.log(accessToken);
 
         const transport = nodemailer.createTransport({
-            service: 'gmail',
-            name: 'gmail.com',
-            pool: true,
-            host: 'gmail.com',
-            port: 587,
-            secure: false,
+            //service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
                 type: 'OAuth2',
                 user: 'emailsenderopenmarket@gmail.com',
@@ -352,10 +349,10 @@ async function sendEmail(email, verifyNum)
                 clientSecret:  CLIENT_SECRET,
                 refreshToken: REFRESH_TOKEN,
                 accessToken: accessToken
-            },
-            tls: {
-                rejectUnauthorized: false, // this made my request token work!
-            },
+            }
+            // tls: {
+            //     rejectUnauthorized: false, // this made my request token work!
+            // },
         });
 
         const mailOptions = {
