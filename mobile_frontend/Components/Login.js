@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
-import HomePage from '../pages/HomePage';
 import {UserContext} from '../logic/UserContext';
 
 
@@ -43,9 +42,9 @@ const Login = (props) => {
         });
         props.navigation?.navigate('Post-Login');
         // Navigate to Home screen
-        setUsername(''); // Clear username
-        setPassword(''); // Clear password
-        setMessage(''); // Clear error message
+        setUsername('');
+        setPassword('');
+        setMessage('');
       }
     } catch (error) {
       console.error(error);
@@ -58,6 +57,10 @@ const Login = (props) => {
     console.log('Redirecting to register screen');
     props.navigation.navigate('Register');
   };
+
+  const resetPassword = () => {
+    props.navigation.navigate('Request');
+  }
 
   const handleLogout = () => {
     setUsername(''); // Clear username
@@ -89,6 +92,9 @@ const Login = (props) => {
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
       <Text style={styles.message}>{message}</Text>
+      <TouchableOpacity onPress={resetPassword}>
+      <Text style={styles.forgotPassword}>Forgot Password?</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -116,6 +122,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingLeft: 10,
     paddingRight: 60, 
+  },
+  forgotPassword: {
+    color: 'blue',
+    fontSize: 18,
+    marginBottom: 20,
+    marginHorizontal: 75,
   },
   button: {
     width: '80%',

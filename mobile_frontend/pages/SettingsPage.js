@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { useForm, Controller } from "react-hook-form";
 import { UserContext } from '../logic/UserContext';
 import R_Validation_Data from "../logic/RegisterValidation";
 
@@ -97,7 +96,6 @@ const SettingsPage = () => {
           return;
         }
       }
-    //}
 
     if (!validateUsername(newUsername)) {
       setUsernameError("Username must be 4-18 characters (Alphanumeric, -, _) and start with a character");

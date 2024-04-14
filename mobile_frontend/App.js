@@ -9,6 +9,8 @@ import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
 import UserPage from './pages/UserPage';
+import UsernamePage from './pages/UsernamePage';
+import PasswordResetPage from './pages/PasswordResetPage';
 import { UserContext } from './logic/UserContext';
 import SettingsPage from './pages/SettingsPage';
 
@@ -45,6 +47,8 @@ const App = () => {
         <Stack.Screen name="Post-Login" component={PostLogin}
           options={{headerShown: false}}
         />
+        <Stack.Screen name="Reset" component={PasswordResetPage} />
+        <Stack.Screen name="Request" component={UsernamePage} />
         <Stack.Screen name="Settings" component={SettingsPage} />
       </Stack.Navigator>
     </UserContext.Provider>

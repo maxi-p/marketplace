@@ -49,23 +49,23 @@ const UserPage = () => {
       <Text style={styles.title}>{curUsername}'s Information</Text>
       <View style={styles.userInfo}>
         <Text style={styles.label}>Username</Text>
-        <Text>{curUsername}</Text>
+        <Text style={styles.info}>{curUsername}</Text>
       </View>
       <View style={styles.userInfo}>
         <Text style={styles.label}>Name</Text>
-        <Text>{curFirstName + " " + curLastName}</Text>
+        <Text style={styles.info}>{curFirstName + " " + curLastName}</Text>
       </View>
       <View style={styles.userInfo}>
         <Text style={styles.label}>Email</Text>
-        <Text>{curEmail}</Text>
+        <Text style={styles.info}>{curEmail}</Text>
       </View>
       <View style={styles.userInfo}>
         <Text style={styles.label}>Phone Number</Text>
-        <Text>{curPhoneNumber}</Text>
+        <Text style={styles.info}>{curPhoneNumber}</Text>
       </View>
       <View style={styles.userInfo}>
         <Text style={styles.label}>About Me</Text>
-        <Text>{curAboutMe}</Text>
+        <Text style={styles.info}>{curAboutMe}</Text>
       </View>
     </ScrollView>
     );
@@ -82,13 +82,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: 'black',
   },
   userInfo: {
     fontSize: 20,
     marginBottom: 10,
     alignSelf: 'flex-start', // Align text to the left
+    color: 'black',
+  },
+  info: {
+    fontSize: 20,
+    color: 'black',
   },
   label: {
+    fontSize: 20,
+    color: 'black',
     fontWeight: 'bold',
   },
   button: {
