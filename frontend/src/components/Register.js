@@ -69,7 +69,7 @@ const Register = props => {
                 </div>
                 <div className="row clearfix">
                     <div className="col_half">
-                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser}/></span>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform = "down-5"/></span>
                             <input
                                 type="text"
                                 id="firstname"
@@ -78,7 +78,7 @@ const Register = props => {
                                 onChange={handleChange}
                             />
                         </div>
-                        <span id="firstNameResult">{validationState.firstNameMessage}</span><br />
+                        <span id="firstNameResult">{validationState.firstNameMessage }</span><br />
                     </div>
                     <div className="col_half">
                         <div className="input_field"> <span><FontAwesomeIcon icon={faUser}/></span>
@@ -106,8 +106,6 @@ const Register = props => {
                                     value={formData.username}
                                     onChange={handleChange}
                                 />
-                                <span id="userNameResult">{validationState.userNameMessage}</span><br />
-
                             </div>
                             <span id="userNameResult">{validationState.userNameMessage}</span><br />
 
