@@ -338,21 +338,18 @@ async function sendEmail(email, verifyNum)
 
         const transport = nodemailer.createTransport({
             //service: 'gmail',
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
             auth: {
                 type: 'OAuth2',
                 user: 'emailsenderopenmarket@gmail.com',
-                pass: process.env.MAILER_PASSWORD,
+                //pass: process.env.MAILER_PASSWORD,
                 clientId: CLIENT_ID,
                 clientSecret:  CLIENT_SECRET,
                 refreshToken: REFRESH_TOKEN,
                 accessToken: accessToken
-            }
-            // tls: {
-            //     rejectUnauthorized: false, // this made my request token work!
-            // },
+            },
+            tls: {
+                rejectUnauthorized: false, // this made my request token work!
+            },
         });
 
         const mailOptions = {
@@ -489,7 +486,7 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
     res.status(200).json(ret);
 });
 
-app.post('/api/createPost', upload.single('image'), async function(req, res, next) {
+app.post('/api/createPost', /*upload.single('image'),*/ async function(req, res, next) {
     //incoming: username, name, condition, genre, price, desc, image
     //outgoing: newPost, error
 
@@ -498,20 +495,20 @@ app.post('/api/createPost', upload.single('image'), async function(req, res, nex
 
 
     let usersInterested = [];
-    var newImage = null;
+    //var newImage = null;
 
-    if (req.file !== undefined)
-    {
-        newImage = new imageModel({
+    //if (req.body.image !== undefined)
+    //{
+        newImage = req.body.image;/*new imageModel({
             name: req.file.filename,
             image: {
                 data: fs.readFileSync(path.join(req.file.path)),
                 contentType: req.file.mimetype
             }
-        });
-    }
+        });*/
+    //}
 
-    var newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage, usersInterested: usersInterested};
+    var newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: req.body.image, usersInterested: usersInterested};
     const results = await db.collection('Posts').find({username: username, name: name}).toArray();
 
     var err = '';
