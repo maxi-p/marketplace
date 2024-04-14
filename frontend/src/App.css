@@ -30,25 +30,26 @@ section {
 }
 
 .login {
-    background-color: #82099c;
-    border-radius: 20px;
+  background-color: #82099c;
+  height: 30%;
+  margin-inline:auto; padding: 100px;
+  width: 35%;
+  border-radius: 10px;
+  text-align: center
+
+}
+
+.userdetails {
+    border-radius: 5px;
+    padding: 10px;
     text-align: center;
-    margin-inline:auto;padding: 10px;
-    height: 30%;
-    width: 75%;
-
 }
 
-.userDetails {
-  text-align: center;
+.login-buttons{
   border-radius: 20px;
+  background-color: #fff;
 }
 
-.buttons {
-  text-align: center;
-  border-radius: 20px;
-  padding: 10px;
-}
 
 .search {
   background-color: #82099c;
