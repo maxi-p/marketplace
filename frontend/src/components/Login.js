@@ -57,8 +57,8 @@ const Login = props =>
     return(
         <div id="loginDiv">
             <form  className="login" onSubmit={doLogin}>
-                <span id="inner-title">PLEASE LOG IN</span><br />
-                
+                <span className = "LoginTitle" id="inner-title">Log in</span><br />
+                <span id="inner-title">Username</span><br />
                 <input 
                     type="text"
                     placeholder="Username"
@@ -68,6 +68,7 @@ const Login = props =>
                     value={formData.username}
                 />
                 <br/>
+                <span id="inner-title">Password</span><br />
                 <input 
                     type="password" 
                     placeholder="Password"
