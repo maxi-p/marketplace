@@ -238,6 +238,10 @@ app.post('/api/login', async (req, res, next) =>
     var email = '';
     var userTTL = -1;
     var err = '';
+    var phoneNumber = ''
+    var aboutMe = '';
+    var profilePic = null;
+    var interestedIn = [];
 
     if( results.length !== 0 )
     {
@@ -246,6 +250,10 @@ app.post('/api/login', async (req, res, next) =>
         ln = results[0].lastname;
         email = results[0].email;
         userTTL = results[0].ttl;
+        phoneNumber = results[0].phoneNumber;
+        aboutMe = results[0].aboutme;
+        profilePic = results[0].profilePic;
+        interestedIn = results[0].interestedIn;
 
         if(userTTL > 0){
             err = 'User is not verified!';
@@ -256,7 +264,7 @@ app.post('/api/login', async (req, res, next) =>
         err = 'No Records Found';
     }
 
-    var ret = { id:id, username: username, firstName:fn, lastName:ln, email: email, error:err};
+    var ret = { id:id, firstName:fn, lastName:ln, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: userTTL, interestedIn: interestedIn, error:err};
     res.status(200).json(ret);
 });
 
@@ -312,7 +320,7 @@ app.post('/api/register', async (req, res, next) =>
 
     verifyEmail(email, verifyNum);
 
-    var ret = { _id: newId, username: username, verifyNum: verifyNum, error: error};
+    var ret = {id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
     res.status(200).json(ret);
 });
 
