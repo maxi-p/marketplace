@@ -93,6 +93,7 @@ const Login = props => {
             </div>
 
             <p class="credit"><a href="http://www.designtheway.com" target="_blank"></a></p>
+
             <span id="loginResult">{message}</span>
         </div >
     );
