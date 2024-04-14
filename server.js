@@ -84,12 +84,12 @@ app.post('/api/passwordRequest', async (req, res, next) =>
 
 
     try{
-        const user = await db.collection('Users').findOne({username: username});
+        const user = await db.collection('Users').find({username: username}).toArray();
 
         if (!user)
             throw new Error('User is not in Database');
         
-        email = user.email;
+        email = user[0].email;
 
         await verifyEmail(email, verifyNum);
 
