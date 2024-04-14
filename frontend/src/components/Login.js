@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Route, { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import buildPath from '../logic/buildPath';
 
 const Login = props => {
@@ -58,7 +60,7 @@ const Login = props => {
 
                 <div class="">
                     <form className="login" onSubmit={doLogin}>
-                        <div class="input_field"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                        <div class="input_field"> <span><FontAwesomeIcon icon={faUser}/></span>
                             <input
                                 type="text"
                                 placeholder="Username"
@@ -68,7 +70,7 @@ const Login = props => {
                                 value={formData.username}
                             />
                         </div>
-                        <div class="input_field"> <span><i aria-hidden="true" class="fa fa-lock"></i></span>
+                        <div class="input_field"> <span> <FontAwesomeIcon icon={faLock}/></span>
                             <input
                                 type="password"
                                 placeholder="Password"
