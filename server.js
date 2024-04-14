@@ -345,7 +345,10 @@ async function sendEmail(email, verifyNum)
                 clientSecret:  CLIENT_SECRET,
                 refreshToken: REFRESH_TOKEN,
                 accessToken: accessToken
-            }
+            },
+            tls: {
+                rejectUnauthorized: false, // this made my request token work!
+            },
         });
 
         const mailOptions = {
