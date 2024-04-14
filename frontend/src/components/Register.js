@@ -69,7 +69,7 @@ const Register = props => {
                 </div>
                 <div className="row clearfix">
                     <div className="col_half">
-                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform = "down-5"/></span>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform = "down-6"/></span>
                             <input
                                 type="text"
                                 id="firstname"
@@ -81,7 +81,7 @@ const Register = props => {
                         <span id="firstNameResult">{validationState.firstNameMessage }</span><br />
                     </div>
                     <div className="col_half">
-                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser}/></span>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform = "down-6"/></span>
                             <input
                                 type="text"
                                 id="lastname"
@@ -98,7 +98,7 @@ const Register = props => {
                     <div className="">
                         <form>
                             <div className="input_field">
-                                <span><FontAwesomeIcon icon={faUser} /></span>
+                                <span><FontAwesomeIcon icon={faUser} transform = "down-6"/></span>
                                 <input
                                     type="text"
                                     id="username"
@@ -109,7 +109,7 @@ const Register = props => {
                             </div>
                             <span id="userNameResult">{validationState.userNameMessage}</span><br />
 
-                            <div className="input_field"> <span><FontAwesomeIcon icon={faEnvelope} /></span>
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faEnvelope} transform = "down-6"/></span>
                                 <input
                                     type="text"
                                     id="email"
@@ -121,7 +121,7 @@ const Register = props => {
                             </div>
                             <span id="emailResult">{validationState.emailMessage}</span><br />
 
-                            <div className="input_field"> <span><FontAwesomeIcon icon={faPhone} /></span>
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faPhone} transform = "down-6"/></span>
                                 <input
                                     type="text"
                                     id="phoneNumber"
@@ -132,7 +132,7 @@ const Register = props => {
                             </div>
                             <span id="phoneResult">{validationState.phoneMessage}</span><br />
 
-                            <div className="input_field"> <span><FontAwesomeIcon icon={faLock} /></span>
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faLock} transform = "down-6"/></span>
                                 <input
                                     type="password"
                                     id="password"
