@@ -90,7 +90,7 @@ paths:
         "Empty Error String":
           description: OK
           schema:
-            $ref: '#/definitions/NormalResponse'
+            $ref: '#/definitions/EmailVerifyResponse'
   /editUser:
     post:
       tags:
@@ -406,7 +406,7 @@ paths:
         "Empty Error String":
           description: OK
           schema:
-            $ref: '#/definitions/PasswordChangeResponse'
+            $ref: '#/definitions/LoginResponse'
         "User is not in Database":
           description: The given user was not found
         "Verify Num doesn't match Database":
@@ -541,18 +541,32 @@ definitions:
       id:
         type: string
         example: 12121fafwfaf103012
-      username:
-        type: string
-        example: Fred1212
       firstName:
         type: string
         example: Fred
       lastName:
         type: string
         example: Doe
+      username:
+        type: string
+        example: Fred1212
       email:
         type: string
         example: fred@doe.com
+      phoneNumber:
+        type: string
+        example: 1112223333
+      aboutMe:
+        type: string
+        example: About Me
+      profilePic:
+        type: object
+      ttl:
+        type: number
+        example: 12121213454
+      interestedIn:
+        type: string
+        example: []
       error:
         type: string
         example: ""
@@ -590,12 +604,32 @@ definitions:
       _id:
         type: string
         example: 12121fafwfaf103012
+      firstName:
+        type: string
+        example: Fred
+      lastName:
+        type: string
+        example: Doe
       username:
         type: string
         example: Fred1212
-      verifyNum:
-        type: integer
-        example: 12345
+      email:
+        type: string
+        example: fred@doe.com
+      phoneNumber:
+        type: string
+        example: 1112223333
+      aboutMe:
+        type: string
+        example: About Me
+      profilePic:
+        type: object
+      ttl:
+        type: number
+        example: 12121213454
+      interestedIn:
+        type: string
+        example: []
       error:
         type: string
         example: ""
@@ -611,6 +645,18 @@ definitions:
       verifyNum:
         type: integer
         example: 458792
+  EmailVerifyResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        example: 12121fafwfaf103012
+      ttl:
+        type: number
+        example: 12345593473
+      error:
+        type: string
+        example: ''
   InterestAddition:
     type: object
     required:
@@ -724,15 +770,6 @@ definitions:
       newPassword:
         type: string
         example: secret
-  PasswordChangeResponse:
-    type: object
-    properties:
-      username:
-        type: string
-        example: Fred121
-      error: 
-        type: string
-        example: ''
   SearchUser:
     type: object
     required:

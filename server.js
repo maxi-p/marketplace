@@ -11,13 +11,10 @@ client.connect(console.log("mongodb connected"));
 // Email API
 const nodemailer = require('nodemailer');
 const { google }  = require('googleapis');
-const CLIENT_ID = process.env.CLIENT_ID;;
+const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
-
-const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 // Connection Management
 const express = require('express');
@@ -44,6 +41,7 @@ app.use((req, res, next) =>
 const multer = require('multer');
 const mongoose = require('mongoose');
 const fs = require('fs');
+const { send } = require('process');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -91,7 +89,7 @@ app.post('/api/passwordRequest', async (req, res, next) =>
         
         email = user[0].email;
 
-        await verifyEmail(email, verifyNum);
+        await sendEmail(email, verifyNum);
 
         const update = await db.collection('Users').updateOne({username: username}, {$set: {verifyNum: verifyNum}});
     }
@@ -100,7 +98,7 @@ app.post('/api/passwordRequest', async (req, res, next) =>
         error = e.toString();
     }
 
-    var ret = {username: username, email: email, verifyNum: verifyNum, error: error};
+    var ret = {username: username, email: email, error: error};
     res.status(200).json(ret);
 });
 
@@ -110,8 +108,10 @@ app.post('/api/passwordChange', async (req, res, next) =>
     const db = client.db('oMarketDB');
     let error = '';
 
+    var user = null;
+
     try{
-        const user = await db.collection('Users').findOne({username: username});
+        user = await db.collection('Users').findOne({username: username});
 
         if (!user)
             throw new Error('User is not in Database');
@@ -132,7 +132,7 @@ app.post('/api/passwordChange', async (req, res, next) =>
         error = e.toString();
     }
 
-    var ret = {username: username, error: error};
+    var ret = {id: user._id, firstName: user.firstname, lastName: user.lastname, username: username, email: user.email, phoneNumber: user.phoneNumber, aboutMe: user.aboutme, profilePic: user.profilePic, ttl: user.ttl, interestedIn: user.interestedIn, error: error};
     res.status(200).json(ret);
 });
 
@@ -230,7 +230,7 @@ app.post('/api/login', async (req, res, next) =>
     const {username, password} = req.body;
 
     const db = client.db("oMarketDB");
-    const results = await db.collection('Users').find({username: username, password: password.hashCode()}).toArray();
+    const results = await db.collection('Users').find({username: username}).toArray();
 
     var id = -1;
     var fn = '';
@@ -243,7 +243,7 @@ app.post('/api/login', async (req, res, next) =>
     var profilePic = null;
     var interestedIn = [];
 
-    if( results.length !== 0 )
+    if(results.length !== 0 && results[0].password == password.hashCode())
     {
         id = results[0]._id;
         fn = results[0].firstname;
@@ -318,25 +318,29 @@ app.post('/api/register', async (req, res, next) =>
         error = e.toString();
     }
 
-    verifyEmail(email, verifyNum);
+    await sendEmail(email, verifyNum).then(result => console.log('Email sent...')).catch(error => console.log(error.message));
 
-    var ret = {id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
+    var ret = {_id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
     res.status(200).json(ret);
 });
 
-async function verifyEmail(email, verifyNum)
+async function sendEmail(email, verifyNum)
 {
+    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+    oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
     let message = 'Here is your verification code: ' + verifyNum;
 
     try
     {
         const accessToken = await oAuth2Client.getAccessToken();
+        //console.log(accessToken);
 
         const transport = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 type: 'OAuth2',
-                user: 'randomrandomrandom120@gmail.com',
+                user: 'emailsenderopenmarket@gmail.com',
                 clientId: CLIENT_ID,
                 clientSecret:  CLIENT_SECRET,
                 refreshToken: REFRESH_TOKEN,
@@ -345,17 +349,18 @@ async function verifyEmail(email, verifyNum)
         });
 
         const mailOptions = {
-            from: 'Open Market <randomrandomrandom120@gmail.com>',
+            from: 'Open Market <emailsenderopenmarket@gmail.com>',
             to: email,
             subject: 'Verification Code',
             text: message
         };
 
         const result = await transport.sendMail(mailOptions);
+        return result;
     }
-    catch(e)
+    catch(error)
     {
-        console.log(e.toString());
+        return error;
     }
 
 }
@@ -372,7 +377,7 @@ app.post('/api/emailVerify', async (req, res, next) =>
     const currentTime = Date.now();
 
     try{
-        const user = await db.collection('Users').findOne({_id: new ObjectId(id)});
+        var user = await db.collection('Users').findOne({_id: new ObjectId(id)});
 
         if (user == null)
             throw new Error('User Id Not Found');
@@ -400,13 +405,17 @@ app.post('/api/emailVerify', async (req, res, next) =>
         {
             throw new Error('Undefined Behavior Spotted');
         }
+
+        user = await db.collection('Users').findOne({_id: new ObjectId(id)});
     }
     catch(e)
     {
         error = e.toString();
     }
 
-    var ret = { _id: id, error: error};
+    var updatedTTL = user.ttl;
+
+    var ret = { _id: id, ttl: updatedTTL, error: error};
     res.status(200).json(ret);
 });
 
@@ -588,7 +597,8 @@ app.post('/api/deletePost', async(req, res, next) => {
     const db = client.db("oMarketDB");
 
     try{
-        const post = await db.collection('Posts').findOneAndDelete({_id: new ObjectId(id)})
+        const user = db.collection('Users').updateMany({interestedIn: {$all: [id]}}, {$pull: {interestedIn: id}});
+        const post = await db.collection('Posts').findOneAndDelete({_id: new ObjectId(id)});
 
         if (!post)
             throw new Error('Post was not found');
