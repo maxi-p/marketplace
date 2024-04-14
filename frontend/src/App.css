@@ -103,7 +103,7 @@ section {
   width: 90%
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=price] {
   padding: 0;
   height: 30px;
   position: relative;
