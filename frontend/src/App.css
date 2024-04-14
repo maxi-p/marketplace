@@ -105,6 +105,35 @@ section {
   background: darken(#82099c, 7%);
 }
 
+.registerButton {
+  background: #82099c;
+  height: 35px;
+  line-height: 35px;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  transition: all 0.30s ease-in-out;
+
+
+}
+
+.registerButton:hover {
+  background: darken(#82099c, 7%);
+}
+
+.registerButton:focus {
+  background: darken(#82099c, 7%);
+}
+
+
 .search-Bar {
   width: 90%
 }
@@ -132,9 +161,10 @@ input[type=price] {
 }
 
 .card {
-  background-color: #82099c;
+  background-color: floralwhite;
+  border: 1px solid #82099c;
   border-radius: 20px;
-  color: #fff;
+  color: #000;
   display: flex;
   flex: 10 10 auto;
   flex-direction: column;
@@ -176,6 +206,7 @@ input[type=price] {
 .delete--badge,
 .edit--badge {
   background-color: #fff;
+  border-color: #c739e6;
   border-radius: 2px;
   font-weight: 700;
   padding: 5px 7px;
@@ -263,7 +294,7 @@ li a:hover {
 }
 
 a {
-  color: #fff
+  color: #000
 }
 
 .spinner-container {
@@ -317,6 +348,7 @@ a {
   }
 
   .title_container {
+    color: #82099c;
     text-align: center;
     padding-bottom: 15px;
   }
