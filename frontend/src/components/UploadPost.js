@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Route, {useNavigate} from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faComment, faDollarSign, faLightbulb, faPencil, faStar } from '@fortawesome/free-solid-svg-icons';
 import buildPath from '../logic/buildPath';
 
