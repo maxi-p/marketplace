@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Route, {useNavigate} from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faComment, faDollarSign, faLightbulb, faPencil, faStar } from '@fortawesome/free-solid-svg-icons';
 import buildPath from '../logic/buildPath';
 
 const UploadForm = props => 
@@ -55,65 +57,74 @@ const UploadForm = props =>
     };
 
     return(
-        <div id="uploadPostDiv">
-            <form onSubmit={doPost}>
-                <span id="inner-title">Enter Your Post Details</span><br />
-                <input 
-                    type="text"
-                    placeholder="name"
-                    id="name"
-                    onChange={handleChange}
-                    value={formData.name}
-                />
-                <br/>
-                <input 
-                    type="text" 
-                    placeholder="genre"
-                    id="genre"
-                    onChange={handleChange} 
-                    value={formData.genre}
-                />
-                <br/>
-                <input 
-                    type="price" 
-                    placeholder="price"
-                    id="price"
-                    onChange={handleChange} 
-                    value={formData.price}
-                />
-                <br/>
-                <input 
-                    type="text" 
-                    placeholder="desc"
-                    id="desc"
-                    onChange={handleChange} 
-                    value={formData.desc}
-                />
-                <br/>
-                <input 
-                    type="text" 
-                    placeholder="condition"
-                    id="condition"
-                    onChange={handleChange} 
-                    value={formData.condition}
-                /><br/>
-                <input 
-                    type="file" 
-                    placeholder="image"
-                    accept="image/*"
-                    id="image"
-                    onChange={handleChange} 
-                />
-                
-                <br/>
-                <input 
-                    type="submit" 
-                    value = "Post"
-                    id="postButton" 
-                    className="buttons"  
-                />
-            </form>
-            <span id="postResult">{message}</span>
+
+        <div className="form_wrapper">
+            <div className="form_container">
+                <div className="title_container">
+                    <h2>Upload Post</h2>
+                </div>
+                <div className="row clearfix">
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faPencil} transform = "down-6"/></span>
+                            <input 
+                                type="text"
+                                placeholder="name"
+                                id="name"
+                                onChange={handleChange}
+                                value={formData.name}
+                            />
+                        </div>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faLightbulb} transform = "down-6"/></span>
+                            <input 
+                                type="text" 
+                                placeholder="genre"
+                                id="genre"
+                                onChange={handleChange} 
+                                value={formData.genre}
+                            />
+                        </div>
+                    <div className="uploadPostDiv">
+                        <form>
+                            <div className="input_field">
+                                <span><FontAwesomeIcon icon={faDollarSign} transform = "down-6"/></span>
+                                <input 
+                                    type="price" 
+                                    placeholder="price"
+                                    id="price"
+                                    onChange={handleChange} 
+                                    value={formData.price}
+                                />
+                            </div>
+
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faComment} transform = "down-6"/></span>
+                                <input 
+                                    type="text" 
+                                    placeholder="desc"
+                                    id="desc"
+                                    onChange={handleChange} 
+                                    value={formData.desc}
+                                />
+                            </div>
+
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faStar} transform = "down-6"/></span>
+                                <input 
+                                    type="text" 
+                                    placeholder="condition"
+                                    id="condition"
+                                    onChange={handleChange} 
+                                    value={formData.condition}
+                                />
+                            </div>
+                            <input 
+                                type="submit" 
+                                value = "Post"
+                                id="postButton" 
+                                className="postUploadButton"  
+                            />
+                        </form>
+                        <span id="postResult">{message}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

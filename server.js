@@ -10,14 +10,7 @@ client.connect(console.log("mongodb connected"));
 
 // Email API
 const nodemailer = require('nodemailer');
-const { google }  = require('googleapis');
-const CLIENT_ID = process.env.CLIENT_ID;;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI;
-const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
-
-const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+const pass = process.env.pass;
 
 // Connection Management
 const express = require('express');
@@ -44,6 +37,8 @@ app.use((req, res, next) =>
 const multer = require('multer');
 const mongoose = require('mongoose');
 const fs = require('fs');
+const { send } = require('process');
+const e = require('express');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -73,6 +68,70 @@ const imageSchema = new mongoose.Schema({ // Defines image objects
     }
 });
 const imageModel = mongoose.model("imagemodel", imageSchema);
+
+app.post('/api/passwordRequest', async (req, res, next) => 
+{
+    const {username} = req.body;
+    const db = client.db('oMarketDB');
+    let email = '';
+    let verifyNum = randomNum();
+    let error = '';
+
+
+    try{
+        const user = await db.collection('Users').find({username: username}).toArray();
+
+        if (!user)
+            throw new Error('User is not in Database');
+        
+        email = user[0].email;
+
+        await sendEmail(email, verifyNum);
+
+        const update = await db.collection('Users').updateOne({username: username}, {$set: {verifyNum: verifyNum}});
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = {username: username, email: email, error: error};
+    res.status(200).json(ret);
+});
+
+app.post('/api/passwordChange', async (req, res, next) => 
+{
+    const {username, verifyNum, newPassword} = req.body;
+    const db = client.db('oMarketDB');
+    let error = '';
+
+    var user = null;
+
+    try{
+        user = await db.collection('Users').findOne({username: username});
+
+        if (!user)
+            throw new Error('User is not in Database');
+        
+        var dbVerifyNum = user.verifyNum;
+
+        if (dbVerifyNum == verifyNum)
+        {
+            const change = await db.collection('Users').updateOne({username: username}, {$set: {password: newPassword.hashCode(), verifyNum: 0}});
+        }
+        else
+        {
+            throw new Error('Verify Num doesn\'t match database');
+        }
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = {id: user._id, firstName: user.firstname, lastName: user.lastname, username: username, email: user.email, phoneNumber: user.phoneNumber, aboutMe: user.aboutme, profilePic: user.profilePic, ttl: user.ttl, interestedIn: user.interestedIn, error: error};
+    res.status(200).json(ret);
+});
 
 app.post('/api/searchPost', async (req, res, next) =>
 {
@@ -124,7 +183,7 @@ app.post('/api/searchPost', async (req, res, next) =>
         if (req.body.minIndex <= searches.length - 1)
         {
             let max = (req.body.maxIndex > searches.length - 1) ? searches.length - 1 : req.body.maxIndex;
-            for(var i = req.body.minIndex; i <= max; i++)
+            for(var i = req.body.minIndex; i < max; i++)
             {
                 paginatedSearches.push(searches[i]);
             }
@@ -137,6 +196,29 @@ app.post('/api/searchPost', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/searchUser', async (req, res, next) => 
+{
+    //incoming: username
+    //outgoing: userInfo, error
+
+    const { username } = req.body;
+
+    const db = client.db("oMarketDB");
+    var error = '';
+
+    var userResults = [];
+
+    try{
+        userResults = await db.collection('Users').find({username: username}).toArray();
+    }
+    catch(e){
+        error = e.toString();
+    }
+
+    var ret = {results: userResults, error:error};
+    res.status(200).json(ret);
+})
+
 app.post('/api/login', async (req, res, next) =>
 {
     // incoming: username, password
@@ -145,27 +227,41 @@ app.post('/api/login', async (req, res, next) =>
     const {username, password} = req.body;
 
     const db = client.db("oMarketDB");
-    const results = await db.collection('Users').find({username: username, password: password.hashCode()}).toArray();
+    const results = await db.collection('Users').find({username: username}).toArray();
 
     var id = -1;
     var fn = '';
     var ln = '';
     var email = '';
+    var userTTL = -1;
     var err = '';
+    var phoneNumber = ''
+    var aboutMe = '';
+    var profilePic = null;
+    var interestedIn = [];
 
-    if( results.length != 0 )
+    if(results.length !== 0 && results[0].password == password.hashCode())
     {
         id = results[0]._id;
         fn = results[0].firstname;
         ln = results[0].lastname;
         email = results[0].email;
+        userTTL = results[0].ttl;
+        phoneNumber = results[0].phoneNumber;
+        aboutMe = results[0].aboutme;
+        profilePic = results[0].profilePic;
+        interestedIn = results[0].interestedIn;
+
+        if(userTTL > 0){
+            err = 'User is not verified!';
+        }
     }
     else
     {
         err = 'No Records Found';
     }
 
-    var ret = { id:id, username: username, firstName:fn, lastName:ln, email: email, error:err};
+    var ret = { id:id, firstName:fn, lastName:ln, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: userTTL, interestedIn: interestedIn, error:err};
     res.status(200).json(ret);
 });
 
@@ -203,7 +299,7 @@ app.post('/api/register', async (req, res, next) =>
                          ttl: TTL,
                          interestedIn: interested};
 
-    const results = await db.collection('Users').find({username: username, email: email}).toArray();
+    const results = await db.collection('Users').find({username: username}).toArray();
 
     try
     {
@@ -219,46 +315,44 @@ app.post('/api/register', async (req, res, next) =>
         error = e.toString();
     }
 
-    verifyEmail(email, verifyNum);
+    await sendEmail(email, verifyNum).then(result => console.log('Email sent...', result)).catch(error => console.log(error.message));
 
-    var ret = { _id: newId, username: username, verifyNum: verifyNum, error: error};
+    var ret = {_id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
     res.status(200).json(ret);
 });
 
-async function verifyEmail(email, verifyNum)
+async function sendEmail(email, verifyNum)
 {
     let message = 'Here is your verification code: ' + verifyNum;
 
     try
     {
-        const accessToken = await oAuth2Client.getAccessToken();
-
-        const transport = nodemailer.createTransport({
-            service: 'gmail',
+        const smtpConfig = {
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
-                type: 'OAuth2',
-                user: 'randomrandomrandom120@gmail.com',
-                clientId: CLIENT_ID,
-                clientSecret:  CLIENT_SECRET,
-                refreshToken: REFRESH_TOKEN,
-                accessToken: accessToken
+                user: 'emailsenderopenmarket@gmail.com',
+                pass: pass
             }
-        });
+        };
+
+        const transport = nodemailer.createTransport(smtpConfig);
 
         const mailOptions = {
-            from: 'Open Market <randomrandomrandom120@gmail.com>',
+            from: 'Open Market <emailsenderopenmarket@gmail.com>',
             to: email,
             subject: 'Verification Code',
             text: message
         };
 
         const result = await transport.sendMail(mailOptions);
+        return result;
     }
     catch(e)
     {
-        console.log(e.toString());
+        return e;
     }
-
 }
 
 app.post('/api/emailVerify', async (req, res, next) =>
@@ -271,9 +365,10 @@ app.post('/api/emailVerify', async (req, res, next) =>
 
     var error = '';
     const currentTime = Date.now();
+    var updatedTTL = -1;
 
     try{
-        const user = await db.collection('Users').findOne({_id: new ObjectId(id)});
+        var user = await db.collection('Users').findOne({_id: new ObjectId(id)});
 
         if (user == null)
             throw new Error('User Id Not Found');
@@ -301,13 +396,16 @@ app.post('/api/emailVerify', async (req, res, next) =>
         {
             throw new Error('Undefined Behavior Spotted');
         }
+
+        user = await db.collection('Users').findOne({_id: new ObjectId(id)});
+        updatedTTL = user.ttl;
     }
     catch(e)
     {
         error = e.toString();
     }
 
-    var ret = { _id: id, error: error};
+    var ret = { _id: id, ttl: updatedTTL, error: error};
     res.status(200).json(ret);
 });
 
@@ -321,6 +419,7 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
     const db = client.db("oMarketDB");
 
     var newImage = null;
+    var oldImage = 0;
 
     if (req.file !== undefined)
     {
@@ -332,19 +431,36 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
             }
         });
     }
+    else
+        oldImage = 1;
 
     var error = '';
 
     try{
-        const newUser = await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set:
-                                                               {firstname: firstName,
-                                                                lastname: lastName,
-                                                                username: username,
-                                                                password: password.hashCode(),
-                                                                email: email,
-                                                                profilePic: newImage,
-                                                                phoneNumber: phoneNumber,
-                                                                aboutme: aboutMe}});
+
+        if (firstName)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {firstname: firstName}});
+
+        if (lastName)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {lastname: lastName}});
+
+        if (username)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {username: username}});
+
+        if (password)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {password: password.hashCode()}});
+
+        if (email)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {email: email}});
+
+        if (phoneNumber)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {phoneNumber: phoneNumber}});
+
+        if (aboutMe)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutMe: aboutMe}});
+
+        if (!oldImage)
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {profilePic: newImage}});
     }
     catch(e)
     {
@@ -413,6 +529,7 @@ app.post('/api/editPost', upload.single('image'), async(req, res, next) => {
     const db = client.db("oMarketDB");
 
     var newImage = null;
+    var oldImage = 0;
 
     if (req.file !== undefined)
     {
@@ -424,13 +541,32 @@ app.post('/api/editPost', upload.single('image'), async(req, res, next) => {
             }
         });
     }
+    else
+        oldImage = 1;
 
 
     //just updates all the fields and if they're unchanged they just update from the prev value.
     try{
-        const user = db.collection('Posts').updateOne({_id: new ObjectId(id)},
-        {$set: {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage}});
+        if (username)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {username: username}});
 
+        if (name)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {name: name}});
+
+        if (genre)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {genre: genre}});
+
+        if (price)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {price: price}});
+
+        if (desc)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {desc: desc}});
+
+        if (condition)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {condition: condition}});
+
+        if (!oldImage)
+            await db.collection('Posts').updateOne({_id: new ObjectId(id)}, {$set: {image: newImage}});
     }
     catch(e){
         err = e.toString();
@@ -451,7 +587,8 @@ app.post('/api/deletePost', async(req, res, next) => {
     const db = client.db("oMarketDB");
 
     try{
-        const post = await db.collection('Posts').findOneAndDelete({_id: new ObjectId(id)})
+        const user = db.collection('Users').updateMany({interestedIn: {$all: [id]}}, {$pull: {interestedIn: id}});
+        const post = await db.collection('Posts').findOneAndDelete({_id: new ObjectId(id)});
 
         if (!post)
             throw new Error('Post was not found');

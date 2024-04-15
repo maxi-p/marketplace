@@ -64,15 +64,15 @@ const Login = props => {
     };
 
     return (
-        <div class="form_wrapper">
-            <div class="form_container">
-                <div class="title_container">
+        <div className="form_wrapper">
+            <div className="form_container">
+                <div className="title_container">
                     <h2>Login</h2>
                 </div>
 
-                <div class="">
+                <div className="">
                     <form className="login" onSubmit={doLogin}>
-                        <div class="input_field"> <span><FontAwesomeIcon icon={faUser} transform="down-10"/></span>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform="down-10"/></span>
                             <input
                                 type="text"
                                 placeholder="Username"
@@ -82,7 +82,7 @@ const Login = props => {
                                 value={formData.username}
                             />
                         </div>
-                        <div class="input_field"> <span> <FontAwesomeIcon icon={faLock} transform="down-10"/></span>
+                        <div className="input_field"> <span> <FontAwesomeIcon icon={faLock} transform="down-10"/></span>
                             <input
                                 type="password"
                                 placeholder="Password"
@@ -100,11 +100,18 @@ const Login = props => {
                             className="loginButton"
                             onClick={doLogin}
                         />
+                        <input
+                            type="submit"
+                            id="registerButton"
+                            className="registerButton"
+                            value="Register"
+                            onClick={() => navigate('/register')}
+                        />
                     </form>
                 </div>
             </div>
 
-            <p class="credit"><a href="http://www.designtheway.com" target="_blank"></a></p>
+            <p className="credit"><a href="http://www.designtheway.com" target="_blank"></a></p>
 
             <span id="loginResult">{message}</span>
         </div >
