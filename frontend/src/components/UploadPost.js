@@ -39,13 +39,15 @@ const UploadForm = props =>
             var res = JSON.parse(await response.text());
             console.log(res)
 
-            if( res.id <= 0 )
+            if( res.error !== '' )
             {
                 setMessage('Post wasn\'t added');
             }
             else
             {
+
                 setMessage('');
+                console.log(res)
                 navigate('/'+res._id);
             }
 
@@ -64,6 +66,7 @@ const UploadForm = props =>
                     <h2>Upload Post</h2>
                 </div>
                 <div className="row clearfix">
+                    <form onSubmit={doPost}>   
                         <div className="input_field"> <span><FontAwesomeIcon icon={faPencil} transform = "down-6"/></span>
                             <input 
                                 type="text"
@@ -115,15 +118,25 @@ const UploadForm = props =>
                                 />
                             </div>
                             <input 
+                                type="file" 
+                                placeholder="image"
+                                accept="image/*"
+                                id="image"
+                                onChange={handleChange} 
+                            />
+                            <input 
                                 type="submit" 
                                 value = "Post"
                                 id="postButton" 
-                                className="postUploadButton"  
+                                className="postUploadButton"
+                                onClick={doPost}  
                             />
                         </form>
                         <span id="postResult">{message}</span>
                     </div>
+                    </form>
                 </div>
+                
             </div>
         </div>
     );
