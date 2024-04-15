@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Route, {useNavigate} from 'react-router-dom';
-import {faComment, faDollarSign, faLightbulb, faPencil, } from '@fortawesome/free-solid-svg-icons';
+import {faComment, faDollarSign, faLightbulb, faPencil, faStar } from '@fortawesome/free-solid-svg-icons';
 import buildPath from '../logic/buildPath';
 
 const UploadForm = props => 
