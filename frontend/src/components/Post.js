@@ -29,7 +29,7 @@ const Post = props => {
                 onClick={() => props.openDeleteHandler(props.obj)}
             ><img src="./delete.jpg" className="card--star"/>
             </button>}
-            {props.loggedUser && <button
+            <button
                 onClick={interestHandler}
                 className="interestedButton"
             >
