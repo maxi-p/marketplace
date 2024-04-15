@@ -55,7 +55,7 @@ const UploadForm = props =>
         <div className="form_wrapper">
             <div className="form_container">
                 <div className="title_container">
-                    <h2>Register</h2>
+                    <h2>Upload Post</h2>
                 </div>
                 <div className="row clearfix">
                         <div className="input_field"> <span><FontAwesomeIcon icon={faPencil} transform = "down-6"/></span>

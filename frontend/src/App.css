@@ -423,7 +423,8 @@ a {
 
     &[type="text"],
     &[type="email"],
-    &[type="password"] {
+    &[type="password"],
+    &[type="price"] {
       width: 100%;
       padding: 8px 10px 9px 35px;
       height: 35px;
@@ -438,13 +439,15 @@ a {
 
     &[type="text"]:hover,
     &[type="email"]:hover,
-    &[type="password"]:hover {
+    &[type="password"]:hover,
+    &[type="price"]{
       background: #fafafa;
     }
 
     &[type="text"]:focus,
     &[type="email"]:focus,
-    &[type="password"]:focus {
+    &[type="password"]:focus,
+    &[type="price"] {
       -webkit-box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
       -moz-box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
       box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
