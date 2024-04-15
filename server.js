@@ -11,10 +11,13 @@ client.connect(console.log("mongodb connected"));
 // Email API
 const nodemailer = require('nodemailer');
 const { google }  = require('googleapis');
+const mailgen = require('mailgen');
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+const user = process.env.user;
+const pass = process.env.pass;
 
 // Connection Management
 const express = require('express');
@@ -42,6 +45,7 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const { send } = require('process');
+const e = require('express');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -318,7 +322,7 @@ app.post('/api/register', async (req, res, next) =>
         error = e.toString();
     }
 
-    await sendEmail(email, verifyNum).then(result => console.log('Email sent...', result)).catch(error => console.log(error.message));
+    await sendEmail(email, verifyNum).then(result => console.log('Email sent...'/*, result*/)).catch(error => console.log(error.message));
 
     var ret = {_id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
     res.status(200).json(ret);
@@ -326,46 +330,100 @@ app.post('/api/register', async (req, res, next) =>
 
 async function sendEmail(email, verifyNum)
 {
-    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-    oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+    // const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+    // oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-    let message = 'Here is your verification code: ' + verifyNum;
+    let txtMessage = 'Here is your verification code: ' + verifyNum;
 
-    try
-    {
-        const accessToken = await oAuth2Client.getAccessToken();
-        //console.log(accessToken);
+    let config = {
+        service: 'gmail',
+        auth: {
+            user: user,
+            pass: pass
+        }
+    };
 
-        const transport = nodemailer.createTransport({
-            //service: 'gmail',
-            auth: {
-                type: 'OAuth2',
-                user: 'emailsenderopenmarket@gmail.com',
-                //pass: process.env.MAILER_PASSWORD,
-                clientId: CLIENT_ID,
-                clientSecret:  CLIENT_SECRET,
-                refreshToken: REFRESH_TOKEN,
-                accessToken: accessToken
-            },
-            tls: {
-                rejectUnauthorized: false, // this made my request token work!
-            },
-        });
+    let transporter = nodemailer.createTransport(config);
 
-        const mailOptions = {
-            from: 'Open Market <emailsenderopenmarket@gmail.com>',
-            to: email,
-            subject: 'Verification Code',
-            text: message
-        };
+    let mailgenerator = new mailgen({
+        theme: "default",
+        product: {
+            name: "Mailgen",
+            link: "https://mailgen.js/"
+        }
+    });
 
-        const result = await transport.sendMail(mailOptions);
-        return result;
-    }
-    catch(error)
-    {
+    // let response = {
+    //     body: {
+    //         name : "Daily Tuition",
+    //         intro: "Your bill has arrived!",
+    //         table : {
+    //             data : [
+    //                 {
+    //                     item : "Nodemailer Stack Book",
+    //                     description: "A Backend application",
+    //                     price : "$10.99",
+    //                 }
+    //             ]
+    //         },
+    //         outro: "Looking forward to do more business"
+    //     }
+    // };
+
+    // let mail = mailgenerator.generate(response);
+
+    let message = {
+        // from: user,
+        // to: email,
+        // subject: "Verification Number",
+        // text: txtMessage
+        from: 'Open Market <emailsenderopenmarket@gmail.com>',
+        to: email,
+        subject: 'Verification Code',
+        text: txtMessage
+    };
+
+    transporter.sendMail(message).then(() => {
+        return;
+    }).catch(error => {
         return error;
-    }
+    })
+
+    // try
+    // {
+    //     const accessToken = await oAuth2Client.getAccessToken();
+    //     //console.log(accessToken);
+
+    //     const transport = nodemailer.createTransport({
+    //         //service: 'gmail',
+    //         auth: {
+    //             type: 'OAuth2',
+    //             user: 'emailsenderopenmarket@gmail.com',
+    //             //pass: process.env.MAILER_PASSWORD,
+    //             clientId: CLIENT_ID,
+    //             clientSecret:  CLIENT_SECRET,
+    //             refreshToken: REFRESH_TOKEN,
+    //             accessToken: accessToken
+    //         },
+    //         tls: {
+    //             rejectUnauthorized: false, // this made my request token work!
+    //         },
+    //     });
+
+    //     const mailOptions = {
+    //         from: 'Open Market <emailsenderopenmarket@gmail.com>',
+    //         to: email,
+    //         subject: 'Verification Code',
+    //         text: message
+    //     };
+
+    //     const result = await transport.sendMail(mailOptions);
+    //     return result;
+    // }
+    // catch(error)
+    // {
+    //     return error;
+    // }
 
 }
 
@@ -486,7 +544,7 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
     res.status(200).json(ret);
 });
 
-app.post('/api/createPost', /*upload.single('image'),*/ async function(req, res, next) {
+app.post('/api/createPost', upload.single('image'), async function(req, res, next) {
     //incoming: username, name, condition, genre, price, desc, image
     //outgoing: newPost, error
 
@@ -495,20 +553,20 @@ app.post('/api/createPost', /*upload.single('image'),*/ async function(req, res,
 
 
     let usersInterested = [];
-    //var newImage = null;
+    var newImage = null;
 
-    //if (req.body.image !== undefined)
-    //{
-        newImage = req.body.image;/*new imageModel({
+    if (req.file !== undefined)
+    {
+        newImage = new imageModel({
             name: req.file.filename,
             image: {
                 data: fs.readFileSync(path.join(req.file.path)),
                 contentType: req.file.mimetype
             }
-        });*/
-    //}
+        });
+    }
 
-    var newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: req.body.image, usersInterested: usersInterested};
+    var newPost = {username: username, name: name, genre: genre, price: price, desc: desc, condition: condition, image: newImage, usersInterested: usersInterested};
     const results = await db.collection('Posts').find({username: username, name: name}).toArray();
 
     var err = '';
