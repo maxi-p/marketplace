@@ -158,6 +158,7 @@ const Register = props => {
                                 onClick={() => navigate('/login')}
                             />
                         </form>
+                        <span id="registerResult">{message}</span>
                     </div>
                 </div>
             </div>

@@ -133,6 +133,33 @@ section {
   background: darken(#82099c, 7%);
 }
 
+.postUploadButton{
+  background: #82099c;
+  height: 35px;
+  line-height: 35px;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  transition: all 0.30s ease-in-out;
+
+
+}
+
+.postUploadButton:hover {
+  background: darken(#82099c, 7%);
+}
+
+.postUploadButton:focus {
+  background: darken(#82099c, 7%);
+}
 
 .search-Bar {
   width: 90%
