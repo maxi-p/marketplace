@@ -365,6 +365,7 @@ app.post('/api/emailVerify', async (req, res, next) =>
 
     var error = '';
     const currentTime = Date.now();
+    var updatedTTL = -1;
 
     try{
         var user = await db.collection('Users').findOne({_id: new ObjectId(id)});
@@ -397,13 +398,12 @@ app.post('/api/emailVerify', async (req, res, next) =>
         }
 
         user = await db.collection('Users').findOne({_id: new ObjectId(id)});
+        updatedTTL = user.ttl;
     }
     catch(e)
     {
         error = e.toString();
     }
-
-    var updatedTTL = user.ttl;
 
     var ret = { _id: id, ttl: updatedTTL, error: error};
     res.status(200).json(ret);
