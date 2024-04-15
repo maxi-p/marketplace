@@ -42,7 +42,7 @@ export const DeletePostFromHome = props => {
         }
     };
   return (
-    <div id="editPostDiv">
+    <div id="editPostDiv" className= "editPostDiv">
             <form onSubmit={doDelete}>
                 <span id="inner-title">Are You Sure You Want to Delete this Post?</span><br />
                 <br/>
