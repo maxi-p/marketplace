@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import buildPath from '../logic/buildPath';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faComment, faDollarSign, faLightbulb, faPencil, faStar } from '@fortawesome/free-solid-svg-icons';
 export const EditPostFromHome = props => {
     const [formData, setFormData] = useState({...props.post, id:props.post._id});
     
