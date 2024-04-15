@@ -2,7 +2,8 @@ import React from "react"
 import { Link } from 'react-router-dom';
 import buildPath from '../logic/buildPath';
 
-const Post = props => {
+const PostInUserPage = props => {
+    
     const interestHandler = async () => {
         console.log("userId",props.loggedUser.id,"postId",props.obj._id)
         if(props.obj.interested === false){
@@ -18,9 +19,8 @@ const Post = props => {
             var res = JSON.parse(await response.text());
             console.log(res)
         }
-        props.setOnePost({...props.obj,interested:!props.obj.interested});
+        props.setOnePost({...props.obj,interested:!props.obj.interested})
     }
-
     return (
         <div className="card">
             {props.obj.username === props.loggedNick && 
@@ -29,20 +29,21 @@ const Post = props => {
                 onClick={() => props.openDeleteHandler(props.obj)}
             ><img src="./delete.jpg" className="card--star"/>
             </button>}
-            <button
-                onClick={interestHandler}
-            >
-                <img src={props.obj.interested?"filled_star.png":"empty_star.png"} className="card--star" />
-            </button>
             {props.obj.username === props.loggedNick && 
             <button
                 className="edit--badge"
                 onClick={() => props.openEditHandler(props.obj)}
             ><img src="./edit.jpg" className="card--star" />
             </button>}
+            <button
+                onClick={interestHandler}
+            >
+                <img src={props.obj.interested?"filled_star.png":"empty_star.png"} className="card--star" />
+            </button>
             <Link to={"/pst="+props.obj._id.toString()} style={{ textDecoration: 'none' }}>
             <img src={props.obj.image? "data:image/;base64,"+props.obj.image.image.data:'./post.png'} className="card--image" />
             <div className="card--stats">
+                
                 <span className="gray"> • </span>
                 <span className="gray">{props.obj.name}</span>
             </div>
@@ -54,4 +55,4 @@ const Post = props => {
     )
 };
 
-export default Post;
+export default PostInUserPage;
