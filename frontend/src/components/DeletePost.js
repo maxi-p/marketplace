@@ -40,13 +40,13 @@ export const DeletePost = props => {
                 <br/>
                 <input 
                     type="submit" 
-                    value = "Yes, Detele!"
+                    value = "Yes, Delete!"
                     id="saveButton" 
                     className="buttons"  
                 />
                 <input 
                     type="button" 
-                    value = "Discard"
+                    value = "No"
                     id="saveButton" 
                     name="discard"
                     className="buttons"
