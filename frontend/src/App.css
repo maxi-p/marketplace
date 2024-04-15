@@ -267,6 +267,10 @@ input[type=checkbox]:checked+label:before {
 {
   color: #82099c
 }
+h1
+{
+  color: #82099c
+}
 
 li a {
     color: #fff;
