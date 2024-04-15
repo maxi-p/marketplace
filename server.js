@@ -10,11 +10,6 @@ client.connect(console.log("mongodb connected"));
 
 // Email API
 const nodemailer = require('nodemailer');
-const { google }  = require('googleapis');
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI;
-const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 const pass = process.env.pass;
 
 // Connection Management
@@ -334,16 +329,10 @@ app.post('/api/register', async (req, res, next) =>
 
 async function sendEmail(email, verifyNum)
 {
-    // const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-    // oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
-
     let message = 'Here is your verification code: ' + verifyNum;
 
     try
     {
-        //const accessToken = await oAuth2Client.getAccessToken();
-        //const transport = nodemailer.createTransport('smtps://emailsenderopenmarket%gmail.com:' + pass + '@smtp.gmail.com')
-
         const smtpConfig = {
             host: 'smtp.gmail.com',
             port: 465,
