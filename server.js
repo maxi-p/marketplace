@@ -334,8 +334,8 @@ app.post('/api/register', async (req, res, next) =>
 
 async function sendEmail(email, verifyNum)
 {
-    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-    oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+    // const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+    // oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
     let message = 'Here is your verification code: ' + verifyNum;
 
