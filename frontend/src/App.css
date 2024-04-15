@@ -451,14 +451,14 @@ input[type="file"] {
     &[type="text"]:hover,
     &[type="email"]:hover,
     &[type="password"]:hover,
-    &[type="price"]{
+    &[type="price"]:hover{
       background: #fafafa;
     }
 
     &[type="text"]:focus,
     &[type="email"]:focus,
     &[type="password"]:focus,
-    &[type="price"] {
+    &[type="price"]:focus {
       -webkit-box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
       -moz-box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
       box-shadow: 0 0 2px 1px rgba(142, 9, 156, 0.5);
