@@ -11,12 +11,10 @@ client.connect(console.log("mongodb connected"));
 // Email API
 const nodemailer = require('nodemailer');
 const { google }  = require('googleapis');
-const mailgen = require('mailgen');
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
-const user = process.env.user;
 const pass = process.env.pass;
 
 // Connection Management
@@ -281,6 +279,12 @@ app.post('/api/register', async (req, res, next) =>
 
     var error = '';
     const {firstname, lastname, username, password, email, phoneNumber} = req.body;
+    let verifyNum2 = randomNum();
+
+    await sendEmail(email, verifyNum2).then(result => console.log('Email sent...'/*, result*/)).catch(error => console.log(error.message));
+    var ret = {error: ''};
+    res.status(200).json(ret);
+    return;
 
     let verifyNum = randomNum();
     let aboutMe = '';
@@ -322,7 +326,7 @@ app.post('/api/register', async (req, res, next) =>
         error = e.toString();
     }
 
-    await sendEmail(email, verifyNum).then(result => console.log('Email sent...'/*, result*/)).catch(error => console.log(error.message));
+    //await sendEmail(email, verifyNum).then(result => console.log('Email sent...'/*, result*/)).catch(error => console.log(error.message));
 
     var ret = {_id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
     res.status(200).json(ret);
@@ -338,23 +342,32 @@ async function sendEmail(email, verifyNum)
     try
     {
         const accessToken = await oAuth2Client.getAccessToken();
-        //console.log(accessToken);
+        //const transport = nodemailer.createTransport('smtps://emailsenderopenmarket%gmail.com:' + pass + '@smtp.gmail.com')
 
-        const transport = nodemailer.createTransport({
-            service: 'gmail',
+        const smtpConfig = {
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
-                type: 'OAuth2',
                 user: 'emailsenderopenmarket@gmail.com',
-                pass: pass,
-                clientId: CLIENT_ID,
-                clientSecret:  CLIENT_SECRET,
-                refreshToken: REFRESH_TOKEN,
-                accessToken: accessToken
-            },
-            tls: {
-                rejectUnauthorized: false, // this made my request token work!
-            },
-        });
+                pass: pass
+            }
+        };
+
+        const transport = nodemailer.createTransport(smtpConfig/*'smtps://emailsenderopenmarket%gmail.com:' + pass + '@smtp.gmail.com'*/);
+
+        // const transport = nodemailer.createTransport({
+        //     service: 'smtp-mail.gmail',
+        //     auth: {
+        //         type: 'OAuth2',
+        //         user: 'emailsenderopenmarket@gmail.com',
+        //         pass: pass,
+        //         clientId: CLIENT_ID,
+        //         clientSecret:  CLIENT_SECRET,
+        //         refreshToken: REFRESH_TOKEN,
+        //         accessToken: accessToken
+        //     }
+        // });
 
         const mailOptions = {
             from: 'Open Market <emailsenderopenmarket@gmail.com>',
@@ -364,11 +377,10 @@ async function sendEmail(email, verifyNum)
         };
 
         const result = await transport.sendMail(mailOptions);
-        return result;
     }
-    catch(error)
+    catch(e)
     {
-        return error;
+        console.log(e.toString());
     }
 
 }
