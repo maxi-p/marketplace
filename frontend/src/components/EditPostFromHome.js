@@ -129,7 +129,7 @@ export const EditPostFromHome = props => {
                                 id="saveButton" 
                                 name="discard"
                                 className="buttons"
-                                onClick={props.editHandler}  
+                                onClick={props.closeEditHandler}  
                             />
                         <span id="postResult">{message}</span>
                     </div>
