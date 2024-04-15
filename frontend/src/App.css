@@ -183,6 +183,10 @@ section {
 .card--star {
     height: 14px
 }
+.interestedButton{
+  border: none;
+  color: floralwhite;
+}
 
 .card--price {
     margin-top: auto
