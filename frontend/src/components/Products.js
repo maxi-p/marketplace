@@ -72,17 +72,14 @@ const Products = props =>
                         className="delete-post-popup"
                         post={post}
                         closeDeleteHandler={closeDeleteHandler}
-                        setAllPosts={props.setAllPosts}
-                        allPosts={props.allPosts}
+                        setOnePost={props.setOnePost}
                     />}
                     {isEditing && 
                     <EditPostFromHome 
                         className="edit-post-popup"
                         post={post}
                         closeEditHandler={closeEditHandler}
-                        setAllPosts={props.setAllPosts}
-                        allPosts={props.allPosts}
-                        setModified={props.setModified}
+                        setOnePostFetch={props.setOnePostFetch}
                     />}
                     <br /><br />
                     {props.saved?

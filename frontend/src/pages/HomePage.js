@@ -13,7 +13,7 @@ const HomePage = props =>
     const loadingHandler = data => {
         setLoading(data);
     }
-    const {allPosts, setAllPosts, setOnePost} = useSearch(loadingHandler,{username: '',name: '',genre: ''},props.loggedUser);
+    const {allPosts, setAllPosts, setOnePost, setOnePostFetch} = useSearch(loadingHandler,{username: '',name: '',genre: ''},props.loggedUser);
 
     const postHandler = data => {
         setAllPosts(data)
@@ -32,7 +32,7 @@ const HomePage = props =>
             <PageTitle title="Open Market"/>
             {/* {user && <span>Logged in as: {user.firstName} {user.lastName}</span>} */}
             <SearchBar setLoading={loadingHandler} setAllPosts={postHandler} modified={modified} setModified={modifiedHandler} saved={saved} setSaved={handleSaved}/>
-            <Products loggedUser={props.loggedUser} loading={loading} allPosts={allPosts} setAllPosts={postHandler} setModified={modifiedHandler} saved={saved} setOnePost={setOnePost}/>
+            <Products loggedUser={props.loggedUser} loading={loading} allPosts={allPosts} setAllPosts={postHandler} setModified={modifiedHandler} saved={saved} setOnePost={setOnePost} setOnePostFetch={setOnePostFetch}/>
         </div>
     );
 }

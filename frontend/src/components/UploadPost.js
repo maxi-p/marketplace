@@ -48,7 +48,7 @@ const UploadForm = props =>
 
                 setMessage('');
                 console.log(res)
-                navigate('/'+res._id);
+                navigate('/pst='+res._id);
             }
 
         }

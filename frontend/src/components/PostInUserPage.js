@@ -35,6 +35,7 @@ const PostInUserPage = props => {
                 onClick={() => props.openEditHandler(props.obj)}
             ><img src="./edit.jpg" className="card--star" />
             </button>}
+            {props.loggedUser && 
             <button
                 onClick={interestHandler}
                 className="interestedButton"
