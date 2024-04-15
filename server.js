@@ -274,12 +274,6 @@ app.post('/api/register', async (req, res, next) =>
 
     var error = '';
     const {firstname, lastname, username, password, email, phoneNumber} = req.body;
-    let verifyNum2 = randomNum();
-
-    await sendEmail(email, verifyNum2).then(result => console.log('Email sent...'/*, result*/)).catch(error => console.log(error.message));
-    var ret = {error: ''};
-    res.status(200).json(ret);
-    return;
 
     let verifyNum = randomNum();
     let aboutMe = '';
@@ -321,7 +315,7 @@ app.post('/api/register', async (req, res, next) =>
         error = e.toString();
     }
 
-    //await sendEmail(email, verifyNum).then(result => console.log('Email sent...'/*, result*/)).catch(error => console.log(error.message));
+    await sendEmail(email, verifyNum).then(result => console.log('Email sent...', result)).catch(error => console.log(error.message));
 
     var ret = {_id: newId, firstName: firstname, lastName: lastname, username: username, email: email, phoneNumber: phoneNumber, aboutMe: aboutMe, profilePic: profilePic, ttl: TTL, interestedIn: interested, error: error};
     res.status(200).json(ret);
@@ -353,12 +347,12 @@ async function sendEmail(email, verifyNum)
         };
 
         const result = await transport.sendMail(mailOptions);
+        return result;
     }
     catch(e)
     {
-        console.log(e.toString());
+        return e;
     }
-
 }
 
 app.post('/api/emailVerify', async (req, res, next) =>
