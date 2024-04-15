@@ -23,8 +23,7 @@ const SearchBar = props =>
             console.log("res",res);
             props.setModified(false);
             props.setAllPosts(res.results)
-            // TODO: remove this mimicking network request time (0.5 seconds)
-            setTimeout(()=>{props.setLoading(false)}, 250)
+            props.setLoading(false)
         };
         getAllPosts();
     },[props.modified])
