@@ -38,9 +38,10 @@ const PostInUserPage = props => {
             {props.loggedUser && 
             <button
                 onClick={interestHandler}
+                className="interestedButton"
             >
-                <img src={props.obj.interested?"filled_star.png":"empty_star.png"} className="card--star" />
-            </button>}
+                <img src={props.obj.interested?"filled_star_p.png":"empty_star_p.png"} className="card--star" />
+            </button>
             <Link to={"/pst="+props.obj._id.toString()} style={{ textDecoration: 'none' }}>
             <img src={props.obj.image? "data:image/;base64,"+props.obj.image.image.data:'./post.png'} className="card--image" />
             <div className="card--stats">
