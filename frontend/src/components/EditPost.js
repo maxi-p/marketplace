@@ -52,7 +52,7 @@ export const EditPost = props => {
     <div id="editPostDiv" className='editPostDiv'>
         <div className="form_container">
                 <div className="title_container">
-                    <h2>Upload Post</h2>
+                    <h2>Edit Post</h2>
                 </div>
                 <div className="row clearfix">
                     <form onSubmit={doSave}>   
