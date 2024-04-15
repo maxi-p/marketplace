@@ -14,30 +14,20 @@ export const DeletePostFromHome = props => {
             const response = await fetch(buildPath('api/deletePost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
 
-            if( res.id <= 0 )
+            if( res.error !== '' )
             {
-                setMessage('Post wasn\'t deleted');
+                setMessage(res.error);
             }
             else
             {
                 setMessage('');
-                const newPosts = [];
-                props.allPosts.map(post => {
-                    if(post._id !== props.post._id){
-                        newPosts.push(post);
-                    }
-                    else{
-                        ;
-                    }
-                });
-                props.setAllPosts(newPosts);
+                props.setOnePost({...props.post, delete:true})
                 props.closeDeleteHandler();
             }
 
         }
         catch(e){
-            console.log(json)
-            alert(e.toString());
+            console.log(e.toString());
             return;
         }
     };
