@@ -49,7 +49,7 @@ const Register = props =>
                 else
                 {
                     var user = { 
-                        id: res.id, 
+                        id: res._id, 
                         username: res.username, 
                         firstName: res.firstName, 
                         lastName: res.lastName, 
