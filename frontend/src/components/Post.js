@@ -1,7 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import { Link } from 'react-router-dom';
+import isLoggedIn from '../logic/isLoggedIn';
 
 const Post = props => {
+    // const [user] = useState(isLoggedIn());
+    // const isUserInterested = props.obj.usersInterested.includes(user._id);
     return (
         <div className="card">
             {props.obj.username === props.loggedNick && 
@@ -16,9 +19,10 @@ const Post = props => {
                 onClick={() => props.openEditHandler(props.obj)}
             ><img src="./edit.jpg" className="card--star" />
             </button>}
-            <Link to={props.obj._id.toString()}>
+            <Link to={props.obj._id.toString()} style={{ textDecoration: 'none' }}>
             <img src={'./post.png'} className="card--image" />
             <div className="card--stats">
+                {/* {isUserInterested && <img src="./star.png" className="card--star" />} */}
                 <img src="./star.png" className="card--star" />
                 <span className="gray"> • </span>
                 <span className="gray">{props.obj.name}</span>

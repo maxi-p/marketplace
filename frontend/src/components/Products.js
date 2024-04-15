@@ -68,7 +68,8 @@ const Products = props =>
                         setAllPosts={props.setAllPosts}
                         allPosts={props.allPosts}
                     />}
-                    <span>Posts:</span><br /><br />
+                    {/* <span>Posts:</span> */}
+                    <br /><br />
                     <section className="posts-list">
                         {posts}
                     </section>
