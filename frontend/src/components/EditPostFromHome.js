@@ -7,7 +7,7 @@ export const EditPostFromHome = props => {
     
     const handleChange = (event) => {
         const {id, value,type,files} = event.target;
-        // console.log(event)
+        console.log(event)
             setFormData(prevFormData => {
                 return {
                     ...prevFormData,
@@ -20,14 +20,10 @@ export const EditPostFromHome = props => {
 
     const doSave = async (event) =>
     {
-        var id = -1;
         event.preventDefault();
         const form = new FormData();
         for (const property in formData) {
             form.append(property, formData[property]) 
-            if(property === 'id'){
-                id = formData[property];
-            }
         }
 
         try
@@ -35,15 +31,17 @@ export const EditPostFromHome = props => {
             const response = await fetch(buildPath('api/editPost'), {method:'POST',body:form});
             var res = JSON.parse(await response.text());
 
-            if( res.error !== '' )
+            if( res.id <= 0 )
             {
-                setMessage(res.error);
+                setMessage('Post wasn\'t edited');
             }
             else
             {
                 setMessage('');
-                props.setOnePostFetch({postId:id});
-                props.closeEditHandler()
+                const newPosts = [];
+                console.log("setting")
+                props.setModified(true);
+                props.closeEditHandler();
             }
 
         }
