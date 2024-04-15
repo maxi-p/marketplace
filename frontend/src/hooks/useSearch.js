@@ -15,7 +15,10 @@ export default function useSearch(setLoading, init,loggedUser){
             if(res.error === ''){
                 var arr = res.results;
                 arr = arr.map(element=>{
-                    return {...element, interested: element.usersInterested.includes(loggedUser.id)}
+                    if(loggedUser)
+                        return {...element, interested: element.usersInterested.includes(loggedUser.id)}
+                    else
+                        return element;
                 });
                 console.log('array',arr)
                 loadingFunction(false)

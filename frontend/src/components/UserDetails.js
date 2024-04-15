@@ -9,7 +9,7 @@ const PostDetails = props => {
     const id = props.id;
     const [saved, setSaved] = useState(false);
     const navigate = useNavigate();
-    if(id === props.loggedUser.username){
+    if(props.loggedUser && id === props.loggedUser.username){
         navigate('/user-home');
     }
     const [user, setUser] = useState({});
