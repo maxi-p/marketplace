@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage';
 import UserHomePage from './pages/UserHomePage'
 import EnterCodePage from './pages/EnterCodePage';
 import isLogged from './logic/isLoggedIn';
-import PostDetails from './components/PostDetails';
+import DetailsPage from './pages/DetailsPage'
 import NavBar from './components/NavBar';
 import UploadPage from './pages/UploadPage'
 
@@ -34,7 +34,7 @@ function App()
             />
             <Route
               path=":id"
-              element={<PostDetails loggedUser={isLoggedIn}/>}
+              element={<DetailsPage loggedUser={isLoggedIn}/>}
             />
           </Route>
           <Route path="/home" index element={<Navigate to="/"/>}/>

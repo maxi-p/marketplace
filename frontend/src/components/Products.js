@@ -27,11 +27,26 @@ const Products = props =>
     const closeDeleteHandler = event => {
         setIsDeleting(false);
     }
-    console.log("posts", props.allPosts)
     const posts = props.allPosts.map(post => {
         return (
             <Post
                 loggedNick={props.loggedUser? props.loggedUser.username : ''}
+                loggedUser={props.loggedUser}
+                setOnePost={props.setOnePost}
+                key={post._id}
+                obj={post}
+                openEditHandler={openEditHandler}
+                openDeleteHandler={openDeleteHandler}
+            />
+        )
+    });
+    const savedPosts = props.allPosts.map(post => {
+        if (post.interested)
+        return (
+            <Post
+                loggedNick={props.loggedUser? props.loggedUser.username : ''}
+                loggedUser={props.loggedUser}
+                setOnePost={props.setOnePost}
                 key={post._id}
                 obj={post}
                 openEditHandler={openEditHandler}
@@ -50,30 +65,30 @@ const Products = props =>
                         size={200}
                         loading={props.loading}
                     />
-                </div>):
+                </div>): 
                 (<div className="post-detail-container">
                     {isDeleting &&
                     <DeletePostFromHome 
                         className="delete-post-popup"
                         post={post}
                         closeDeleteHandler={closeDeleteHandler}
-                        setAllPosts={props.setAllPosts}
-                        allPosts={props.allPosts}
+                        setOnePost={props.setOnePost}
                     />}
                     {isEditing && 
                     <EditPostFromHome 
                         className="edit-post-popup"
                         post={post}
                         closeEditHandler={closeEditHandler}
-                        setAllPosts={props.setAllPosts}
-                        allPosts={props.allPosts}
-                        setModified={props.setModified}
+                        setOnePostFetch={props.setOnePostFetch}
                     />}
-                    {/* <span>Posts:</span> */}
                     <br /><br />
-                    <section className="posts-list">
+                    {props.saved?
+                    (<section className="posts-list">
+                        {savedPosts}
+                    </section>):
+                    (<section className="posts-list">
                         {posts}
-                    </section>
+                    </section>)}
                 </div>)
             }
         </div>)

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import buildPath from '../logic/buildPath';
-import FadeLoader from 'react-spinners/FadeLoader'
 
 const SearchBar = props =>
 {
@@ -13,20 +11,6 @@ const SearchBar = props =>
             genre: false
         }
     );
-
-    useEffect(() => {
-        const getAllPosts = async () => {
-            props.setLoading(true);
-            const json = JSON.stringify({ username:'', name:'', genre:''});
-            const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
-            var res = JSON.parse(await response.text());
-            console.log("res",res);
-            props.setModified(false);
-            props.setAllPosts(res.results)
-            props.setLoading(false)
-        };
-        getAllPosts();
-    },[props.modified])
 
     const handleChange = (event) => { 
         const {name, value, type, checked} = event.target;
@@ -52,21 +36,7 @@ const SearchBar = props =>
         if(formData.string !== '' && formData.name === false && formData.username === false && formData.genre === false)
             obj = {username: formData.string, name: formData.string, genre: formData.string};
         
-        console.log(obj)
-        props.setLoading(true);
-        const json = JSON.stringify(obj);
-        const response = await fetch(buildPath('api/searchPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
-        var res = JSON.parse(await response.text());
-        if(res.error === ''){
-            setMessage('')
-            props.setAllPosts(res.results)
-        }
-        else
-            setMessage(res.error)
-
-        // TODO: remove this mimicking network request time (0.5 seconds)
-        setTimeout(()=>{props.setLoading(false)}, 250)
-
+        props.setAllPosts(obj);
     }
 
     // 5 15 84 1
@@ -110,7 +80,16 @@ const SearchBar = props =>
                         onChange={handleChange}
                         className="search-box"
                     />
-                    <label htmlFor="genre"> genre </label><br/>
+                    <label htmlFor="genre"> genre </label>
+                    <input 
+                        type="checkbox" 
+                        id="saved" 
+                        name="saved"
+                        checked={props.saved}
+                        onChange={props.setSaved}
+                        className="search-box"
+                    />
+                    <label htmlFor="saved"> saved </label><br/>
                     <span>{message}</span><br/>
                 </div>
                 
