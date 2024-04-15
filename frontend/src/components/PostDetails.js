@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import buildPath from '../logic/buildPath';
 import FadeLoader from 'react-spinners/FadeLoader'
 import { DeletePost } from './DeletePost';
 import { EditPost } from './EditPost';
 
 const PostDetails = props => {
-    const { id } = useParams();
+    const id = props.id;
     const [post, setPost] = useState({});
     const [loading, setLoading] = useState(true);
     const [hasUpdated, setHasUpdated] = useState(false);
