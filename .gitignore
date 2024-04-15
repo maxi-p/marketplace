@@ -1,4 +1,3 @@
-server.*
 package-lock.*
 # Environment variables
 .env
