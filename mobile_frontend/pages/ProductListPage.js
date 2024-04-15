@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     background: {
         width: '100%',
         height: '100%',
-        backgroundColor: 'white',
+        backgroundColor: 'mediumorchid',
     },
     addProductButton: {
         backgroundColor: '#AF9FC9',

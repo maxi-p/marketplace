@@ -289,6 +289,7 @@ function RegisterComponent({navigation}) {
             <Button
               onPress={handleSubmit(doRegister)}
               title="Submit"
+              color="mediumslateblue"
             />
           </View>
           <View style={[styles.form, styles.formMessage]}>
@@ -322,6 +323,7 @@ function RegInput(props) {
         style={[styles.textInput, props.error && styles.errorInput, props.style]}
         {...props}
         ref={(r) => {props.inputRef && props.inputRef(r);}}
+        placeholderTextColor="darkgrey"
         />
         {props.errorText && (
           <Text style={styles.errorText}>{props.errorText}</Text>
@@ -333,22 +335,51 @@ function RegInput(props) {
 
 const styles = StyleSheet.create({
   // ----
-  root: { },
-  container: { },
-  form: { },
-  label: { },
+  root: { 
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+  },
+  container: {
+    backgroundColor: 'floralwhite',
+    color: 'black',
+    width: '95%',
+    marginTop: '25%',
+    marginBottom: '25%',
+    borderWidth: 1,
+    borderRadius: 25,
+    paddingTop: 10,
+  },
+  form: { 
+    marginBottom: 5,
+  },
+  label: {
+    color: 'black',
+    alignSelf: 'center',
+    fontSize: 20,
+  },
   textInput: {
     height:40,
     margin:12,
     borderWidth: 1,
     padding: 10,
+    color: 'black',
+    
   },
   errorInput: {
     borderColor: 'red',
   },
   errorText: {
     color: 'red',
+    marginLeft: 12,
   },
+  formButton: {
+    width: '80%',
+    alignSelf: 'center',
+    marginTop: 10,
+    color: 'violet',
+
+  }
 });
 
 export default RegisterComponent;

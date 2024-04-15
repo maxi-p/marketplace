@@ -203,180 +203,183 @@ const SellUpdateProduct = ({product, route, navigation}) => {
 
     // HTML
     return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView
-                behavior="padding"
-                keyboardVerticalOffset={30}
-            >
-                <ScrollView style={styles.scroll}>
-                    <View style={styles.imageContainer}>
-                        {/* Photo Picker */}
+        <View style={styles.background}>
+            <View style={styles.container}>
+                <KeyboardAvoidingView
+                    behavior="padding"
+                    keyboardVerticalOffset={30}
+                >
+                    <ScrollView style={styles.scroll}>
+                        <View style={styles.imageContainer}>
+                            {/* Photo Picker */}
+                            <Controller
+                                name="photo"
+                                control={control}
+                                render={({field: {onChange, value}}) => {
+                                    return (
+                                        <>
+                                        <Image source={value?.uri ? {uri: value.uri} : tempImage} style={styles.image}/>
+                                        <View style={styles.loadImageButton}>
+                                            <Pressable style={{transform:[{rotate: '90deg'}]}}
+                                            onPress={() => {
+                                                getPhoto().then( (retval) => {
+                                                    onChange(retval[0]);
+                                                    setPhotoUpdate(true);
+                                                    });
+                                                }}
+                                            >
+                                                <AntDesign name="upload" size={40} color="white"/>
+                                            </Pressable>
+                                        </View>
+                                        </>
+                                );}}
+                            />
+
+
+                            {/* Back Button */}
+                            <Pressable style={styles.backButton}
+                            onPress={() => goBack()}
+                            >
+                                <IonIcons name="arrow-back" size={30} color="black"/>
+                            </Pressable>
+                        </View>
+
+                        {/* Title */}
+                        <View style={[styles.row, styles.titleRow]}>
+                            <Controller
+                                name="title"
+                                control={control}
+                                rules={{
+                                    required: 'This Value is Required',
+                                }}
+                                render={({field: {onChange, onBlur, value} }) => {
+                                    return (
+                                    <TextInput
+                                        style={[styles.textInput, styles.title, errors.title && styles.titleError]}
+                                        placeholder="TITLE"
+                                        numberOfLines={1}
+                                        autoCapitalize="sentences"
+                                        textAlign="center"
+                                        borderBottomWidt={5}
+
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        value={value}
+                                    />
+                                    );
+                                }}
+                            />
+                        </View>
+                        {errors.title && (
+                            <View style={[styles.row, styles.errorRow, styles.titleRowError]}>
+                                <Text style={[styles.text, styles.errorText, styles.titleErrorText]}>
+                                {errors.title.message || "ERROR HERE"}
+                                </Text>
+                            </View>
+                        )}
+                        {/* Genee */}
                         <Controller
-                            name="photo"
-                            control={control}
-                            render={({field: {onChange, value}}) => {
-                                return (
-                                    <>
-                                    <Image source={value?.uri ? {uri: value.uri} : tempImage} style={styles.image}/>
-                                    <View style={styles.loadImageButton}>
-                                        <Pressable style={{transform:[{rotate: '90deg'}]}}
-                                        onPress={() => {
-                                            getPhoto().then( (retval) => {
-                                                onChange(retval[0]);
-                                                setPhotoUpdate(true);
-                                                });
-                                            }}
-                                        >
-                                            <AntDesign name="upload" size={40} color="white"/>
-                                        </Pressable>
-                                    </View>
-                                    </>
-                            );}}
-                        />
-
-
-                        {/* Back Button */}
-                        <Pressable style={styles.backButton}
-                        onPress={() => goBack()}
-                        >
-                            <IonIcons name="arrow-back" size={30}/>
-                        </Pressable>
-                    </View>
-
-                    {/* Title */}
-                    <View style={[styles.row, styles.titleRow]}>
-                        <Controller
-                            name="title"
+                            name="genre"
                             control={control}
                             rules={{
                                 required: 'This Value is Required',
                             }}
-                            render={({field: {onChange, onBlur, value} }) => {
+                            render={({field: {onChange, onBlur, value}}) =>
+                            {
                                 return (
-                                <TextInput
-                                    style={[styles.textInput, styles.title]}
-                                    placeholder="TITLE"
-                                    numberOfLines={1}
-                                    autoCapitalize="sentences"
-                                    textAlign="center"
-                                    borderBottomWidt={5}
+                                <RegInput
+                                    header="Genre"
+                                    placeholder="HERE"
 
                                     onBlur={onBlur}
                                     onChangeText={onChange}
                                     value={value}
-                                />
-                                );
+                                    error={errors.genre}
+                                />);
                             }}
                         />
+
+                        {/* Condition */}
+                        <Controller
+                            name="condition"
+                            control={control}
+                            rules={{
+                                required: 'This Value is Required',
+                            }}
+                            render={({field: {onChange, onBlur, value}}) =>
+                            {
+                                return (
+                                <RegInput
+                                    header="Condition"
+                                    placeholder="HERE"
+
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    error={errors.condition}
+                                />);
+                            }}
+                        />
+
+                        {/* Price */}
+                        <Controller
+                            name="price"
+                            control={control}
+                            rules={{
+                                required: 'This Value is Required',
+                            }}
+                            render={({field: {onChange, onBlur, value}}) =>
+                            {
+                                return (
+                                <RegInput
+                                    header="Price"
+                                    placeholder="HERE"
+                                    beforeText="$"
+
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value.toString()}
+                                    error={errors.price}
+                                />);
+                            }}
+                        />
+
+                        {/* Description */}
+                        <Controller
+                            name="desc"
+                            control={control}
+                            rules={{
+                                required: 'This Value is Required',
+                            }}
+                            render={({field: {onChange, onBlur, value}}) =>
+                            {
+                                return (
+                                <RegInput
+                                    header="Description"
+                                    placeholder="HERE"
+
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    error={errors.desc}
+                                />);
+                            }}
+                        />
+                    <View style={styles.submitButton}>
+                        <Button
+                            title={uProduct ? 'Update Product' : 'Create Product'}
+                            onPress={handleSubmit(uProduct ? updatePost : createPost)}
+                        />
                     </View>
-                    {errors.title && (
-                        <View style={[styles.row, styles.errorRow, styles.titleRowError]}>
-                            <Text style={[styles.text, styles.errorText, styles.titleErrorText]}>
-                            {errors.title.message || "ERROR HERE"}
-                            </Text>
-                        </View>
-                    )}
-                    {/* Genee */}
-                    <Controller
-                        name="genre"
-                        control={control}
-                        rules={{
-                            required: 'This Value is Required',
-                        }}
-                        render={({field: {onChange, onBlur, value}}) =>
-                        {
-                            return (
-                            <RegInput
-                                header="Genre"
-                                placeholder="HERE"
-
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                error={errors.genre}
-                            />);
-                        }}
-                    />
-
-                    {/* Condition */}
-                    <Controller
-                        name="condition"
-                        control={control}
-                        rules={{
-                            required: 'This Value is Required',
-                        }}
-                        render={({field: {onChange, onBlur, value}}) =>
-                        {
-                            return (
-                            <RegInput
-                                header="Condition"
-                                placeholder="HERE"
-
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                error={errors.condition}
-                            />);
-                        }}
-                    />
-
-                    {/* Price */}
-                    <Controller
-                        name="price"
-                        control={control}
-                        rules={{
-                            required: 'This Value is Required',
-                        }}
-                        render={({field: {onChange, onBlur, value}}) =>
-                        {
-                            return (
-                            <RegInput
-                                header="Price"
-                                placeholder="HERE"
-
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value.toString()}
-                                error={errors.price}
-                            />);
-                        }}
-                    />
-
-                    {/* Description */}
-                    <Controller
-                        name="desc"
-                        control={control}
-                        rules={{
-                            required: 'This Value is Required',
-                        }}
-                        render={({field: {onChange, onBlur, value}}) =>
-                        {
-                            return (
-                            <RegInput
-                                header="Description"
-                                placeholder="HERE"
-
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                                error={errors.desc}
-                            />);
-                        }}
-                    />
-                <View style={styles.submitButton}>
-                    <Button
-                        title={uProduct ? 'Update Product' : 'Create Product'}
-                        onPress={handleSubmit(uProduct ? updatePost : createPost)}
-                    />
-                </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </View>
         </View>
     );
 };
 
 // Regulated Input
-const RegInput = ({header, onBlur, onChangeText, value, error, placeholder, ...props}) =>
+const RegInput = ({header, onBlur, onChangeText, value, error, placeholder, beforeText, ...props}) =>
 {
 
     return (
@@ -386,6 +389,12 @@ const RegInput = ({header, onBlur, onChangeText, value, error, placeholder, ...p
                     <Text style={[styles.text, styles.headerText]}>{header}</Text>
                 </View>
             )}
+            <View style={[styles.textInputBox, error? styles.textInputBoxError: styles.textInputBoxGood]}>
+            <Text
+                style={[styles.textInputText, error ? styles.textInputTextError : styles.textInputTextGood]}
+            >
+            {beforeText}
+            </Text>
             <TextInput
                 {...props}
                 placeholder={placeholder}
@@ -394,6 +403,7 @@ const RegInput = ({header, onBlur, onChangeText, value, error, placeholder, ...p
                 value={value}
                 style={error ? styles.textInputError : styles.textInput}
             />
+            </View>
             {error && (
                 <View style={[styles.row, styles.errorRow, props.errorRowStyle]}>
                     <Text style={[styles.text, styles.errorText, props.errorTextStyle]}>
@@ -410,6 +420,11 @@ const Heights = {
 };
 
 const styles = StyleSheet.create({
+    background: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'mediumorchid',
+    },
     container: {
         backgroundColor: 'floralwhite',
         borderRadius: 20,
@@ -460,19 +475,40 @@ const styles = StyleSheet.create({
         fontSize: 12,
 
     },
-    textInput: {
+    textInputBox: {
+        flexDirection: 'row',
         backgroundColor: 'white',
-        paddingVertical: -10,
         borderWidth: 1,
         margin: 10,
+        color:'black',
+        alignItems: 'center',
+
     },
-    textInputError: {
-        backgroundColor: 'white',
+    textInputBoxError: {
         borderColor: 'red',
         color: 'red',
-        paddingVertical: -10,
-        borderWidth: 1,
-        margin: 10,
+    },
+    textInputBoxGood: {
+        color: 'black',
+    },
+    textInputText: {
+        color: 'black',
+        paddingLeft: 10,
+    },
+    textInputTextGood: {},
+    textInputTextError: {},
+
+    textInput: {
+        flex: 1,
+        padding: 0,
+        marginLeft: 5,
+        color: 'black',
+    },
+    textInputError: {
+        flex: 1,
+        padding: 0,
+        marginLeft: 5,
+        color: 'red',
     },
 
     titleRow: {
@@ -486,9 +522,17 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         width: '75%',
         backgroundColor: 'floralwhite',
+        color: 'black',
+        borderColor: 'black',
+    },
+    titleError: {
+
+        borderColor: 'red',
     },
     titleRowError: {},
-    titleErrorText: {},
+    titleErrorText: {
+        marginLeft: '25%',
+    },
 
     backButton: {
         backgroundColor: 'lavender',
@@ -496,6 +540,7 @@ const styles = StyleSheet.create({
         top: 5,
         left: 5,
         borderRadius: 50,
+        borderWidth: 1,
     },
     submitButton: {
         marginHorizontal: 10

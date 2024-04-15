@@ -9,8 +9,7 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}) => {
     const [currentValue, setCurrentValue] = useState(`${searchPhrase}`);
     return (
         <View style={styles.container}>
-            <View style={[styles.searchBar,
-            clicked? styles.searchBar__clicked : styles.searchBar__unclicked]}>
+            <View style={[styles.searchBar, styles.searchBar__clicked]}>
             <FontAwesome name="search" size={20} color="black"/>
             <TextInput
                 style={styles.input}
@@ -18,7 +17,10 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}) => {
                 placeholderTextColor="dimgray"
                 value={currentValue}
                 onChangeText={setCurrentValue}
-                onEndEditing={() => setSearchPhrase(currentValue)}
+                onEndEditing={() => {
+                    console.log(currentValue);
+                    setSearchPhrase(currentValue);}
+                }
                 onFocus={ () => {setClicked(true);} }
             />
             {clicked && (
@@ -55,8 +57,6 @@ const styles = StyleSheet.create({
     searchBar__clicked: {
         justifyContent: 'space-evenly',
     },
-    searchBar__unclicked: {
-    },
     input: {
         width:'90%',
         color:'black',
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     text: {
         color:'deepskyblue',
         margin: 15,
-    }
+    },
 });
 
 export default SearchBar;

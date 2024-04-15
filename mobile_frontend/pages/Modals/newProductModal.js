@@ -195,132 +195,145 @@ const ProductModal = ({route, navigation}) => {
         goBack(navigation);
     }
     return (
-        <View style={styles.container}>
-            {/* Image View */}
-            <Pressable style={styles.imageBox}
-             onPress={() => goToImage(navigation,
-                product?.image?.image ?
-                    {uri: `data:${product.image.image.contentType};base64,${product.image.image.data}` } :
-                    tempImage
-             )}
-            >
-                <Image
-                 source={
+        <View style={styles.background}>
+            <View style={styles.container}>
+                {/* Image View */}
+                <Pressable style={styles.imageBox}
+                onPress={() => goToImage(navigation,
                     product?.image?.image ?
-                    {uri: `data:${product.image.image.contentType};base64,${product.image.image.data}` } :
+                        {uri: `data:${product.image.image.contentType};base64,${product.image.image.data}` } :
                         tempImage
-                 }
-                 style={styles.image}
-                />
-            </Pressable>
-
-            {/* Back Button */}
-            <Pressable style={styles.backButton}
-            onPress={() => goBack(navigation)}
-            >
-                <IonIcons name="arrow-back" size={30}/>
-            </Pressable>
-
-            {/* Edit Item */}
-            {product?.isSeller && (
-                <Pressable style={styles.editBox}
-                onPress={editItem}
+                )}
                 >
-                    <FontAwesome name="pencil"
-                        size={30}
-                        color="black"
+                    <Image
+                    source={
+                        product?.image?.image ?
+                        {uri: `data:${product.image.image.contentType};base64,${product.image.image.data}` } :
+                            tempImage
+                    }
+                    style={styles.image}
                     />
                 </Pressable>
-            )}
 
-            {/* Content Section */}
-            <View style={styles.content}>
+                {/* Back Button */}
+                <Pressable style={styles.backButton}
+                onPress={() => goBack(navigation)}
+                >
+                    <IonIcons name="arrow-back" size={30} color="black"/>
+                </Pressable>
 
-                {/* Title Row */}
-                <View style={[styles.row, styles.titleRow]}>
-                    <Text style={[styles.text, styles.titleText]}
-                     numberOfLines={1}
+                {/* Edit Item */}
+                {product?.isSeller && (
+                    <Pressable style={styles.editBox}
+                    onPress={editItem}
                     >
-                        {product.title ?? 'N/A'}
-                    </Text>
-                </View>
+                        <FontAwesome name="pencil"
+                            size={30}
+                            color="black"
+                        />
+                    </Pressable>
+                )}
 
-                {/* Condition and Price Row */}
-                <View style={[styles.row, styles.conditionPriceRow]}>
-                    <Text style={[styles.text, styles.conditionText]}
-                     numberOfLines={1}
-                    >
-                        {product.condition ?? 'N/A'}
-                    </Text>
-                    <Text style={[styles.text, styles.priceText]}
-                     numberOfLines={1}
-                    >
-                        {product.price ?? 'N/A'}
-                    </Text>
-                </View>
+                {/* Content Section */}
+                <View style={styles.content}>
 
-                {/* Catagory and Seller Row */}
-                <View style={[styles.row, styles.catSellerRow]}>
-                    <Text style={[styles.text, styles.catagoryText]}
-                     numberOfLines={1}
-                    >
-                        {product.catagory ?? 'N/A'}
-                    </Text>
-                    <Pressable onPress={null}
-                        style={styles.sellerBox}
-                        android_ripple={{
-                            color :'gray',
-                            foreground: true,
-                        }}>
-                        <Image source={tempImage} style={styles.sellerImage} />
-                        <Text style={[styles.text, styles.sellerText]}
+                    {/* Title Row */}
+                    <View style={[styles.row, styles.titleRow]}>
+                        <Text style={[styles.text, styles.titleText]}
                         numberOfLines={1}
                         >
-                            {product.seller ?? 'N/A'}
+                            {product.title ?? 'N/A'}
                         </Text>
-                    </Pressable>
-                </View>
-                {/* Disc Row */}
-                <ScrollView style={[styles.discRow]}
-                 fadingEdgeLength={40}
-                >
-                    <Text style={[styles.text, styles.discText]}>
-                        {product.desc ?? 'N/A'}
-                    </Text>
-                </ScrollView>
-            </View>
-            {/*Button*/}
-            {
-                !(product?.isSeller) &&
-                <View style={[styles.buttonRow]}>
-                    <View style={styles.button}>
-                    <Button
-                        onPress={interested ? remIntrest : addIntrest}
-                        title={
-                            interested ?
-                            'Remove Interest' :
-                            'Add Interest'
-                            }
-                        color={interested? 'purple' : 'blue'}
-                    />
                     </View>
+
+                    {/* Condition and Price Row */}
+                    <View style={[styles.row, styles.conditionPriceRow]}>
+                        <View>
+                            <Text style={[styles.text]}>Condition:</Text>
+                            <Text style={[styles.text, styles.conditionText]}
+                            numberOfLines={1}
+                            >
+                                {product.condition ?? 'N/A'}
+                            </Text>
+                        </View>
+                        <Text style={[styles.text, styles.priceText]}
+                        numberOfLines={1}
+                        >
+                            ${product.price ?? 'N/A'}
+                        </Text>
+                    </View>
+
+                    {/* Catagory and Seller Row */}
+                    <View style={[styles.row, styles.catSellerRow]}>
+                        <View>
+                            <Text style={[styles.text]}>Catagory:</Text>
+                            <Text style={[styles.text, styles.catagoryText]}
+                            numberOfLines={1}
+                            >
+                                {product.catagory ?? 'N/A'}
+                            </Text>
+                        </View>
+                        <Pressable onPress={null}
+                            style={styles.sellerBox}
+                            android_ripple={{
+                                color :'gray',
+                                foreground: true,
+                            }}>
+                            <Image source={tempImage} style={styles.sellerImage} />
+                            <Text style={[styles.text, styles.sellerText]}
+                            numberOfLines={1}
+                            >
+                                {product.seller ?? 'N/A'}
+                            </Text>
+                        </Pressable>
+                    </View>
+                    {/* Disc Row */}
+                    <ScrollView style={[styles.discRow]}
+                    fadingEdgeLength={40}
+                    >
+                        <Text style={[styles.text, styles.discText]}>
+                            {product.desc ?? 'N/A'}
+                        </Text>
+                    </ScrollView>
                 </View>
-            }
-            {/* Intrest List */}
-            {
-                product?.isSeller &&
-                <View style={styles.intrestListRow}>
-                    <IntrestList
-                        UserIDs={product.usersInterested}
-                        style={styles.intrestList}
-                    />
-                </View>
-            }
+                {/*Button*/}
+                {
+                    !(product?.isSeller) &&
+                    <View style={[styles.buttonRow]}>
+                        <View style={styles.button}>
+                        <Button
+                            onPress={interested ? remIntrest : addIntrest}
+                            title={
+                                interested ?
+                                'Remove Interest' :
+                                'Add Interest'
+                                }
+                            color={interested? 'darkred' : 'purple'}
+                        />
+                        </View>
+                    </View>
+                }
+                {/* Intrest List */}
+                {
+                    product?.isSeller &&
+                    <View style={styles.intrestListRow}>
+                        <IntrestList
+                            UserIDs={product.usersInterested}
+                            style={styles.intrestList}
+                        />
+                    </View>
+                }
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    background: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'mediumorchid',
+    },
     container: {
         backgroundColor: 'floralwhite',
         borderRadius: 20,
@@ -331,6 +344,8 @@ const styles = StyleSheet.create({
     },
     imageBox: {
         height: '30%',
+        backgroundColor: 'white',
+        borderRadius: 20,
     },
     image: {
         width: '100%',
@@ -346,6 +361,8 @@ const styles = StyleSheet.create({
         top: 5,
         left: 5,
         borderRadius: 50,
+        borderWidth: 1,
+        color: 'black',
     },
     editBox: {
         position: 'absolute',
@@ -364,6 +381,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     content: {
+        margin: 10,
     },
     row: {
         flexDirection: 'row',
@@ -381,14 +399,20 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight: 'bold',
     },
-    conditionPriceRow: {},
+    conditionPriceRow: {
+        marginBottom: 10,
+    },
     conditionText: {
         maxWidth: '70%',
     },
     priceText: {
         maxWidth: '30%',
+        fontSize: 20,
+        color: 'dimgray',
     },
-    catSellerRow: {},
+    catSellerRow: {
+        marginBottom: 10,
+    },
     catagoryText: {
         maxWidth: '50%',
     },
@@ -413,9 +437,11 @@ const styles = StyleSheet.create({
     },
     discRow: {
         maxHeight: 340,
+        alignSelf: 'center',
     },
     discText: {
         fontSize: 15,
+        color: 'dimgray',
     },
     buttonRow: {
         justifyContent: 'center',

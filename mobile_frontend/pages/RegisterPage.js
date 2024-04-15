@@ -11,7 +11,9 @@ import RegisterComponent from "../Components/RegisterComponent";
 export default function RegisterPage(props) {
 
     return (
-        <ScrollView>
+        <ScrollView
+            style={styles.container}
+        >
             <RegisterComponent
                 {...props}
             />
@@ -19,4 +21,9 @@ export default function RegisterPage(props) {
     )};
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'mediumorchid',
+        width: '100%',
+        height: '100%',
+    },
 });

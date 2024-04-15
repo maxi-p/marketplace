@@ -79,17 +79,20 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
                     </View>
                     {/* Condition and Price */}
                     <View style={[styles.row, styles.conditionRow]}>
-                        <Text style={[styles.text, styles.conditionText]}
-                        numberOfLines={2}
-                        >
-                            {product.condition ?? 'N/A'}
-                        </Text>
+                        <View>
+                            <Text style={[styles.text]}>Condition:</Text>
+                            <Text style={[styles.text, styles.conditionText]}
+                            numberOfLines={2}
+                            >
+                                {product.condition ?? 'N/A'}
+                            </Text>
+                        </View>
                         <View style={styles.priceBox}>
                             <Text
                             style={[styles.text, styles.priceText]}
                             numberOfLines={1}
                             >
-                                {product.price ?? '$N/A'}
+                                ${product.price ?? '$N/A'}
                             </Text>
                         </View>
                     </View>
@@ -233,8 +236,11 @@ const styles = StyleSheet.create({
         color: 'dimgray',
     },
     descRow: {
+        marginTop: 20,
+        alignSelf: 'center',
     },
     descText: {
+        color: 'dimgray',
     },
 });
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
 import HomePage from '../pages/HomePage';
 import {UserContext} from '../logic/UserContext';
 
@@ -60,43 +60,75 @@ const Login = (props) => {
 
   // Render the login page if isLoggedIn is false
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>LOGIN</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TouchableOpacity style={styles.button} onPress={doLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={registerRedirect}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-      <Text style={styles.message}>{message}</Text>
-    </View>
+    <ScrollView style={{width: '100%', height: '100%'}}>
+      <KeyboardAvoidingView style={styles.view}>
+        <View style={styles.container}>
+          <View style={styles.titleRow}>
+            <Text style={[styles.text, styles.title]}>OpenMarket</Text>
+            <Text style={[styles.text, styles.subtitle]}>
+              A place to buy and sell goods!
+            </Text>
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            placeholderTextColor="dimgray"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            placeholderTextColor="dimgray"
+          />
+          <TouchableOpacity style={styles.button} onPress={doLogin}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={registerRedirect}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+          <Text style={styles.message}>{message}</Text>
+        </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  view: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
   container: {
-    flex: 1,
     justifyContent: 'top',
     alignItems: 'center',
+    backgroundColor: 'floralwhite',
+    width: '95%',
+    borderWidth: 1,
+    borderRadius: 30,
+    marginVertical: 20,
+  },
+  text: {
+    color: "black",
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "black",
-    marginTop: 50,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: 'dimgray',
+    marginTop: 10,
+  },
+  titleRow: {
+    alignItems: 'center',
+    marginTop: 100,
     marginBottom: 150,
     marginVertical: 0, 
   },
@@ -105,10 +137,11 @@ const styles = StyleSheet.create({
     height: 50,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'dimgray',
     borderRadius: 10,
     paddingLeft: 10,
     paddingRight: 60, 
+    color: 'black',
   },
   button: {
     width: '80%',

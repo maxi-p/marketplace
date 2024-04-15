@@ -7,7 +7,7 @@ const EmailVerifyPage = ({navigation, route, UserID}) => {
     const ID = UserID ?? route?.params?.UserID ?? null;
 
     if (UserID === null) {
-        Alert.alert('No Id Provied')
+        Alert.alert('No Id Provided');
         navigation.goBack();
     }
     return (
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ef96f2',
+        backgroundColor: 'mediumorchid',
         width: '100%',
         height: '100%',
     },

@@ -63,6 +63,7 @@ const VerifyComp = ({UserID, navigation, ...props}) =>
                     style={styles.TextBox}
 
                     placeholder='00000'
+                    placeholderTextColor="darkgrey"
                 />
             </View>
             <View style={[styles.row, styles.ButtonRow]}>
@@ -105,7 +106,9 @@ const styles = StyleSheet.create({
         width: '70%' 
      },
 
-    text: {},
+    text: {
+        color: 'black'
+    },
     titleText: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -120,6 +123,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 24,
         borderRadius: 40,
+        color: 'black',
 
     },
 

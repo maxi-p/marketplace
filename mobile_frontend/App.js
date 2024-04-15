@@ -11,14 +11,13 @@ import SellUpdateProduct from './Components/SellUpdateProduct';
 import ProductListPage from './pages/ProductListPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-
+import EmailVerifyPage from './pages/EmailVerifyPage';
 
 import HomePage from './pages/HomePage';
 import SellPage from './pages/SellPage';
 import BrowsePage from './pages/BrowsePage';
-
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const Stack2 = createNativeStackNavigator();
 const App = () => {
   const [user, setUser] = useState(null);
   const UserC = {user, setUser};
@@ -52,6 +51,7 @@ const App = () => {
             component={PostLogin}
             options={{headerShown: false}}
           />
+          <Stack.Screen name="eVerifyModel" component={EmailVerifyPage} />
         </Stack.Navigator>
       </UserContext.Provider>
     </NavigationContainer>
@@ -63,7 +63,7 @@ const App = () => {
 // <Tab.Screen name="Browse" component={BrowsePage} />
 const PostLogin = () => {
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Stack2.Navigator initialRouteName="Home">
       <Stack.Screen name="List" component={ProductListPage} />
       <Stack.Group
         screenOptions={{
@@ -74,7 +74,7 @@ const PostLogin = () => {
         <Stack.Screen name="ImageModal" component={ImageViewModal} />
         <Stack.Screen name="SellUpdateModal" component={SellUpdateProduct} />
       </Stack.Group>
-    </Tab.Navigator>
+    </Stack2.Navigator>
   );
 };
 export default App;

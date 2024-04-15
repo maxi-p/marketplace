@@ -176,17 +176,21 @@ function ProductList(props) {
     // Fetch Data -- First Load and Refoucs
     useEffect(() => {
         const Reload = props.navigation.addListener('focus', () => {
-            const addData = async () => {
-                var inData = await fetchData(0, searchText);
-                setData(inData.data);
-                setLoading(false);
-                setIndex(inData.cnt);
-            };
-            setLoading(true);
-            addData();
+            setSearchText('');
         });
         return Reload;
-    }, [searchText, props.navigation]);
+    }, [props.navigation]);
+
+    useEffect(() => {
+        const addData = async () => {
+            var inData = await fetchData(0, searchText);
+            setData(inData.data);
+            setLoading(false);
+            setIndex(inData.cnt);
+        };
+        setLoading(true);
+        addData();
+    }, [searchText]);
 
     const getData = async () => {
         if (loading === false && momentum === true) {
@@ -247,9 +251,6 @@ const styles = StyleSheet.create({
         width: '90%',
         elevation: 10,
         paddingTop: 10,
-    },
-    container: {
-        backgroundColor: 'white',
     },
 });
 
