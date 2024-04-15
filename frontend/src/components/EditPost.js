@@ -48,7 +48,7 @@ export const EditPost = props => {
         }
     };
   return (
-    <div id="editPostDiv">
+    <div id="editPostDiv" className='editPostDiv'>
             <form onSubmit={doSave}>
                 <span id="inner-title">Edit Your Post</span><br />
                 <input 

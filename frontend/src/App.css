@@ -340,7 +340,7 @@ a {
   width: 100vw
 }
 
-#editPostDiv {
+.editPostDiv {
   background-color: #fff;
   border: 3px solid #000;
   box-sizing: border-box;
