@@ -86,7 +86,6 @@ const UploadForm = props =>
                             />
                         </div>
                     <div className="uploadPostDiv">
-                        <form onSubmit={doPost}>
                             <div className="input_field">
                                 <span><FontAwesomeIcon icon={faDollarSign} transform = "down-6"/></span>
                                 <input 
@@ -127,20 +126,12 @@ const UploadForm = props =>
                                 onChange={handleChange} 
                             /><br/>
                             <input 
-                                type="file" 
-                                placeholder="image"
-                                accept="image/*"
-                                id="image"
-                                onChange={handleChange} 
-                            />
-                            <input 
                                 type="submit" 
                                 value = "Post"
                                 id="postButton" 
                                 className="postUploadButton"
                                 onClick={doPost}  
                             />
-                        </form>
                         <span id="postResult">{message}</span>
                     </div>
                     </form>
