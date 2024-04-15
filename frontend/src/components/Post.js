@@ -32,7 +32,7 @@ const Post = props => {
             <button
                 onClick={interestHandler}
             >
-                <img src={props.obj.interested?"filled_star.png":"empty_star.png"} className="card--star" />
+                <img src={props.obj.interested?"filled_star_p.png":"empty_star_p.png"} className="card--star" />
             </button>
             {props.obj.username === props.loggedNick && 
             <button
