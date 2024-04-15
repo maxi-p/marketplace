@@ -106,7 +106,13 @@ export const EditPost = props => {
                                     value={formData.condition}
                                 />
                             </div>
-
+                            <input 
+                                type="file" 
+                                placeholder="image"
+                                accept="image/*"
+                                id="image"
+                                onChange={handleChange} 
+                            /><br/>
                             <input 
                                 type="submit" 
                                 value = "Save"
@@ -128,72 +134,6 @@ export const EditPost = props => {
                 </div>
                 
             </div>
-            {/* <form onSubmit={doSave}>
-                <span id="inner-title">Edit Your Post</span><br />
-                <input 
-                    type="text"
-                    placeholder="name"
-                    id="name"
-                    onChange={handleChange}
-                    value={formData.name}
-                />
-                <br/>
-                <input 
-                    type="text" 
-                    placeholder="genre"
-                    id="genre"
-                    onChange={handleChange} 
-                    value={formData.genre}
-                />
-                <br/>
-                <input 
-                    type="price" 
-                    placeholder="price"
-                    id="price"
-                    onChange={handleChange} 
-                    value={formData.price}
-                />
-                <br/>
-                <input 
-                    type="text" 
-                    placeholder="desc"
-                    id="desc"
-                    onChange={handleChange} 
-                    value={formData.desc}
-                />
-                <br/>
-                <input 
-                    type="text" 
-                    placeholder="condition"
-                    id="condition"
-                    onChange={handleChange} 
-                    value={formData.condition}
-                />
-                <br/>
-                <input 
-                    type="file" 
-                    placeholder="image"
-                    accept="image/*"
-                    id="image"
-                    onChange={handleChange} 
-                /><br/>
-                <input 
-                    type="submit" 
-                    value = "Save"
-                    id="saveButton" 
-                    className="buttons"  
-                />
-                
-                <input 
-                    type="button" 
-                    value = "Discard"
-                    id="saveButton" 
-                    name="discard"
-                    className="buttons"
-                    onClick={props.editHandler}  
-                />
-            </form>
-            <span id="postResult">{message}</span> */}
         </div>
   )
 }
