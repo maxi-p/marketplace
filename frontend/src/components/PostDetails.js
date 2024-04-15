@@ -9,8 +9,10 @@ const PostDetails = props => {
     const { id } = useParams();
     const [post, setPost] = useState({});
     const [loading, setLoading] = useState(true);
+    const [hasUpdated, setHasUpdated] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    console.log(post)
 
     useEffect(() => {
         const getPost = async() => {
@@ -19,14 +21,19 @@ const PostDetails = props => {
             const response = await fetch(buildPath('api/getPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
             var res = JSON.parse(await response.text());
             setPost(res.post)
+            setHasUpdated(false);
             // TODO: remove this mimicking network request time (0.5 seconds)
             setTimeout(()=>{setLoading(false)}, 100)
         }
         getPost();
-    },[]);
+    },[hasUpdated]);
 
     const saveHandler = data => {
         setPost(data);
+    }
+
+    const updatedHandler = data => {
+        setHasUpdated(data);
     }
 
     const editHandler = event => {
@@ -67,6 +74,7 @@ const PostDetails = props => {
                         post={post}
                         editHandler={editHandler}
                         saveHandler={saveHandler}
+                        setHasUpdated={updatedHandler}
                     />}
                     <section className='post-details'>
                         <h1>{post.name}</h1>
@@ -87,7 +95,7 @@ const PostDetails = props => {
                             >
                                 <img src="./edit.jpg" className="card--star" />
                             </button>}
-                            <img src={'./post.png'} className="card--image" />
+                            <img src={post.image? "data:image/;base64,"+post.image.image.data:'./post.png'} className="card--image" />
                             <div className="card--stats">
                                 <img src="./star.png" className="card--star" />
                                 <span className="gray"> • </span>

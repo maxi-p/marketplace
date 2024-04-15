@@ -27,7 +27,7 @@ const Products = props =>
     const closeDeleteHandler = event => {
         setIsDeleting(false);
     }
-
+    console.log("posts", props.allPosts)
     const posts = props.allPosts.map(post => {
         return (
             <Post
@@ -67,6 +67,7 @@ const Products = props =>
                         closeEditHandler={closeEditHandler}
                         setAllPosts={props.setAllPosts}
                         allPosts={props.allPosts}
+                        setModified={props.setModified}
                     />}
                     {/* <span>Posts:</span> */}
                     <br /><br />

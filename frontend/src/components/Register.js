@@ -3,7 +3,7 @@ import Route, { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEnvelope, faPhone} from '@fortawesome/free-solid-svg-icons';
 import validateRegister from '../logic/validator';
-import buildPath from '../logic/validator';
+import buildPath from '../logic/buildPath';
 
 const Register = props => {
     const navigate = useNavigate();
@@ -39,13 +39,29 @@ const Register = props => {
 
         if (validationState.status === 'valid') {
             var json = JSON.stringify(formData);
-            try {
-                const response = await fetch(buildPath('api/register'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
+            try
+            {
+                console.log(json)
+                const response = await fetch(buildPath('api/register'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
                 var res = JSON.parse(await response.text());
-                if (res.error)
+                console.log(res)
+                if(res.error)
                     setMessage(res.error);
-                else {
-                    var user = { username: res.username, firstName: res.firstName, lastName: res.lastName, id: res.id }
+                else
+                {
+                    var user = { 
+                        id: res._id, 
+                        username: res.username, 
+                        firstName: res.firstName, 
+                        lastName: res.lastName, 
+                        email: res.email,
+                        interestedIn: res.interestedIn,
+                        phoneNumber: res.phoneNumber,
+                        ttl: res.ttl,
+                        aboutMe: res.aboutMe,
+                        profilePic: res.profilePic
+                    };
+
                     localStorage.setItem('user_data', JSON.stringify(user));
                     props.loggedHandler(user)
                     setMessage('');
@@ -53,8 +69,7 @@ const Register = props => {
                 }
 
             }
-            catch (e) {
-                alert(e.toString());
+            catch(e){
                 console.log(e.toString());
                 return;
             }

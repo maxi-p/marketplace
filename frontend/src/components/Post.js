@@ -5,6 +5,7 @@ import isLoggedIn from '../logic/isLoggedIn';
 const Post = props => {
     // const [user] = useState(isLoggedIn());
     // const isUserInterested = props.obj.usersInterested.includes(user._id);
+    // console.log("one",props.obj.image.image.data)
     return (
         <div className="card">
             {props.obj.username === props.loggedNick && 
@@ -20,7 +21,7 @@ const Post = props => {
             ><img src="./edit.jpg" className="card--star" />
             </button>}
             <Link to={props.obj._id.toString()} style={{ textDecoration: 'none' }}>
-            <img src={'./post.png'} className="card--image" />
+            <img src={props.obj.image? "data:image/;base64,"+props.obj.image.image.data:'./post.png'} className="card--image" />
             <div className="card--stats">
                 {/* {isUserInterested && <img src="./star.png" className="card--star" />} */}
                 <img src="./star.png" className="card--star" />

@@ -1,3 +1,4 @@
+package-lock.*
 # Environment variables
 .env
 
@@ -14,6 +15,8 @@ node_modules
 dist
 dist-ssr
 *.local
+
+imageUploads/*
 
 # Editor directories and files
 .vscode/*

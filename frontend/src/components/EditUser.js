@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import buildPath from '../logic/buildPath';
 
-export const EditPost = props => {
-    const [formData, setFormData] = useState({...props.post, id:props.post._id});
-    
+export const EditUser = props => {
+    const [formData, setFormData] = useState({...props.loggedUser, password:''});
+    console.log(props.loggedUser)
     const handleChange = (event) => {
         const {id, value,type,files} = event.target;
         console.log(event)
@@ -15,6 +15,7 @@ export const EditPost = props => {
             })
     };
 
+
     const [message,setMessage] = useState('');
 
     const doSave = async (event) =>
@@ -24,21 +25,22 @@ export const EditPost = props => {
         for (const property in formData) {
             form.append(property, formData[property]) 
         }
+        console.log("form",form)
+        console.log("formData",formData)
 
         try
         {
-            const response = await fetch(buildPath('api/editPost'), {method:'POST',body:form});
+            const response = await fetch(buildPath('api/editUser'), {method:'POST',body:form});
             var res = JSON.parse(await response.text());
 
             if( res.id <= 0 )
             {
-                setMessage('Post wasn\'t edited');
+                setMessage('User wasn\'t edited');
             }
             else
             {
                 setMessage('');
                 props.editHandler('saved')
-                props.setHasUpdated(true)
             }
 
         }
@@ -50,45 +52,46 @@ export const EditPost = props => {
   return (
     <div id="editPostDiv">
             <form onSubmit={doSave}>
-                <span id="inner-title">Edit Your Post</span><br />
+                <span id="inner-title">Edit Your Profile</span><br />
+ 
                 <input 
                     type="text"
-                    placeholder="name"
-                    id="name"
+                    placeholder="First Name"
+                    id="firstName"
                     onChange={handleChange}
-                    value={formData.name}
+                    value={formData.firstName}
                 />
                 <br/>
                 <input 
                     type="text" 
-                    placeholder="genre"
-                    id="genre"
+                    placeholder="Last Name"
+                    id="lastName"
                     onChange={handleChange} 
-                    value={formData.genre}
-                />
-                <br/>
-                <input 
-                    type="price" 
-                    placeholder="price"
-                    id="price"
-                    onChange={handleChange} 
-                    value={formData.price}
+                    value={formData.lastName}
                 />
                 <br/>
                 <input 
                     type="text" 
-                    placeholder="desc"
-                    id="desc"
+                    placeholder="Email"
+                    id="email"
                     onChange={handleChange} 
-                    value={formData.desc}
+                    value={formData.email}
                 />
                 <br/>
                 <input 
                     type="text" 
-                    placeholder="condition"
-                    id="condition"
+                    placeholder="Phone Number"
+                    id="phoneNumber"
                     onChange={handleChange} 
-                    value={formData.condition}
+                    value={formData.phoneNumber}
+                />
+                <br/>
+                <input 
+                    type="text" 
+                    placeholder="About me"
+                    id="aboutMe"
+                    onChange={handleChange} 
+                    value={formData.aboutMe}
                 />
                 <br/>
                 <input 

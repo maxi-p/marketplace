@@ -1,46 +1,44 @@
 import React, { useState } from 'react';
-import buildPath from '../logic/validator';
+import { useNavigate } from 'react-router-dom';
+import buildPath from '../logic/buildPath';
 
-function EnterCode()
+const EnterCode =  props =>
 {
-    var verificationCode;
+    const navigate = useNavigate();
+    const [token, setToken] = useState('');
+    const [emailVerified, setEmailVerified] = useState(false);
     const [message,setMessage] = useState('');
+
+    console.log(props.loggedUser);
+
+    const handleToken = event => {
+        setToken(event.target.value)
+    }
 
     const doVerify = async event =>
     {  
         event.preventDefault();
         
-        // user == {firstName: string, lastName: string, id: int}
-        const user = JSON.parse(localStorage.getItem('user_data'));
-        if(user == null)
-            window.location.href = '/register';
-
         var code = {
-            username: user.firstName, 
-            code: verificationCode.value
+            id: props.loggedUser.id, 
+            verifyNum: token
         };
 
         var json = JSON.stringify(code);
 
         try
         {
-            var res;
-            res = {
-                status:1,
-                error:""
-            };
-            // TODO: wait for backend to finish this API
-            // const response = await fetch(buildPath('api/verifyEmail'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
-            // res = JSON.parse(await response.text());
+            const response = await fetch(buildPath('api/emailVerify'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
+            const res = JSON.parse(await response.text());
 
-            if( res.status == 0 )
+            if( res.error !== "" )
             {
                 setMessage(res.error);
             }
             else    
             {
+                setEmailVerified(true);
                 setMessage('');
-                window.location.href = '/home';
             }
         }
         catch(e){
@@ -51,11 +49,28 @@ function EnterCode()
 
     return(
         <div id="verifyEmailDiv">
+            {(props.loggedUser.ttl !== -1) &&
             <form onSubmit={doVerify}>
                 <span id="inner-title">Please paste the verification code that was sent to your email.</span><br />
-                <input type="text" id="verificationCode" placeholder="Enter the code" ref={(c) => verificationCode = c}/><br />
-                <input type="submit" id="submitCode" className="buttons" value = "Verify Code" onClick={doVerify} />
+                <input 
+                    type="text"
+                    id="verificationCode"
+                    placeholder="Enter the code" 
+                    value={token}
+                    onChange={handleToken}
+                    /><br />
+                <input 
+                    type="submit" 
+                    id="submitCode" 
+                    className="buttons" 
+                    value = "Verify Code" 
+                    onClick={doVerify} 
+                    />
             </form>
+            }
+            {(emailVerified || props.loggedUser.ttl === -1) &&
+                <h1>Email has been verified!!!</h1>
+            }
             <span id="registerResult">{message}</span>
         </div>
     );
