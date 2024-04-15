@@ -49,7 +49,85 @@ export const EditPost = props => {
     };
   return (
     <div id="editPostDiv" className='editPostDiv'>
-            <form onSubmit={doSave}>
+        <div className="form_container">
+                <div className="title_container">
+                    <h2>Upload Post</h2>
+                </div>
+                <div className="row clearfix">
+                    <form onSubmit={doSave}>   
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faPencil} transform = "down-6"/></span>
+                            <input 
+                                type="text"
+                                placeholder="name"
+                                id="name"
+                                onChange={handleChange}
+                                value={formData.name}
+                            />
+                        </div>
+                        <div className="input_field"> <span><FontAwesomeIcon icon={faLightbulb} transform = "down-6"/></span>
+                            <input 
+                                type="text" 
+                                placeholder="genre"
+                                id="genre"
+                                onChange={handleChange} 
+                                value={formData.genre}
+                            />
+                        </div>
+                    <div className="uploadPostDiv">
+                            <div className="input_field">
+                                <span><FontAwesomeIcon icon={faDollarSign} transform = "down-6"/></span>
+                                <input 
+                                    type="price" 
+                                    placeholder="price"
+                                    id="price"
+                                    onChange={handleChange} 
+                                    value={formData.price}
+                                />
+                            </div>
+
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faComment} transform = "down-6"/></span>
+                                <input 
+                                    type="text" 
+                                    placeholder="desc"
+                                    id="desc"
+                                    onChange={handleChange} 
+                                    value={formData.desc}
+                                />
+                            </div>
+                          
+
+                            <div className="input_field"> <span><FontAwesomeIcon icon={faStar} transform = "down-6"/></span>
+                                <input 
+                                    type="text" 
+                                    placeholder="condition"
+                                    id="condition"
+                                    onChange={handleChange} 
+                                    value={formData.condition}
+                                />
+                            </div>
+
+                            <input 
+                                type="submit" 
+                                value = "Save"
+                                id="saveButton" 
+                                className="buttons"  
+                            />
+                            
+                            <input 
+                                type="button" 
+                                value = "Discard"
+                                id="saveButton" 
+                                name="discard"
+                                className="buttons"
+                                onClick={props.editHandler}  
+                            />
+                        <span id="postResult">{message}</span>
+                    </div>
+                    </form>
+                </div>
+                
+            </div>
+            {/* <form onSubmit={doSave}>
                 <span id="inner-title">Edit Your Post</span><br />
                 <input 
                     type="text"
@@ -114,7 +192,7 @@ export const EditPost = props => {
                     onClick={props.editHandler}  
                 />
             </form>
-            <span id="postResult">{message}</span>
+            <span id="postResult">{message}</span> */}
         </div>
   )
 }
