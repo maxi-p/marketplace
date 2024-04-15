@@ -330,100 +330,46 @@ app.post('/api/register', async (req, res, next) =>
 
 async function sendEmail(email, verifyNum)
 {
-    // const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-    // oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+    oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-    let txtMessage = 'Here is your verification code: ' + verifyNum;
+    let message = 'Here is your verification code: ' + verifyNum;
 
-    let config = {
-        service: 'gmail',
-        auth: {
-            user: user,
-            pass: pass
-        }
-    };
+    try
+    {
+        const accessToken = await oAuth2Client.getAccessToken();
+        //console.log(accessToken);
 
-    let transporter = nodemailer.createTransport(config);
+        const transport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: 'emailsenderopenmarket@gmail.com',
+                pass: pass,
+                clientId: CLIENT_ID,
+                clientSecret:  CLIENT_SECRET,
+                refreshToken: REFRESH_TOKEN,
+                accessToken: accessToken
+            },
+            tls: {
+                rejectUnauthorized: false, // this made my request token work!
+            },
+        });
 
-    let mailgenerator = new mailgen({
-        theme: "default",
-        product: {
-            name: "Mailgen",
-            link: "https://mailgen.js/"
-        }
-    });
+        const mailOptions = {
+            from: 'Open Market <emailsenderopenmarket@gmail.com>',
+            to: email,
+            subject: 'Verification Code',
+            text: message
+        };
 
-    // let response = {
-    //     body: {
-    //         name : "Daily Tuition",
-    //         intro: "Your bill has arrived!",
-    //         table : {
-    //             data : [
-    //                 {
-    //                     item : "Nodemailer Stack Book",
-    //                     description: "A Backend application",
-    //                     price : "$10.99",
-    //                 }
-    //             ]
-    //         },
-    //         outro: "Looking forward to do more business"
-    //     }
-    // };
-
-    // let mail = mailgenerator.generate(response);
-
-    let message = {
-        // from: user,
-        // to: email,
-        // subject: "Verification Number",
-        // text: txtMessage
-        from: 'Open Market <emailsenderopenmarket@gmail.com>',
-        to: email,
-        subject: 'Verification Code',
-        text: txtMessage
-    };
-
-    transporter.sendMail(message).then(() => {
-        return;
-    }).catch(error => {
+        const result = await transport.sendMail(mailOptions);
+        return result;
+    }
+    catch(error)
+    {
         return error;
-    })
-
-    // try
-    // {
-    //     const accessToken = await oAuth2Client.getAccessToken();
-    //     //console.log(accessToken);
-
-    //     const transport = nodemailer.createTransport({
-    //         //service: 'gmail',
-    //         auth: {
-    //             type: 'OAuth2',
-    //             user: 'emailsenderopenmarket@gmail.com',
-    //             //pass: process.env.MAILER_PASSWORD,
-    //             clientId: CLIENT_ID,
-    //             clientSecret:  CLIENT_SECRET,
-    //             refreshToken: REFRESH_TOKEN,
-    //             accessToken: accessToken
-    //         },
-    //         tls: {
-    //             rejectUnauthorized: false, // this made my request token work!
-    //         },
-    //     });
-
-    //     const mailOptions = {
-    //         from: 'Open Market <emailsenderopenmarket@gmail.com>',
-    //         to: email,
-    //         subject: 'Verification Code',
-    //         text: message
-    //     };
-
-    //     const result = await transport.sendMail(mailOptions);
-    //     return result;
-    // }
-    // catch(error)
-    // {
-    //     return error;
-    // }
+    }
 
 }
 
