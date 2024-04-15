@@ -48,7 +48,18 @@ const Register = props =>
                     setMessage(res.error);
                 else
                 {
-                    var user = {username: res.username, firstName: res.firstName, lastName: res.lastName, id: res.id}
+                    var user = { 
+                        id: res.id, 
+                        username: res.username, 
+                        firstName: res.firstName, 
+                        lastName: res.lastName, 
+                        email: res.email,
+                        interestedIn: res.interestedIn,
+                        phoneNumber: res.phoneNumber,
+                        ttl: res.ttl,
+                        aboutMe: res.aboutMe,
+                        profilePic: res.profilePic
+                    };
                     localStorage.setItem('user_data', JSON.stringify(user));
                     props.loggedHandler(user)
                     setMessage('');

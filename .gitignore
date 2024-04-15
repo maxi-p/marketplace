@@ -15,6 +15,10 @@ dist
 dist-ssr
 *.local
 
+server.js
+package-lock.json
+imageUploads/*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

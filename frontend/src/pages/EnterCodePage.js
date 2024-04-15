@@ -2,7 +2,7 @@ import React from 'react';
 import PageTitle from '../components/PageTitle';
 import EnterCode from '../components/EnterCode';
 
-const EnterCodePage = () =>
+const EnterCodePage = props =>
 {
     return(
         <div>

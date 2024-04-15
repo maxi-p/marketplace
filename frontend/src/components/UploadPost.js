@@ -8,15 +8,17 @@ const UploadForm = props =>
     const [formData, setFormData] = useState(
         {username: props.loggedUser.username, name:'', genre:'', price:'', desc:'', condition:''}
     );
+    console.log(formData);
     
     const handleChange = (event) => {
-        const {id, value} = event.target;
-        setFormData(prevFormData => {
-            return {
-                ...prevFormData,
-                [id]: value
-            }
-        })
+        const {id, value,type,files} = event.target;
+        console.log(event)
+            setFormData(prevFormData => {
+                return {
+                    ...prevFormData,
+                    [id]: type === 'file'? files[0] :value
+                }
+            })
     };
 
     const [message,setMessage] = useState('');
@@ -24,12 +26,16 @@ const UploadForm = props =>
     const doPost = async (event) =>
     {
         event.preventDefault();
-        var json = JSON.stringify(formData);
+        const form = new FormData();
+        for (const property in formData) {
+            form.append(property, formData[property]) 
+        }
 
         try
         {
-            const response = await fetch(buildPath('api/createPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
+            const response = await fetch(buildPath('api/createPost'), {method:'POST',body:form});
             var res = JSON.parse(await response.text());
+            console.log(res)
 
             if( res.id <= 0 )
             {
@@ -43,8 +49,7 @@ const UploadForm = props =>
 
         }
         catch(e){
-            console.log(json)
-            alert(e.toString());
+            console.log(e.toString());
             return;
         }
     };
@@ -91,7 +96,15 @@ const UploadForm = props =>
                     id="condition"
                     onChange={handleChange} 
                     value={formData.condition}
+                /><br/>
+                <input 
+                    type="file" 
+                    placeholder="image"
+                    accept="image/*"
+                    id="image"
+                    onChange={handleChange} 
                 />
+                
                 <br/>
                 <input 
                     type="submit" 

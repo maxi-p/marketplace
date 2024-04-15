@@ -5,13 +5,14 @@ export const EditPost = props => {
     const [formData, setFormData] = useState({...props.post, id:props.post._id});
     
     const handleChange = (event) => {
-        const {id, value} = event.target;
-        setFormData(prevFormData => {
-            return {
-                ...prevFormData,
-                [id]: value
-            }
-        })
+        const {id, value,type,files} = event.target;
+        console.log(event)
+            setFormData(prevFormData => {
+                return {
+                    ...prevFormData,
+                    [id]: type === 'file'? files[0] :value
+                }
+            })
     };
 
     const [message,setMessage] = useState('');
@@ -19,11 +20,14 @@ export const EditPost = props => {
     const doSave = async (event) =>
     {
         event.preventDefault();
-        var json = JSON.stringify(formData);
+        const form = new FormData();
+        for (const property in formData) {
+            form.append(property, formData[property]) 
+        }
 
         try
         {
-            const response = await fetch(buildPath('api/editPost'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
+            const response = await fetch(buildPath('api/editPost'), {method:'POST',body:form});
             var res = JSON.parse(await response.text());
 
             if( res.id <= 0 )
@@ -34,12 +38,11 @@ export const EditPost = props => {
             {
                 setMessage('');
                 props.editHandler('saved')
-                props.saveHandler(formData)
+                props.setHasUpdated(true)
             }
 
         }
         catch(e){
-            console.log(json)
             alert(e.toString());
             return;
         }
@@ -89,11 +92,19 @@ export const EditPost = props => {
                 />
                 <br/>
                 <input 
+                    type="file" 
+                    placeholder="image"
+                    accept="image/*"
+                    id="image"
+                    onChange={handleChange} 
+                /><br/>
+                <input 
                     type="submit" 
                     value = "Save"
                     id="saveButton" 
                     className="buttons"  
                 />
+                
                 <input 
                     type="button" 
                     value = "Discard"

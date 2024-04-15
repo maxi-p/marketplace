@@ -9,7 +9,7 @@ export const DeletePost = props => {
     const doDelete = async (event) =>
     {
         event.preventDefault();
-        var json = JSON.stringify({...props.post, id: props.post._id});
+        var json = JSON.stringify({id: props.post._id});
 
         try
         {

@@ -7,6 +7,7 @@ import isLoggedIn from '../logic/isLoggedIn';
 const HomePage = props =>
 {
     // const [user] = useState(isLoggedIn());
+    const [modified, setModified] = useState(false)
     const [allPosts, setAllPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -18,12 +19,16 @@ const HomePage = props =>
         setLoading(data);
     }
 
+    const modifiedHandler = data =>{
+        setModified(data);
+    }
+
     return(
         <div>
             <PageTitle title="Open Market"/>
             {/* {user && <span>Logged in as: {user.firstName} {user.lastName}</span>} */}
-            <SearchBar setLoading={loadingHandler} setAllPosts={postHandler}/>
-            <Products loggedUser={props.loggedUser} loading={loading} allPosts={allPosts} setAllPosts={postHandler}/>
+            <SearchBar setLoading={loadingHandler} setAllPosts={postHandler} modified={modified} setModified={modifiedHandler}/>
+            <Products loggedUser={props.loggedUser} loading={loading} allPosts={allPosts} setAllPosts={postHandler} setModified={modifiedHandler}/>
         </div>
     );
 }
