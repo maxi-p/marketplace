@@ -6,7 +6,11 @@ import buildPath from '../logic/buildPath';
 
 const UploadForm = props => 
 {
-    const [formData, setFormData] = useState({...props.post, id:props.post._id});
+ const navigate = useNavigate();
+    const [formData, setFormData] = useState(
+        {username: props.loggedUser.username, name:'', genre:'', price:'', desc:'', condition:''}
+    );
+    console.log(formData);
     
     const handleChange = (event) => {
         const {id, value,type,files} = event.target;
@@ -21,7 +25,7 @@ const UploadForm = props =>
 
     const [message,setMessage] = useState('');
 
-    const doSave = async (event) =>
+    const doPost = async (event) =>
     {
         event.preventDefault();
         const form = new FormData();
@@ -31,28 +35,27 @@ const UploadForm = props =>
 
         try
         {
-            const response = await fetch(buildPath('api/editPost'), {method:'POST',body:form});
+            const response = await fetch(buildPath('api/createPost'), {method:'POST',body:form});
             var res = JSON.parse(await response.text());
+            console.log(res)
 
             if( res.id <= 0 )
             {
-                setMessage('Post wasn\'t edited');
+                setMessage('Post wasn\'t added');
             }
             else
             {
                 setMessage('');
-                const newPosts = [];
-                console.log("setting")
-                props.setModified(true);
-                props.closeEditHandler();
+                navigate('/'+res._id);
             }
 
         }
         catch(e){
-            alert(e.toString());
+            console.log(e.toString());
             return;
         }
     };
+
     return(
 
         <div className="form_wrapper">
