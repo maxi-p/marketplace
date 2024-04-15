@@ -263,6 +263,10 @@ input[type=checkbox]:checked+label:before {
 #title {
     color: #82099c
 }
+.title_container
+{
+  color: #82099c
+}
 
 li a {
     color: #fff;
