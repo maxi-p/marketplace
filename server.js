@@ -341,7 +341,7 @@ async function sendEmail(email, verifyNum)
 
     try
     {
-        const accessToken = await oAuth2Client.getAccessToken();
+        //const accessToken = await oAuth2Client.getAccessToken();
         //const transport = nodemailer.createTransport('smtps://emailsenderopenmarket%gmail.com:' + pass + '@smtp.gmail.com')
 
         const smtpConfig = {
@@ -354,20 +354,7 @@ async function sendEmail(email, verifyNum)
             }
         };
 
-        const transport = nodemailer.createTransport(smtpConfig/*'smtps://emailsenderopenmarket%gmail.com:' + pass + '@smtp.gmail.com'*/);
-
-        // const transport = nodemailer.createTransport({
-        //     service: 'smtp-mail.gmail',
-        //     auth: {
-        //         type: 'OAuth2',
-        //         user: 'emailsenderopenmarket@gmail.com',
-        //         pass: pass,
-        //         clientId: CLIENT_ID,
-        //         clientSecret:  CLIENT_SECRET,
-        //         refreshToken: REFRESH_TOKEN,
-        //         accessToken: accessToken
-        //     }
-        // });
+        const transport = nodemailer.createTransport(smtpConfig);
 
         const mailOptions = {
             from: 'Open Market <emailsenderopenmarket@gmail.com>',
