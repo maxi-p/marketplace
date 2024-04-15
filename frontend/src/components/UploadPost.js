@@ -6,7 +6,7 @@ import buildPath from '../logic/buildPath';
 
 const UploadForm = props => 
 {
- const navigate = useNavigate();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState(
         {username: props.loggedUser.username, name:'', genre:'', price:'', desc:'', condition:''}
     );
