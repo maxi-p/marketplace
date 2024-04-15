@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, View, TextInput, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import R_Validation_Data from "../logic/RegisterValidation";
 
 
 const PasswordResetPage = ( {route} ) => {
@@ -7,6 +8,7 @@ const PasswordResetPage = ( {route} ) => {
     const [username, setUsername] = useState('');
     const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     useEffect(() => {
         setUsername(route.params.username || '');
@@ -22,6 +24,22 @@ const PasswordResetPage = ( {route} ) => {
             Alert.alert('Error', error.message);
         }
     };
+
+    const handleNewPassword = async () => {
+        if (!validatePassword(newPassword)) {
+          if (newPassword != '') {
+            setPasswordError('Password must be 8-32 characters long, with at least 1 digit, 1 letter, and 1 special character');
+            return;
+          }
+        }
+        else {
+            setPasswordError('');
+        }
+    };
+
+    const validatePassword = (password) => {
+        return R_Validation_Data.passwordRegex.test(password);
+      };
 
     const passwordChange = async (username, verificationNumber, newPassword) => {
         try {
@@ -42,6 +60,7 @@ const PasswordResetPage = ( {route} ) => {
             if (response.status === 200) {
                 // Password changed successfully
                 console.log('Password changed successfully');
+                Alert.alert('Password changed Successfully');
                 return responseData; // You might want to return some data here
             } else if (response.status === 404) {
                 // User not found in the database
@@ -76,10 +95,12 @@ const PasswordResetPage = ( {route} ) => {
             placeholder=""
             value={newPassword}
             onChangeText={setNewPassword}
+            secureTextEntry
           />
-          <TouchableOpacity style={styles.button} onPress={handlePasswordChange}>
+        {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+          <TouchableOpacity style={styles.button} onPress={() => { handlePasswordChange(); handleNewPassword(); }}>
             <Text style={styles.buttonText}>Reset Password</Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -106,6 +127,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'black',
         alignSelf: 'flex-start', // Align text to the left
+      },
+      errorText: {
+        color: 'red',
+        alignSelf: 'flex-start',
       },
       input: {
         width: '100%',

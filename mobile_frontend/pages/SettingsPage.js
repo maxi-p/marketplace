@@ -59,35 +59,28 @@ const SettingsPage = () => {
         setNewEmail(userData.user.email || '');
         setNewPhoneNumber(userData.user.phoneNumber || '');
         setNewAboutMe(userData.user.aboutme || '');
-        console.log(user.id);
-        console.log("userData: ", userData.user.username);
-        console.log("userData: ", userData.user.firstname);
-        console.log("userData: ", userData.user.lastname);
-        console.log("userData: ", userData.user.email);
-        console.log("userData: ", userData.user.phoneNumber);
-        console.log("userData: ", userData.user.aboutme);
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
       Alert.alert('Error', 'Failed to fetch user info. Please try again.');
     }
   };
+  // Debugging logs
+  // console.log("curUsername: ", curUsername);
+  // console.log("curPassword: ", curPassword);
+  // console.log("curFirstName: ", curFirstName);
+  // console.log("curLastName: ", curLastName);
+  // console.log("curEmail: ", curEmail);
+  // console.log("curPhoneNumber: ", curPhoneNumber);
+  // console.log("curAboutMe: ", curAboutMe);
 
-  console.log("curUsername: ", curUsername);
-  console.log("curPassword: ", curPassword);
-  console.log("curFirstName: ", curFirstName);
-  console.log("curLastName: ", curLastName);
-  console.log("curEmail: ", curEmail);
-  console.log("curPhoneNumber: ", curPhoneNumber);
-  console.log("curAboutMe: ", curAboutMe);
-
-  console.log("newUsername: ", newUsername);
-  console.log("newPassword: ", newPassword);
-  console.log("newFirstName: ", newFirstName);
-  console.log("newLastName: ", newLastName);
-  console.log("newEmail: ", newEmail);
-  console.log("newPhoneNumber: ", newPhoneNumber);
-  console.log("newAboutMe: ", newAboutMe);
+  // console.log("newUsername: ", newUsername);
+  // console.log("newPassword: ", newPassword);
+  // console.log("newFirstName: ", newFirstName);
+  // console.log("newLastName: ", newLastName);
+  // console.log("newEmail: ", newEmail);
+  // console.log("newPhoneNumber: ", newPhoneNumber);
+  // console.log("newAboutMe: ", newAboutMe);
 
   const editUser = async () => {
       if (!validatePassword(newPassword)) {
