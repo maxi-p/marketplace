@@ -116,13 +116,13 @@ const UserHome = props => {
                 value="Verify Email"
                 onClick={() => navigate("/verify-email")}
             /> <br />
-            <input
+            {props.loggedUser.ttl === -1 && <input
                 type="button"
                 id="verifyButton"
                 className="buttons"
                 value="Edit Account"
                 onClick={editHandler}
-            /> <br />
+            />} <br />
             <input
                 type="button"
                 id="logoutButton"
@@ -130,6 +130,8 @@ const UserHome = props => {
                 value="Log Out"
                 onClick={() => logOutHandler('/login')}
             />
+            {props.loggedUser.ttl === -1 && 
+            <div>
             <h1>My Posts:</h1>
             <input
                 type="checkbox"
@@ -146,21 +148,21 @@ const UserHome = props => {
                         color="#1a2e68"
                         size={200}
                         loading={loading}
-                    />
+                        />
                 </div>) : (<div className="post-detail-container">
                     {isDeletingPost &&
                         <DeletePostFromHome
-                            className="delete-post-popup"
-                            post={post}
-                            closeDeleteHandler={closeDeleteHandler}
-                            setOnePost={setOnePost}
+                        className="delete-post-popup"
+                        post={post}
+                        closeDeleteHandler={closeDeleteHandler}
+                        setOnePost={setOnePost}
                         />}
                     {isEditingPost &&
                         <EditPostFromHome
-                            className="edit-post-popup"
-                            post={post}
-                            closeEditHandler={closeEditHandler}
-                            setOnePostFetch={setOnePostFetch}
+                        className="edit-post-popup"
+                        post={post}
+                        closeEditHandler={closeEditHandler}
+                        setOnePostFetch={setOnePostFetch}
                         />}
                     <br /><br />
                     {saved ?
@@ -172,6 +174,7 @@ const UserHome = props => {
                         </div>}
                 </div>)
             }
+            </div>}
         </div>
     );
 };
