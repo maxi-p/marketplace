@@ -37,8 +37,6 @@ app.use((req, res, next) =>
 const multer = require('multer');
 const mongoose = require('mongoose');
 const fs = require('fs');
-const { send } = require('process');
-const e = require('express');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -135,7 +133,7 @@ app.post('/api/passwordChange', async (req, res, next) =>
 
 app.post('/api/searchPost', async (req, res, next) =>
 {
-    // incoming: username, name, genre, minIndex (optional), maxIndex (optional)
+    // incoming: username, name, genre
     // outgoing: results[], error
     var error = '';
     var searches = [];
@@ -176,29 +174,13 @@ app.post('/api/searchPost', async (req, res, next) =>
         error = e.toString();
     }
 
-    var paginatedSearches = [];
-
-    if ((req.body.minIndex !== undefined && req.body.minIndex !== '') && (req.body.maxIndex !== undefined && req.body.maxIndex !== ''))
-    {
-        if (req.body.minIndex <= searches.length - 1)
-        {
-            let max = (req.body.maxIndex > searches.length - 1) ? searches.length - 1 : req.body.maxIndex;
-            for(var i = req.body.minIndex; i < max; i++)
-            {
-                paginatedSearches.push(searches[i]);
-            }
-        }
-    }
-    else
-        paginatedSearches = searches
-
-    var ret = {results: paginatedSearches, error:error};
+    var ret = {results: searches, error:error};
     res.status(200).json(ret);
 });
 
 app.post('/api/noRegexSearchPost', async (req, res, next) =>
 {
-    // incoming: username, name, genre, minIndex (optional), maxIndex (optional)
+    // incoming: username, name, genre
     // outgoing: results[], error
     var error = '';
     var searches = [];
@@ -239,23 +221,50 @@ app.post('/api/noRegexSearchPost', async (req, res, next) =>
         error = e.toString();
     }
 
-    var paginatedSearches = [];
+    var ret = {results: searches, error:error};
+    res.status(200).json(ret);
+});
 
-    if ((req.body.minIndex !== undefined && req.body.minIndex !== '') && (req.body.maxIndex !== undefined && req.body.maxIndex !== ''))
-    {
-        if (req.body.minIndex <= searches.length - 1)
-        {
-            let max = (req.body.maxIndex > searches.length - 1) ? searches.length - 1 : req.body.maxIndex;
-            for(var i = req.body.minIndex; i < max; i++)
-            {
-                paginatedSearches.push(searches[i]);
-            }
+app.post('/api/searchPostPaged', async (req, res, next) =>
+{
+    // incoming: username, name, genre, limit, skip
+    // outgoing: results[], error
+    var error = '';
+    var searches = [];
+
+    const {username, name, genre, limit, skip} = req.body;
+
+    const db = client.db("oMarketDB");
+
+    try{
+        var usernameTrim = username.trim();
+        var nameTrim = name.trim();
+        var genreTrim = genre.trim();
+
+        var QueryList = [];
+        var query = {};
+        if (username !== '') {
+            QueryList.push({username: {$regex: usernameTrim + '.*', $options: 'i'}});
         }
-    }
-    else
-        paginatedSearches = searches
+        if (name !== '') {
+            QueryList.push({username: {$regex: nameTrim + '.*', $options: 'i'}});
+        }
+        if (genre !== '') {
+            QueryList.push({username: {$regex: genreTrim + '.*', $options: 'i'}});
+        }
+        if (username != '' || name != '' || genre != '')
+        {
+            query = {$or: QueryList};
+        }
+        searches = await db.collection('Posts').find(query).limit(limit).skip(skip).toArray();
 
-    var ret = {results: paginatedSearches, error:error};
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = {results: searches, error:error};
     res.status(200).json(ret);
 });
 
@@ -748,7 +757,9 @@ app.post('/api/getUser', async(req, res, next) => {
     catch(e){
         error = e.toString();
     }
-    var rat;
+
+    var ret;
+    
     if(req.body.justUsername){
         ret = {user: user.username, error: error};
     }

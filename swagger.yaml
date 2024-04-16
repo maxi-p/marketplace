@@ -114,7 +114,7 @@ paths:
         type: string
       - in: formData
         name: username
-        type: number
+        type: string
       - in: formData
         name: password
         type: string
@@ -134,7 +134,7 @@ paths:
         "Empty Error String":
           description: OK
           schema:
-            $ref: '#/definitions/NormalResponse'
+            $ref: '#/definitions/LoginResponse'
         "Non-Empty Error String":
           description: An error occured with updating the user
   /createPost:
@@ -244,6 +244,54 @@ paths:
             $ref: '#/definitions/SearchPostResponse'
         "Too many used fields":
           description: Input format was incorrect. Two fields must be blank.
+  /noRegexSearchPost:
+    post:
+      tags:
+      - Posts
+      summary: Searches the database for posts given certain input without the use of regex
+      operationId: dlsearchPost
+      description: Place search terms in their respective fields and get back an array that matches the search terms sent. To limit the amount of search results use minIndex and maxIndex to limit the resulting array. minIndex and maxIndex are not required to make the post request work.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: searchPost
+        description: search
+        schema:
+          $ref: '#/definitions/SearchPost'
+      responses:
+        "Empty Error String":
+          description: OK
+          schema:
+            $ref: '#/definitions/SearchPostResponse'
+        "Too many used fields":
+          description: Input format was incorrect. Two fields must be blank.
+  /searchPostPaged:
+    post:
+      tags:
+      - Posts
+      summary: Searches the database for posts given certain input and given pagination indexes
+      operationId: dlsearchPost
+      description: Place search terms in their respective fields and get back an array that matches the search terms sent. To limit the amount of search results use minIndex and maxIndex to limit the resulting array. minIndex and maxIndex are not required to make the post request work.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: searchPost
+        description: search
+        schema:
+          $ref: '#/definitions/SearchPostPaged'
+      responses:
+        "Empty Error String":
+          description: OK
+          schema:
+            $ref: '#/definitions/SearchPostResponse'
+        "Non-empty error string":
+          description: There was an error with the database.
   /deletePost:
     post:
       tags:
@@ -316,14 +364,13 @@ paths:
             $ref: '#/definitions/ErrorOnlyResponse'
         "Non-Empty Error String":
           description: An error occured with updating the database
-
   /getUser:
     post:
       tags:
       - Users
       summary: Get user object
       operationId: dlGetUser
-      description: When given an id, return the user object associated with that id
+      description: When given an id, return the user object associated with that id. The boolean value in the input field "justUsername" will determine whether you receive just the username or the whole user document.
       consumes:
       - application/json
       produces:
@@ -510,11 +557,14 @@ definitions:
   GetUser:
     type: object
     required:
-    - User ID
+    - userId
     properties:
       userId:
         type: string
         example: 12121fafwfaf103012
+      justUsername: 
+        type: number
+        example: 0
   GetPost:
     type: object
     required:
@@ -685,12 +735,30 @@ definitions:
       genre: 
         type: string
         example: Cars
-      minIndex:
-        type: integer
-        example: 0
-      maxIndex:
-        type: integer
+  SearchPostPaged:
+    type: object
+    required:
+    - Username
+    - Name of Post
+    - Genre
+    - limit
+    - skip
+    properties:
+      username:
+        type: string
+        example: Fred121
+      name:
+        type: string
+        example: Fred
+      genre: 
+        type: string
+        example: Cars
+      limit:
+        type: number
         example: 10
+      skip:
+        type: number
+        example: 1
   SearchPostResponse:
     type: object
     properties:
