@@ -180,17 +180,21 @@ section {
   margin-bottom: 9px;
   width: 50%;
 }
+.card--image img {
+  width: 100%;
+  height: auto;
+}
 
 .card--image--details {
   border-radius: 9px;
   width: 50%; 
   margin-top: 30px;
 }
-
-.card--image img {
+.card--image--details img {
   width: 100%;
   height: auto;
 }
+
 
 .card--content {
   width: 50%; 

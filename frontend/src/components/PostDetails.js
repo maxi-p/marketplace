@@ -3,6 +3,8 @@ import buildPath from '../logic/buildPath';
 import FadeLoader from 'react-spinners/FadeLoader'
 import { DeletePost } from './DeletePost';
 import { EditPost } from './EditPost';
+import { Link } from 'react-router-dom';
+
 
 const PostDetails = props => {
     const id = props.id;
@@ -128,7 +130,8 @@ const PostDetails = props => {
                                 <div className="card--stats">
                                     <span className="gray">{post.name}</span>
                                 </div>
-                                <p className="card--title">Author: {post.username}</p>
+                                <Link to={"/usr="+props.obj.username.toString()} ><p className="card--title"> Author: {props.obj.username}</p></Link>
+                                {/* <p className="card--title">Author: {post.username}</p> */}
                                 <p className="card--title">Description: {post.desc}</p>
                                 <p className="card--title">Genre: {post.genre}</p>
                                 <p className="card--title">Condition: {post.condition}</p>
