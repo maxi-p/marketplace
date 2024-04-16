@@ -96,42 +96,46 @@ const PostDetails = props => {
                         />}
                     <section className='post-details'>
                         <h1>{post.name}</h1>
-                        <div className="card">
-                            {props.loggedUser && post.username === props.loggedUser.username &&
-                                <button
-                                    className="delete--badge"
-                                    name="open-delete"
-                                    onClick={deleteHandler}
-                                >
-                                    <img src="./delete.jpg" className="card--star" />
-                                </button>}
-                            {props.loggedUser &&
-                                <button
-                                    onClick={interestHandler}
-                                    className="interestedButton"
-                                >
-                                    <img src={post.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
-                                </button>}
-                            {props.loggedUser && post.username === props.loggedUser.username &&
-                                <button
-                                    className="edit--badge"
-                                    name="open-edit"
-                                    onClick={editHandler}
-                                >
-                                    <img src="./edit.jpg" className="card--star" />
-                                </button>}
-                            <img src={post.image ? "data:image/;base64," + post.image.image.data : './post.png'} className="card--image" />
-
-                            <div className="card--stats">
-                                <img src="./star.png" className="card--star" />
-                                <span className="gray"> • </span>
-                                <span className="gray">{post.name}</span>
+                        <div className="card--details">
+                            <div class="card--image">
+                                <img src={post.image ? "data:image/;base64," + post.image.image.data : './post.png'} />
                             </div>
-                            <p className="card--title">Author: {post.username}</p>
-                            <p className="card--title">Description: {post.desc}</p>
-                            <p className="card--title">Genre: {post.genre}</p>
-                            <p className="card--title">Condition: {post.condition}</p>
-                            <p className="card--price"><span className="bold">${post.price}</span></p>
+                            <div class="card--content">
+                                {props.loggedUser && post.username === props.loggedUser.username &&
+                                    <button
+                                        className="delete--badge"
+                                        name="open-delete"
+                                        onClick={deleteHandler}
+                                    >
+                                        <img src="./delete.jpg" className="card--star" />
+                                    </button>}
+                                {props.loggedUser &&
+                                    <button
+                                        onClick={interestHandler}
+                                        className="interestedButton"
+                                    >
+                                        <img src={post.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
+                                    </button>}
+                                {props.loggedUser && post.username === props.loggedUser.username &&
+                                    <button
+                                        className="edit--badge"
+                                        name="open-edit"
+                                        onClick={editHandler}
+                                    >
+                                        <img src="./edit.jpg" className="card--star" />
+                                    </button>}
+
+                                <div className="card--stats">
+                                    <img src="./star.png" className="card--star" />
+                                    <span className="gray"> • </span>
+                                    <span className="gray">{post.name}</span>
+                                </div>
+                                <p className="card--title">Author: {post.username}</p>
+                                <p className="card--title">Description: {post.desc}</p>
+                                <p className="card--title">Genre: {post.genre}</p>
+                                <p className="card--title">Condition: {post.condition}</p>
+                                <p className="card--price"><span className="bold">${post.price}</span></p>
+                            </div>
                         </div>
                     </section>
                 </div>)
