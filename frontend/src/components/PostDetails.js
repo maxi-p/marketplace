@@ -28,7 +28,7 @@ const PostDetails = props => {
     }, [hasUpdated]);
 
     const interestHandler = async () => {
-        // console.log("userId", props.loggedUser.id, "postId", props.obj._id)
+        console.log("userId", props.loggedUser.id, "postId", post._id)
         if (post.interested === false) {
             console.log("false")
             const json = JSON.stringify({ userId: props.loggedUser.id, postId: post._id });
@@ -42,7 +42,7 @@ const PostDetails = props => {
             var res = JSON.parse(await response.text());
             console.log(res)
         }
-        setPost({ ...props, interested: !post.interested })
+        setPost({interested: !post.interested })
     }
 
     const saveHandler = data => {
