@@ -34,7 +34,7 @@ const Post = props => {
                 className="interestedButton"
             >
                 <img src={props.obj.interested?"filled_star_p.png":"empty_star_p.png"} className="card--star" />
-            </button>
+            </button>}
             {props.obj.username === props.loggedNick && 
             <button
                 className="edit--badge"

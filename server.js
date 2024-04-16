@@ -415,7 +415,7 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
     // outgoing: id, error
 
     const {id, firstName, lastName, username, password, email, phoneNumber, aboutMe} = req.body;
-
+    console.log(req.body)
     const db = client.db("oMarketDB");
 
     var newImage = null;
@@ -459,7 +459,7 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
             await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {phoneNumber: phoneNumber}});
 
         if (aboutMe)
-            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutMe: aboutMe}});
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutme: aboutMe}});
 
         if (!oldImage)
             await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {profilePic: newImage}});

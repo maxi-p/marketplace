@@ -3,6 +3,7 @@ import buildPath from '../logic/buildPath';
 
 export const EditUser = props => {
     const [formData, setFormData] = useState({...props.loggedUser});
+    
     const handleChange = (event) => {
         const {id, value,type,files} = event.target;
             setFormData(prevFormData => {
@@ -19,6 +20,7 @@ export const EditUser = props => {
     const doSave = async (event) =>
     {
         event.preventDefault();
+        console.log("form data", formData);
         const form = new FormData();
         for (const property in formData) {
             form.append(property, formData[property]) 
