@@ -35,12 +35,12 @@ const PostInUserPage = props => {
                 onClick={() => props.openEditHandler(props.obj)}
             ><img src="./edit.jpg" className="card--star" />
             </button>}
+            {props.loggedUser && 
             <button
                 onClick={interestHandler}
-                className="interestedButton"
             >
                 <img src={props.obj.interested?"filled_star_p.png":"empty_star_p.png"} className="card--star" />
-            </button>
+            </button>}
             <Link to={"/pst="+props.obj._id.toString()} style={{ textDecoration: 'none' }}>
             <img src={props.obj.image? "data:image/;base64,"+props.obj.image.image.data:'./post.png'} className="card--image" />
             <div className="card--stats">
