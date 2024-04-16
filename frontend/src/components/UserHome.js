@@ -68,17 +68,17 @@ const UserHome = props => {
             <img src={props.loggedUser.profilePic ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './avatar.png'} style={{ width: 100, height: 100 }} alt="avatar"></img><br />
             {props.loggedUser && <div className="user-detail-container">
                 <section className='user-details'>
-                    <h1>{user.username}</h1>
+                    <h1>{props.loggedUser.username}</h1>
                     <div className="userDetails">
-                        <img src={user.image ? "data:image/;base64," + user.image.image.data : './post.png'} className="card--image" />
+                        {/* <img src={user.image ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './post.png'} className="card--image" /> */}
                         <div className="card--stats">
-                            <span className="gray">{user.username}</span>
+                            <span className="gray">{props.loggedUser.username}</span>
                         </div>
-                        <p className="card--title">First Name: {user.firstName}</p>
-                        <p className="card--title">Last Name: {user.lastName}</p>
-                        <p className="card--title">About Me: {user.aboutMe}</p>
-                        <p className="card--title">Email: {user.email}</p>
-                        <p className="card--title">Phone Number: {user.phoneNumber}</p>
+                        <p className="card--title">First Name: {props.loggedUser.firstName}</p>
+                        <p className="card--title">Last Name: {props.loggedUser.lastName}</p>
+                        <p className="card--title">About Me: {props.loggedUser.aboutMe}</p>
+                        <p className="card--title">Email: {props.loggedUser.email}</p>
+                        <p className="card--title">Phone Number: {props.loggedUser.phoneNumber}</p>
                     </div>
                 </section>
             </div>
