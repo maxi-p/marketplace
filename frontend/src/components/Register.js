@@ -52,6 +52,7 @@ const Register = props => {
                     var user = { 
                         id: res._id, 
                         username: res.username, 
+                        password: '',
                         firstName: res.firstName, 
                         lastName: res.lastName, 
                         email: res.email,
@@ -61,9 +62,7 @@ const Register = props => {
                         aboutMe: res.aboutMe,
                         profilePic: res.profilePic
                     };
-
-                    localStorage.setItem('user_data', JSON.stringify(user));
-                    props.loggedHandler(user)
+                    props.setLoggedUser(user)
                     setMessage('');
                     navigate('/verify-email');
                 }

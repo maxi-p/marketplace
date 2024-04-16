@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import buildPath from '../logic/buildPath';
 
 export const EditUser = props => {
-    const [formData, setFormData] = useState({...props.loggedUser, password:''});
-    console.log(props.loggedUser)
+    const [formData, setFormData] = useState({...props.loggedUser});
     const handleChange = (event) => {
         const {id, value,type,files} = event.target;
-        console.log(event)
             setFormData(prevFormData => {
                 return {
                     ...prevFormData,
@@ -25,22 +23,33 @@ export const EditUser = props => {
         for (const property in formData) {
             form.append(property, formData[property]) 
         }
-        console.log("form",form)
-        console.log("formData",formData)
-
         try
         {
             const response = await fetch(buildPath('api/editUser'), {method:'POST',body:form});
             var res = JSON.parse(await response.text());
 
-            if( res.id <= 0 )
+            if( res.error !== '' )
             {
                 setMessage('User wasn\'t edited');
             }
             else
             {
+                var user = { 
+                    id: res.id, 
+                    username: res.username, 
+                    password: '',
+                    firstName: res.firstName, 
+                    lastName: res.lastName, 
+                    email: res.email,
+                    interestedIn: res.interestedIn,
+                    phoneNumber: res.phoneNumber,
+                    ttl: res.ttl,
+                    aboutMe: res.aboutMe,
+                    profilePic: res.profilePic
+                };
+                props.setLoggedUser(user);
                 setMessage('');
-                props.editHandler('saved')
+                props.editHandler('saved');
             }
 
         }

@@ -38,6 +38,7 @@ const Login = props => {
                 var user = { 
                     id: res.id, 
                     username: res.username, 
+                    password: '',
                     firstName: res.firstName, 
                     lastName: res.lastName, 
                     email: res.email,
@@ -47,9 +48,7 @@ const Login = props => {
                     aboutMe: res.aboutMe,
                     profilePic: res.profilePic
                 };
-                console.log("user", user)
-                localStorage.setItem('user_data', JSON.stringify(user));
-                props.loggedHandler(user);
+                props.setLoggedUser(user);
                 setMessage('');
                 navigate('/home');
             }

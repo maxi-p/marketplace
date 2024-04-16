@@ -9,7 +9,7 @@ const UploadPage = props => {
             <PageTitle 
                 title="Post Page"
             />
-            <UploadPost loggedUser={props.loggedUser} loggedHandler={props.loggedHandler}/>
+            <UploadPost loggedUser={props.loggedUser}/>
         </div>
     );
 }

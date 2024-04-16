@@ -9,7 +9,7 @@ const NavBar = props => {
     if(name === 'logout')
     {
       localStorage.removeItem("user_data")
-      props.loggedHandler(null);
+      props.setLoggedUser(null);
       navigate('/login');
     }
     else

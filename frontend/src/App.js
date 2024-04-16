@@ -8,60 +8,56 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import UserHomePage from './pages/UserHomePage'
 import EnterCodePage from './pages/EnterCodePage';
-import isLogged from './logic/isLoggedIn';
 import DetailsPage from './pages/DetailsPage'
 import NavBar from './components/NavBar';
 import UploadPage from './pages/UploadPage'
+import useLoggedUser from './hooks/useLoggedUser';
 
 function App()
 {
-  // console.log(isLoggedIn()!=null)
-  const [isLoggedIn, setIsLoggedIn] = useState(isLogged());
+  const {loggedUser, setLoggedUser} = useLoggedUser();
 
-  const loggedHandler = data => {
-    setIsLoggedIn(data);
-  }
 
   return (
     <>
       <BrowserRouter>
-      <NavBar loggedUser={isLoggedIn} loggedHandler={loggedHandler}/>
+      <NavBar loggedUser={loggedUser} setLoggedUser={setLoggedUser}/>
         <Routes>
           <Route path="/">
             <Route
               index
-              element={<HomePage loggedUser={isLoggedIn}/>}
+              element={<HomePage loggedUser={loggedUser}/>}
             />
             <Route
               path=":id"
-              element={<DetailsPage loggedUser={isLoggedIn}/>}
+              element={<DetailsPage loggedUser={loggedUser}/>}
             />
           </Route>
           <Route path="/home" index element={<Navigate to="/"/>}/>
           <Route 
             path="/login" 
             index 
-            element={!isLoggedIn? <LoginPage loggedHandler={loggedHandler}/> : <Navigate to="/user-home"/>}
+            element={!loggedUser? <LoginPage setLoggedUser={setLoggedUser}/> : <Navigate to="/user-home"/>}
           />
           <Route 
             path="/register" 
             index 
-            element={!isLoggedIn? <RegisterPage loggedHandler={loggedHandler}/>: <Navigate to="/user-home"/>}
+            element={!loggedUser? <RegisterPage setLoggedUser={setLoggedUser}/>: <Navigate to="/user-home"/>}
           />
           <Route 
             path="/user-home"
             index 
-            element={isLoggedIn? <UserHomePage loggedUser={isLoggedIn} loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
+            element={loggedUser? <UserHomePage loggedUser={loggedUser} setLoggedUser={setLoggedUser}/> : <Navigate to="/login"/>}
           />
           <Route
             path="/verify-email" 
             index 
-            element={isLoggedIn? <EnterCodePage loggedUser={isLoggedIn} loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
+            element={loggedUser? <EnterCodePage loggedUser={loggedUser}/> : <Navigate to="/login"/>}
           />
           <Route
             path="/post" 
             index 
-            element={isLoggedIn? <UploadPage loggedUser={isLoggedIn} loggedHandler={loggedHandler}/> : <Navigate to="/login"/>}
+            element={loggedUser? <UploadPage loggedUser={loggedUser} setLoggedUser={setLoggedUser}/> : <Navigate to="/login"/>}
           />
         </Routes>
       </BrowserRouter>
