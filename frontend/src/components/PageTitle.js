@@ -3,7 +3,11 @@ import React from 'react';
 const PageTitle = props =>
 {
     return(
-        <h1 id="title">{props.title}</h1>
+        <div className='pageTitle'>
+        <img src="openMarketLogo.png" className="logo"/>
+        <h1 id="title">{props.title}</h1> 
+        </div>
+      
     );
 };
 

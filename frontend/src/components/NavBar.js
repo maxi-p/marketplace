@@ -18,7 +18,10 @@ const NavBar = props => {
     }
   }
   return (
-    <ul>
+    <ul className='navbar'>
+      <li>
+      <img src="openMarketLogo.png" className="NavLogo" />
+      </li>
       <li>
         <a 
           className=""
