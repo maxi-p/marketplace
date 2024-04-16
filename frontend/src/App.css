@@ -141,6 +141,7 @@ section {
 .buttons:focus,.buttons:hover {
     background: darken(#82099c,7%)
 }
+
 .search-Bar {
     width: 90%
 }
@@ -149,7 +150,8 @@ section {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    overflow-x: auto
+    overflow-x: auto;
+    justify-content: center;
 }
 
 .card {
@@ -163,7 +165,8 @@ section {
   font-size: 14px;
   padding: 10px;
   position: relative;
-  width: 175px
+  width: 18%;
+  margin:0
 }
 .card--details {
   background-color: #fffaf0;
@@ -597,9 +600,10 @@ a {
     height: auto;
     max-height: 100em; /* Adjust as needed */
     width: auto;
-    max-width: 25em; /* Adjust as needed */
+    max-width: 10em; /* Adjust as needed */
     margin: auto auto; /* Adjust as needed */
     text-align: center;
+    padding: 30px;
 }
 .pageTitle
 {
@@ -612,6 +616,16 @@ a {
 /* Maksim Code */
 .loggedInDiv{
     height:100;
+}
+.verifyEmailDiv{
+    display: flex;
+    justify-content: center;
+}
+.verify-code-form{
+    width: 50%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .profile-top-section{
     display: flex;
@@ -726,13 +740,16 @@ a {
     height: 100%;
 }
 
-/* .loaded-posts-section{
-
-} */
+.products-section{
+}
 
 .home-post-flex-children{
     margin-right: 10px;
     margin-bottom: 5px;
+}
+
+.card{
+    /* margin-left:10px; */
 }
 
 /* Maksim Code */

@@ -45,23 +45,26 @@ const EnterCode =  props =>
     };
 
     return(
-        <div id="verifyEmailDiv">
+        <div id="verifyEmailDiv" className="verifyEmailDiv">
             {(props.loggedUser.ttl === -1) ?
              <h1>Email has been verified!!!</h1>:
-            <form onSubmit={doVerify}>
-                <span id="inner-title">Please paste the verification code that was sent to your email.</span><br />
+            <form onSubmit={doVerify} className="verify-code-form">
+                <span className="username" id="inner-title">Please paste the verification code that was sent to your email.</span><br/>
                 <input 
                     type="text"
                     id="verificationCode"
                     placeholder="Enter the code" 
                     value={token}
+                    className="userDetails"
                     onChange={handleToken}
+                    style={{width:'400px', margin:'auto'}}
                     /><br />
                 <input 
                     type="submit" 
                     id="submitCode" 
                     className="buttons" 
                     value = "Verify Code" 
+                    style={{width:'400px', margin:'auto'}}
                     onClick={doVerify} 
                     />
             </form>}
