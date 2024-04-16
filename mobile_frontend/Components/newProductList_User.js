@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {ActivityIndicator, Alert, FlatList, StyleSheet, Text, View} from 'react-native';
 import ProductCard, { LoadingCard } from './Cards/ProductCard';
 
 import * as testData from "../TestData/TestProducts.json"
 import SearchBar from './SearchBar';
 import { buildPath } from '../logic/NetworkLogic';
+import { UserContext } from '../logic/UserContext';
 
 // Test Settings
 const localTest = false;
@@ -48,8 +49,8 @@ async function fetchData_Real(index, search = '') {
     var retval = {data: [], endReached: false, cnt: 0};
     var obj = {
         username: search,
-        name: search,
-        genre: search,
+        name: '',
+        genre: '',
         // minIndex: index,
         // maxIndex: index - 1 + fetchAmount,
     };
@@ -113,15 +114,15 @@ async function fetchData_Real(index, search = '') {
 // Props For ProductList
 // onTouch, onSellerTouch, children
 
-function ProductList(props) {
+function UserProductList(props) {
     // States
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [index, setIndex] = useState(0);
     const [refreshing, setRefreshing] = useState(false);
-    const [searchText, setSearchText] = useState('');
-    const [searchClicked, setSearchClicked] = useState(false);
     const [momentum, setMomentum] = useState(false);
+
+    const { user } = useContext(UserContext);
 
      const OpenProduct = (item) => {
         props.navigation.navigate('ProductModal', {
@@ -149,6 +150,12 @@ function ProductList(props) {
         );
     };
     // Inner Elements
+    const footer = () => {
+        if (loading) {
+            return <LoadingCard />;
+        }
+        return null;
+    };
     const empty = () => {
         return (
         <View style={{
@@ -170,65 +177,35 @@ function ProductList(props) {
                 No Products Found
             </Text>
         </View>
-    );};
-    const footer = () => {
-        if (loading) {
-            return <LoadingCard />;
-        }
-        return null;
-    };
-
-    const header = () =>
-    {
-        return (
-            <View
-             style={styles.header}
-            >
-                <View style={styles.inHeader} >
-                    <SearchBar
-                        clicked={searchClicked}
-                        setClicked={setSearchClicked}
-                        searchPhrase={searchText}
-                        setSearchPhrase={setSearchText}
-                    />
-                </View>
-            </View>
-    );};
+    );}
 
 
     // Fetch Data -- First Load and Refoucs
     useEffect(() => {
-        const Reload = props.navigation.addListener('focus', () => {
-            setSearchText('');
-        });
-        return Reload;
-    }, [props.navigation]);
-
-    useEffect(() => {
         const addData = async () => {
-            var inData = await fetchData(0, searchText);
+            var inData = await fetchData(0, user.username);
             setData(inData.data);
             setLoading(false);
             setIndex(inData.cnt);
         };
         setLoading(true);
         addData();
-    }, [searchText]);
+    }, [user]);
 
-    const getData = async () => {
-        if (loading === false && momentum === true) {
-            setLoading(true);
-            var inData = await fetchData(index, searchText);
-            setData([...data, ...(await inData).data]);
-            setIndex(index + inData.cnt);
-            setLoading(false);
-        }
-    };
+    // const getData = async () => {
+    //     if (loading === false && momentum === true) {
+    //         setLoading(true);
+    //         var inData = await fetchData(index, searchText);
+    //         setData([...data, ...(await inData).data]);
+    //         setIndex(index + inData.cnt);
+    //         setLoading(false);
+    //     }
+    // };
     const refresh = async () => {
         if (loading === false){
             setLoading(true);
             setRefreshing(true);
-            var inData = await fetchData(0, searchText);
+            var inData = await fetchData(0, user.username);
             setData([...(await inData).data]);
             setIndex(inData.cnt);
             setRefreshing(false);
@@ -255,11 +232,9 @@ function ProductList(props) {
                 onRefresh={refresh}
                 refreshing={refreshing}
                 style={props.style}
-
-                ListHeaderComponent={header}
-                stickyHeaderIndices={[0]}
-                fadingEdgeLength={4}
                 ListEmptyComponent={empty}
+
+                fadingEdgeLength={4}
             />
         </View>
     );
@@ -278,4 +253,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ProductList;
+export default UserProductList;

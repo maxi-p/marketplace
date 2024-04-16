@@ -26,9 +26,11 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import UserIDPage from './pages/UserIDPage';
 import SettingsPage from './pages/SettingsPage';
 import UserPage from './pages/UserPage';
+import UserProductListPage from './pages/UserProductList';
 
 const Stack = createNativeStackNavigator();
 const Stack2 = createNativeStackNavigator();
+const Stack3 = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const App = () => {
@@ -92,9 +94,20 @@ const PostLogin = () => {
         }}
       />
       <Drawer.Screen
+        name="UserPList"
+        component={UserProductPages}
+        options={{
+          title: 'Sell Products',
+          drawerIcon: ({focused, color, size}) => {
+            return <Entypo name="shopping-bag" color={color} size={size} />;
+          },
+        }}
+      />
+      <Drawer.Screen
         name="UserIDPage"
         component={UserIDPage}
         options={{
+          unmountOnBlur: true,
           title: 'View Account',
           drawerIcon: ({focused, color, size}) => {
             return (
@@ -116,6 +129,28 @@ const PostLogin = () => {
         <Drawer.Screen name="EditUser" component={SettingsPage} />
       </Drawer.Group>
     </Drawer.Navigator>
+  );
+};
+
+const UserProductPages = () => {
+  return (
+    <Stack3.Navigator
+      initialRouteName="List"
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack3.Screen name="List" component={UserProductListPage} />
+      <Stack3.Group
+        screenOptions={{
+          presentation: 'modal',
+          headerShown: false,
+        }}>
+        <Stack3.Screen name="ProductModal" component={ProductModal} />
+        <Stack3.Screen name="SellerModal" component={UserPage} />
+        <Stack3.Screen name="ImageModal" component={ImageViewModal} />
+        <Stack3.Screen name="SellUpdateModal" component={SellUpdateProduct} />
+      </Stack3.Group>
+    </Stack3.Navigator>
   );
 };
 
