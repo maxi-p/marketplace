@@ -38,7 +38,13 @@ const UserHome = props => {
     }
 
     const handleSaved = event => {
-        setSaved(event.target.checked)
+        if(event.target.id === 'allMyPosts'){
+            setSaved(false);
+        }
+        else{
+            setSaved(true);
+        }
+        
     }
 
     const editHandler = event => {
@@ -83,7 +89,7 @@ const UserHome = props => {
     });
 
     return (
-        <div id="loggedInDiv">
+        <div className="loggedInDiv">
             {isEditing &&
                 <EditUser
                     className="edit-post-popup"
@@ -91,90 +97,121 @@ const UserHome = props => {
                     setLoggedUser={props.setLoggedUser}
                     editHandler={editHandler}
                 />}
-            <img src={props.loggedUser.profilePic ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './avatar.png'} style={{ width: 100, height: 100 }} alt="avatar"></img><br />
-            {props.loggedUser && <div className="user-detail-container">
-                <section className='user-details'>
-                    <h1>{props.loggedUser.username}</h1>
-                    <div className="userDetails">
-                        {/* <img src={user.image ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './post.png'} className="card--image" /> */}
-                        <div className="card--stats">
-                            <span className="gray">{props.loggedUser.username}</span>
+            <div className='profile-top-section'>
+                <div className='top-holder-section'>
+                    <div className='avatar-section'>
+                        <div className='profile-avatar'>
+                            <img  src={props.loggedUser.profilePic ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './avatar.png'} alt="avatar"></img>
                         </div>
-                        <p className="card--title">First Name: {props.loggedUser.firstName}</p>
-                        <p className="card--title">Last Name: {props.loggedUser.lastName}</p>
-                        <p className="card--title">About Me: {props.loggedUser.aboutMe}</p>
-                        <p className="card--title">Email: {props.loggedUser.email}</p>
-                        <p className="card--title">Phone Number: {props.loggedUser.phoneNumber}</p>
+                        <span className='username'>{props.loggedUser.username}</span>    
                     </div>
-                </section>
+                    <div className='details-section'>
+                        <section className='user-info'>
+                            <div className="userDetails">
+                                {/* <img src={user.image ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './post.png'} className="card--image" /> */}
+                                <div className="card--stats">
+                                </div>
+                                <p className="userprofile-name">{props.loggedUser.firstName} {props.loggedUser.lastName}</p>
+                                <p className="card--title">About Me: {props.loggedUser.aboutMe}</p>
+                                <p className="card--title">Email: {props.loggedUser.email}</p>
+                                <p className="card--title">Phone Number: {props.loggedUser.phoneNumber}</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
-            }<br />
-            <input
-                type="button"
-                id="verifyButton"
-                className="buttons"
-                value="Verify Email"
-                onClick={() => navigate("/verify-email")}
-            /> <br />
-            {props.loggedUser.ttl === -1 && <input
-                type="button"
-                id="verifyButton"
-                className="buttons"
-                value="Edit Account"
-                onClick={editHandler}
-            />} <br />
-            <input
-                type="button"
-                id="logoutButton"
-                className="buttons"
-                value="Log Out"
-                onClick={() => logOutHandler('/login')}
-            />
-            {props.loggedUser.ttl === -1 && 
-            <div>
-            <h1>My Posts:</h1>
-            <input
-                type="checkbox"
-                id="saved"
-                name="saved"
-                checked={saved}
-                onChange={handleSaved}
-                className="search-box"
-            /><label htmlFor="saved" style={{ color: 'black' }}> saved </label>
-            {loading ?
-                (<div className="spinner-container">
-                    <FadeLoader
-                        className="spinner-loader"
-                        color="#1a2e68"
-                        size={200}
-                        loading={loading}
+            {props.loggedUser && 
+            <div className='profile-buttons-section'>
+                <div className='button-holder-section'>
+                    <div className='profile-button'>
+                        {props.loggedUser.ttl === -1 && <input
+                            type="button"
+                            id="allMyPosts"
+                            className="buttons"
+                            value="Posts by Me"
+                            onClick={handleSaved}
+                        />}
+                    </div>
+                    <div className='profile-button'>
+                        {props.loggedUser.ttl === -1 && <input
+                            type="button"
+                            id="justMySaved Posts"
+                            className="buttons"
+                            value="Saved Posts by Me"
+                            onClick={handleSaved}
+                        />}
+                    </div>
+                    <div className='profile-button'>
+                        {props.loggedUser.ttl === -1 && <input
+                            type="button"
+                            id="verifyButton"
+                            className="buttons"
+                            value="Edit Account"
+                            onClick={editHandler}
+                        />} 
+                    </div>
+                    <div className='profile-button'>
+                        <input
+                            type="button"
+                            id="verifyButton"
+                            className="buttons"
+                            value="Verify Email"
+                            onClick={() => navigate("/verify-email")}
                         />
-                </div>) : (<div className="post-detail-container">
-                    {isDeletingPost &&
-                        <DeletePostFromHome
-                        className="delete-post-popup"
-                        post={post}
-                        closeDeleteHandler={closeDeleteHandler}
-                        setOnePost={setOnePost}
-                        />}
-                    {isEditingPost &&
-                        <EditPostFromHome
-                        className="edit-post-popup"
-                        post={post}
-                        closeEditHandler={closeEditHandler}
-                        setOnePostFetch={setOnePostFetch}
-                        />}
-                    <br /><br />
-                    {saved ?
-                        <div>
-                            {savedPosts}
-                        </div> :
-                        <div>
-                            {posts}
-                        </div>}
-                </div>)
-            }
+                    </div>
+                    <div className='profile-button'>
+                        <input
+                            type="button"
+                            id="logoutButton"
+                            className="buttons"
+                            value="Log Out"
+                            onClick={() => logOutHandler('/login')}
+                        />
+                    </div>
+                </div>
             </div>}
+            {props.loggedUser && 
+            <div className='profile-posts-section'>
+                <div className='posts-holder-section'>
+                    <span className='name-of-post-type'>{saved? "Saved Posts By Me": "All Posts By Me"}</span>
+                    <div className='loaded-posts-section'>
+                        {loading ?
+                        (<div className="spinner-container">
+                            <FadeLoader
+                                className="spinner-loader in-homepage"
+                                color="#1a2e68"
+                                size={200}
+                                loading={loading}
+                                />
+                        </div>) : 
+                        (<div className="post-detail-container">
+                            {isDeletingPost &&
+                                <DeletePostFromHome
+                                className="delete-post-popup"
+                                post={post}
+                                closeDeleteHandler={closeDeleteHandler}
+                                setOnePost={setOnePost}
+                                />}
+                            {isEditingPost &&
+                                <EditPostFromHome
+                                className="edit-post-popup"
+                                post={post}
+                                closeEditHandler={closeEditHandler}
+                                setOnePostFetch={setOnePostFetch}
+                                />}
+                            <br /><br />
+                            {saved ?
+                                <div className='home-post-holder-flex'>
+                                    {savedPosts}
+                                </div> :
+                                <div className='home-post-holder-flex'>
+                                    {posts}
+                                </div>}
+                        </div>)}
+                    </div>
+                </div>
+            </div>}
+
         </div>
     );
 };

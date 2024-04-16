@@ -18,7 +18,7 @@ const PostInUserPage = props => {
         props.setOnePost({...props.obj,interested:!props.obj.interested})
     }
     return (
-        <div className="card">
+        <div className="card home-post-flex-children">
 
             {props.loggedUser && props.loggedUser.ttl === -1 && props.obj.username === props.loggedUser.username && 
             <button 
