@@ -27,6 +27,23 @@ const PostDetails = props => {
         getPost();
     }, [hasUpdated]);
 
+    const interestHandler = async () => {
+        console.log("userId", props.loggedUser.id, "postId", props.obj._id)
+        if (props.obj.interested === false) {
+            console.log("false")
+            const json = JSON.stringify({ userId: props.loggedUser.id, postId: props.obj._id });
+            const response = await fetch(buildPath('api/interestAddition'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
+            var res = JSON.parse(await response.text());
+            console.log(res)
+        }
+        else {
+            const json = JSON.stringify({ userId: props.loggedUser.id, postId: props.obj._id });
+            const response = await fetch(buildPath('api/interestDeletion'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
+            var res = JSON.parse(await response.text());
+            console.log(res)
+        }
+        props.setOnePost({ ...props.obj, interested: !props.obj.interested })
+    }
 
     const saveHandler = data => {
         setPost(data);
@@ -86,6 +103,13 @@ const PostDetails = props => {
                                     onClick={deleteHandler}
                                 >
                                     <img src="./delete.jpg" className="card--star" />
+                                </button>}
+                            {props.loggedUser &&
+                                <button
+                                    onClick={interestHandler}
+                                    className="interestedButton"
+                                >
+                                    <img src={props.obj.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
                                 </button>}
                             {props.loggedUser && post.username === props.loggedUser.username &&
                                 <button
