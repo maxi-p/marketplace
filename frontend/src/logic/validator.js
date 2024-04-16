@@ -59,10 +59,10 @@ const validateRegister = (obj) =>
         phoneNumberMessage = "A US phone must be 10 digits (without +1).";
         statusMsg = "invalid";
     }
-
-    var emailRegex = /^([a-zA-Z0-9_\-]+)@([a-zA-Z0-9_\-]+)\.([a-zA-Z]{2,5})$/;
+                    
+    var emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
     if (mailMessage !== "Email cannot be blank." && emailRegex.test(email) === false) {
-        mailMessage = "Email must be in the form address@domain.";
+        mailMessage = "Email must be valid (Ex: example@test.com)";
         statusMsg = "invalid";
     }
 

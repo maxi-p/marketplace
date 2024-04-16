@@ -1,38 +1,565 @@
-.App {
-  text-align: center;
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+code {
+    font-family: source-code-pro,Menlo,Monaco,Consolas,Courier New,monospace
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+* {
+    box-sizing: border-box
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+body {
+    font-family: Helvetica,sans-serif;
+    margin: 0
+}
+
+.bold {
+    font-weight: 700
+}
+
+.gray {
+    color: #918e9b
+}
+
+section {
+    padding: 20px
+}
+
+.buttons,.userDetails {
+    border-radius: 20px;
+    text-align: center
+}
+
+.search {
+    background-color: #82099c;
+    height: 20%;
+    margin-inline:auto;padding: 10px;
+    width: 95%
+}
+
+.search,.search-Bar,.search-box {
+    border-radius: 20px;
+    text-align: center
+}
+
+.search-Button {
+    background-color: #fff;
+    border: none;
+    border-radius: 6px;
+    color: #000;
+    display: inline-block;
+    padding: 5px 12px;
+    text-align: center;
+    text-decoration: none;
+    transition-duration: .4s
+}
+
+.search-Button:hover {
+    background-color: #c739e6;
+    color: #fff
+}
+
+.loginButton {
+    background: #82099c;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1em;
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 10px;
+    outline: none;
+    transition: all .3s ease-in-out;
+    width: 100%
+}
+
+.loginButton:focus,.loginButton:hover {
+    background: darken(#82099c,7%)
+}
+
+.registerButton {
+    background: #82099c;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1em;
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 10px;
+    outline: none;
+    transition: all .3s ease-in-out;
+    width: 100%
+}
+
+.registerButton:focus,.registerButton:hover {
+    background: darken(#82099c,7%)
+}
+
+.postUploadButton {
+    background: #82099c;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1em;
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 10px;
+    outline: none;
+    transition: all .3s ease-in-out;
+    width: 100%
+}
+
+.postUploadButton:focus,.postUploadButton:hover {
+    background: darken(#82099c,7%)
+}
+
+.buttons {
+    background: #82099c;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1em;
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 10px;
+    outline: none;
+    transition: all .3s ease-in-out;
+    width: 100%
+}
+
+.buttons:focus,.buttons:hover {
+    background: darken(#82099c,7%)
+}
+.search-Bar {
+    width: 90%
+}
+
+.posts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    overflow-x: auto
+}
+
+.card {
+  background-color: #fffaf0;
+  border: 1px solid #82099c;
+  border-radius: 20px;
+  color: #000;
   display: flex;
+  flex: auto auto auto;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 14px;
+  padding: 10px;
+  position: relative;
+  width: 175px
+}
+.card--details {
+  background-color: #fffaf0;
+  border: 1px solid #82099c;
+  border-radius: 20px;
+  color: #000;
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  padding: 10px;
+  position: relative;
+  width: 350px;
 }
 
-.App-link {
-  color: #61dafb;
+.card--image {
+  border-radius: 9px;
+  margin-bottom: 9px;
+  width: 50%;
+}
+.card--image img {
+  width: 100%;
+  height: auto;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card--image--details {
+  border-radius: 9px;
+  width: 50%; 
+  margin-top: 30px;
 }
+.card--image--details img {
+  width: 100%;
+  height: auto;
+}
+
+
+.card--content {
+  width: 50%; 
+  padding-left: 10px; 
+}
+
+
+.card--title {
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.card--stats {
+    align-items: center;
+    display: flex;
+    font-size: 16px
+}
+
+.card--star {
+    height: 14px
+}
+.interestedButton{
+  border: none;
+  background-color: floralwhite;
+}
+
+.card--price {
+    margin-top: auto
+}
+
+.edit--badge {
+    left: 6px
+}
+
+.delete--badge,.edit--badge {
+    background-color: #fff;
+    border-color: #c739e6;
+    border-radius: 2px;
+    font-weight: 700;
+    padding: 5px 7px;
+    position: absolute;
+    top: 6px
+}
+
+.delete--badge {
+    right: 6px
+}
+
+ul {
+    background-color: #82099c;
+    list-style-type: none;
+    margin: 0;
+    overflow: hidden
+}
+
+li {
+    float: left
+}
+
+label {
+    color: #fff;
+    cursor: pointer;
+    font-size: 11px;
+    margin-left: 5px;
+    margin-right: 15px;
+    padding-left: 25px;
+    position: relative
+}
+
+label,label:before {
+    display: inline-block
+}
+
+label:before {
+    background-color: #c739e6;
+    border-radius: 2px;
+    bottom: 1px;
+    box-shadow: inset 0 2px 3px 0 #0000004d,0 1px 0 0 #fffc;
+    content: "";
+    height: 16px;
+    left: 0;
+    margin-right: 10px;
+    position: absolute;
+    width: 16px
+}
+
+input[type=checkbox] {
+    display: none
+}
+
+.checkbox label:before {
+    border-radius: 3px
+}
+
+input[type=checkbox]:checked+label:before {
+    color: #fff;
+    content: "\2713";
+    font-size: 12px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #0003
+}
+
+#title {
+    color: #82099c
+}
+.title_container
+{
+  color: #82099c
+}
+h1
+{
+  color: #82099c
+}
+
+li a {
+    color: #fff;
+    display: block;
+    padding: 14px 16px;
+    text-align: center;
+    text-decoration: none
+}
+
+li a:hover {
+    background-color: #111
+}
+
+.active {
+    background-color: #04aa6d
+}
+
+a {
+    color: #000
+}
+
+.spinner-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    text-align: center
+}
+
+.spinner-loader {
+    margin-top: 100px
+}
+
+.post-detail-container {
+    height: 100vh;
+    width: 100vw
+}
+
+.editPostDiv {
+    background-color: floralwhite;
+    border: 3px solid #82099c;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    height: auto;
+    margin-left: 100px;
+    margin-right: auto;
+    margin-top: 100px;
+    padding: 5%;
+    position: absolute;
+    width: auto;
+    z-index: 2147483647;
+    h2 {
+        font-size: 1.5em;
+        line-height: 1.5em;
+        margin: 0
+    }
+
+    .title_container {
+        color: #82099c;
+        padding-bottom: 15px;
+        text-align: center
+    }
+
+    h3 {
+        font-size: 1.1em;
+        font-weight: 400;
+        line-height: 1.5em;
+        margin: 0
+    }
+
+    label {
+        font-size: 12px
+    }
+
+    .input_field {
+        margin-bottom: 20px;
+        position: relative;
+        >span {
+            border-right: 1px solid #ccc;
+            color: #333;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            text-align: center;
+            top: 0;
+            width: 30px;
+            >i {
+                padding-top: 10px
+            }
+        }
+    }
+
+    .textarea_field {
+        >span {
+            >i {
+                padding-top: 10px
+            }
+        }
+    }
+
+    input {
+        &[type=email],&[type=password],&[type=price],&[type=text] {
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            height: 35px;
+            outline: none;
+            padding: 8px 10px 9px 35px;
+            transition: all .3s ease-in-out;
+            width: 100%
+        }
+
+        &[type=email]:hover,&[type=password]:hover,&[type=price]:hover,&[type=text]:hover {
+            background:#fafafa
+        }
+
+        &[type=email]:focus,&[type=password]:focus,&[type=price]:focus,&[type=text]:focus {
+            background:#fafafa;
+            border: 1px solid #82099c;
+            box-shadow: 0 0 2px 1px #8e099c80
+        }
+
+        
+
+        &[type=checkbox],&[type=radio] {
+            clip: rect(0 0 0 0);
+            border: 0;
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px
+        }
+    }
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    cursor: pointer;
+    display: inline-block;
+    padding: 6px 12px
+}
+
+.form_wrapper {
+    background: #fffaf0;
+    border-top: 5px solid #82099c;
+    box-shadow: 0 0 3px #0000001a;
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 25px;
+    position: relative;
+    width: 400px;
+    z-index: 1;
+    h2 {
+        font-size: 1.5em;
+        line-height: 1.5em;
+        margin: 0
+    }
+
+    .title_container {
+        color: #82099c;
+        padding-bottom: 15px;
+        text-align: center
+    }
+
+    h3 {
+        font-size: 1.1em;
+        font-weight: 400;
+        line-height: 1.5em;
+        margin: 0
+    }
+
+    label {
+        font-size: 12px
+    }
+
+    .input_field {
+        margin-bottom: 20px;
+        position: relative;
+        >span {
+            border-right: 1px solid #ccc;
+            color: #333;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            text-align: center;
+            top: 0;
+            width: 30px;
+            >i {
+                padding-top: 10px
+            }
+        }
+    }
+
+    .textarea_field {
+        >span {
+            >i {
+                padding-top: 10px
+            }
+        }
+    }
+
+    input {
+        &[type=email],&[type=password],&[type=price],&[type=text] {
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            height: 35px;
+            outline: none;
+            padding: 8px 10px 9px 35px;
+            transition: all .3s ease-in-out;
+            width: 100%
+        }
+
+        &[type=email]:hover,&[type=password]:hover,&[type=price]:hover,&[type=text]:hover {
+            background:#fafafa
+        }
+
+        &[type=email]:focus,&[type=password]:focus,&[type=price]:focus,&[type=text]:focus {
+            background:#fafafa;
+            border: 1px solid #82099c;
+            box-shadow: 0 0 2px 1px #8e099c80
+        }
+
+        &[type=submit] {
+            background: #82099c;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.1em;
+            height: 35px;
+            line-height: 35px;
+            margin-bottom: 10px;
+            outline: none;
+            transition: all .3s ease-in-out;
+            width: 100%;
+            &:focus,&:hover {
+                background: darken(#82099c,7%)
+            }
+        }
+
+        &[type=checkbox],&[type=radio] {
+            clip: rect(0 0 0 0);
+            border: 0;
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px
+        }
+    }
+}
+
+/*# sourceMappingURL=main.3954ff82.css.map*/

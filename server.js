@@ -37,8 +37,6 @@ app.use((req, res, next) =>
 const multer = require('multer');
 const mongoose = require('mongoose');
 const fs = require('fs');
-const { send } = require('process');
-const e = require('express');
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -135,7 +133,7 @@ app.post('/api/passwordChange', async (req, res, next) =>
 
 app.post('/api/searchPost', async (req, res, next) =>
 {
-    // incoming: username, name, genre, minIndex (optional), maxIndex (optional)
+    // incoming: username, name, genre
     // outgoing: results[], error
     var error = '';
     var searches = [];
@@ -176,23 +174,97 @@ app.post('/api/searchPost', async (req, res, next) =>
         error = e.toString();
     }
 
-    var paginatedSearches = [];
+    var ret = {results: searches, error:error};
+    res.status(200).json(ret);
+});
 
-    if ((req.body.minIndex !== undefined && req.body.minIndex !== '') && (req.body.maxIndex !== undefined && req.body.maxIndex !== ''))
-    {
-        if (req.body.minIndex <= searches.length - 1)
+app.post('/api/noRegexSearchPost', async (req, res, next) =>
+{
+    // incoming: username, name, genre
+    // outgoing: results[], error
+    var error = '';
+    var searches = [];
+
+    var userResults = [];
+    var nameResults = [];
+    var genreResults = [];
+
+    const {username, name, genre} = req.body;
+
+    const db = client.db("oMarketDB");
+
+    try{
+        var usernameTrim = username.trim();
+        var nameTrim = name.trim();
+        var genreTrim = genre.trim();
+
+        if (username === '' && name === '' && genre === '')
         {
-            let max = (req.body.maxIndex > searches.length - 1) ? searches.length - 1 : req.body.maxIndex;
-            for(var i = req.body.minIndex; i < max; i++)
-            {
-                paginatedSearches.push(searches[i]);
-            }
+            searches = await db.collection('Posts').find({}).toArray();
+        }
+        else
+        {
+            if (username !== '')
+                userResults = await db.collection('Posts').find({username: usernameTrim}).toArray();
+
+            if (name !== '')
+                nameResults = await db.collection('Posts').find({name: nameTrim}).toArray();
+
+            if (genre !== '')
+                genreResults = await db.collection('Posts').find({genre: genreTrim}).toArray();
+
+            searches = [...userResults, ...nameResults, ...genreResults];
         }
     }
-    else
-        paginatedSearches = searches
+    catch(e)
+    {
+        error = e.toString();
+    }
 
-    var ret = {results: paginatedSearches, error:error};
+    var ret = {results: searches, error:error};
+    res.status(200).json(ret);
+});
+
+app.post('/api/searchPostPaged', async (req, res, next) =>
+{
+    // incoming: username, name, genre, limit, skip
+    // outgoing: results[], error
+    var error = '';
+    var searches = [];
+
+    const {username, name, genre, limit, skip} = req.body;
+
+    const db = client.db("oMarketDB");
+
+    try{
+        var usernameTrim = username.trim();
+        var nameTrim = name.trim();
+        var genreTrim = genre.trim();
+
+        var QueryList = [];
+        var query = {};
+        if (username !== '') {
+            QueryList.push({username: {$regex: usernameTrim + '.*', $options: 'i'}});
+        }
+        if (name !== '') {
+            QueryList.push({username: {$regex: nameTrim + '.*', $options: 'i'}});
+        }
+        if (genre !== '') {
+            QueryList.push({username: {$regex: genreTrim + '.*', $options: 'i'}});
+        }
+        if (username != '' || name != '' || genre != '')
+        {
+            query = {$or: QueryList};
+        }
+        searches = await db.collection('Posts').find(query).limit(limit).skip(skip).toArray();
+
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = {results: searches, error:error};
     res.status(200).json(ret);
 });
 
@@ -461,11 +533,13 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
     // outgoing: id, error
 
     const {id, firstName, lastName, username, password, email, phoneNumber, aboutMe} = req.body;
-
+    console.log(req.body)
     const db = client.db("oMarketDB");
 
     var newImage = null;
     var oldImage = 0;
+    var newUser;
+    var ret;
 
     if (req.file !== undefined)
     {
@@ -503,18 +577,34 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
             await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {phoneNumber: phoneNumber}});
 
         if (aboutMe)
-            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutMe: aboutMe}});
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutme: aboutMe}});
 
         if (!oldImage)
             await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {profilePic: newImage}});
+
+        newUser = await db.collection('Users').find({username: username}).toArray();
+        if(newUser.length !== 0)
+        {
+            ret = 
+                {   id: newUser[0]._id, 
+                    firstName: newUser[0].firstname, 
+                    lastName: newUser[0].lastname, 
+                    username: username, 
+                    email: newUser[0].email, 
+                    phoneNumber: newUser[0].phoneNumber, 
+                    aboutMe: newUser[0].aboutme, 
+                    profilePic: newUser[0].profilePic, 
+                    ttl: newUser[0].ttl, 
+                    interestedIn: newUser[0].interestedIn
+                };  
+        }
     }
     catch(e)
     {
         error = e.toString();
     }
 
-
-    var ret = {_id: id, error: error};
+    ret = {...ret, error: error};
     res.status(200).json(ret);
 });
 
@@ -714,7 +804,14 @@ app.post('/api/getUser', async(req, res, next) => {
         error = e.toString();
     }
 
-    var ret = {user: user, error: error};
+    var ret;
+    
+    if(req.body.justUsername){
+        ret = {user: user.username, error: error};
+    }
+    else{
+        ret = {user: user, error: error};
+    }
     res.status(200).json(ret);
 });
 

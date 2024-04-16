@@ -1,15 +1,17 @@
 import React from 'react';
 import PageTitle from '../components/PageTitle';
 import EnterCode from '../components/EnterCode';
-//trying to fix heroku error
-const LoginPage = () =>
+
+const EnterCodePage = props =>
 {
     return(
         <div>
-            <PageTitle />
-            <EnterCode />
+            <PageTitle 
+                title="Verification Page"
+            />
+            <EnterCode loggedUser={props.loggedUser} setUpdatedTTL={props.setUpdatedTTL}/>
         </div>
     );
 };
 
-export default LoginPage;
+export default EnterCodePage;
