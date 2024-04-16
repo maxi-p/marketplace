@@ -21,7 +21,10 @@ const PostDetails = props => {
             const json = JSON.stringify({ postId: id });
             const response = await fetch(buildPath('api/getPost'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
-            var newRes = {...res.post, interested: res.post.usersInterested.includes(props.loggedUser.id)};
+            if (props.loggedUser)
+                var newRes = {...res.post, interested: res.post.usersInterested.includes(props.loggedUser.id)};
+            else
+                newRes = res;
             setPost(newRes)
             setHasUpdated(false);
             // TODO: remove this mimicking network request time (0.5 seconds)
