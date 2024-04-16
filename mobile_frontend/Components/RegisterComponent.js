@@ -336,9 +336,9 @@ function RegInput(props) {
 const styles = StyleSheet.create({
   // ----
   root: { 
-        alignContent: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   container: {
     backgroundColor: 'floralwhite',
@@ -364,7 +364,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     color: 'black',
-    
   },
   errorInput: {
     borderColor: 'red',
@@ -377,9 +376,7 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center',
     marginTop: 10,
-    color: 'violet',
-
-  }
+  },
 });
 
 export default RegisterComponent;

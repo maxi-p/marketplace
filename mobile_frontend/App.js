@@ -1,9 +1,15 @@
-import React, {useState} from 'react';
+/* eslint-disable react/no-unstable-nested-components */
+import React, {useContext, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+  createDrawerNavigator,
+} from '@react-navigation/drawer';
 import {UserContext} from './logic/UserContext';
-import {Appearance} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 import ProductModal from './pages/Modals/newProductModal';
 import ImageViewModal from './pages/Modals/ImageViewModal';
@@ -13,11 +19,17 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import EmailVerifyPage from './pages/EmailVerifyPage';
 
-import HomePage from './pages/HomePage';
-import SellPage from './pages/SellPage';
-import BrowsePage from './pages/BrowsePage';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import UserPage from './pages/UserPage';
+import SettingsPage from './pages/SettingsPage';
+
 const Stack = createNativeStackNavigator();
 const Stack2 = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
 const App = () => {
   const [user, setUser] = useState(null);
   const UserC = {user, setUser};
@@ -49,7 +61,9 @@ const App = () => {
           <Stack.Screen
             name="Post-Login"
             component={PostLogin}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+            }}
           />
           <Stack.Screen name="eVerifyModel" component={EmailVerifyPage} />
         </Stack.Navigator>
@@ -63,7 +77,54 @@ const App = () => {
 // <Tab.Screen name="Browse" component={BrowsePage} />
 const PostLogin = () => {
   return (
-    <Stack2.Navigator initialRouteName="Home">
+    <Drawer.Navigator
+      initialRouteName="ProductList"
+      drawerContent={props => <CustomDrawer {...props} />}>
+      <Drawer.Screen
+        name="ProductList"
+        component={ProductPages}
+        options={{
+          title: 'View Products',
+          drawerIcon: ({focused, color, size}) => {
+            return <Entypo name="shopping-bag" color={color} size={size} />;
+          },
+        }}
+      />
+      <Drawer.Screen
+        name="UserPage"
+        component={UserPage}
+        options={{
+          title: 'View Account',
+          drawerIcon: ({focused, color, size}) => {
+            return (
+              <FontAwesome
+                name={focused ? 'user-circle-o' : 'user'}
+                size={size}
+                color={color}
+              />
+            );
+          },
+        }}
+      />
+      <Drawer.Group
+        screenOptions={{
+          presentation: 'modal',
+          headerShown: false,
+          drawerItemStyle: {display: 'none'},
+        }}>
+        <Drawer.Screen name="EditUser" component={SettingsPage} />
+      </Drawer.Group>
+    </Drawer.Navigator>
+  );
+};
+
+const ProductPages = () => {
+  return (
+    <Stack2.Navigator
+      initialRouteName="List"
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Stack.Screen name="List" component={ProductListPage} />
       <Stack.Group
         screenOptions={{
@@ -77,4 +138,68 @@ const PostLogin = () => {
     </Stack2.Navigator>
   );
 };
+
+const CustomDrawer = props => {
+  const {user, setUser} = useContext(UserContext);
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <View style={style.drawerHeaderView}>
+        <View style={[style.row, style.titleRow]}>
+          <Text style={[style.text, style.titleText]}>OM</Text>
+          <Text style={[style.text, style.splashText]}>
+            Welcome to Open Markert, {}
+            <Text style={(style.text, style.splashText, style.usernameText)}>
+              {user.username}
+            </Text>
+            !{'\n'}
+            Have a Wonderful Day!
+          </Text>
+        </View>
+      </View>
+
+      <DrawerItemList {...props} />
+
+      <DrawerItem
+        label="Log out"
+        onPress={() => {
+          setUser(null);
+          props.navigation.navigate('Login');
+        }}
+        icon={({focused, color, size}) => {
+          return <MCIcon name="logout" color={color} size={size} />;
+        }}
+      />
+    </DrawerContentScrollView>
+  );
+};
+
+const style = StyleSheet.create({
+  drawerHeaderView: {
+    borderBottomWidth: 3,
+    width: '95%',
+    alignSelf: 'center',
+    paddingBottom: 5,
+    marginBottom: 5,
+  },
+
+  row: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  titleRow: {},
+
+  text: {
+    color: 'black',
+  },
+  splashText: {},
+  usernameText: {
+    color: 'dimgray',
+    fontWeight: 'bold',
+  },
+  titleText: {
+    fontSize: 30,
+  },
+});
 export default App;

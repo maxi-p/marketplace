@@ -166,8 +166,16 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
     },
-    phoneText: {},
-    emailText: {},
+    phoneText: {
+        marginLeft: 0,
+        textDecorationStyle: 'solid',
+        textDecorationLine: 'underline',
+    },
+    emailText: {
+        marginLeft: 0,
+        textDecorationStyle: 'solid',
+        textDecorationLine: 'underline',
+    },
 
     icon: {
         height:30,
