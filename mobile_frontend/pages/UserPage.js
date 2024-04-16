@@ -17,7 +17,7 @@ const UserPage = ({username, route, navigation, ...props}) => {
     const [userData, setUserData] = useState(null);
 
     if (user.username == Uname) {
-        goBack();
+        navigation.goBack();
         navigation.navigate('UserIDPage');
     }
 

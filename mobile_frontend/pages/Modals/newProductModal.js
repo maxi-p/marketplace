@@ -3,6 +3,7 @@ import React, {useContext, useState, useEffect, useCallback} from 'react';
 import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MatIcon from 'react-native-vector-icons/MaterialIcons';
 import { UserContext } from '../../logic/UserContext';
 import { buildPath } from '../../logic/NetworkLogic';
 import IntrestList from '../../Components/IntrestList';
@@ -149,6 +150,53 @@ const ProductModal = ({route, navigation}) => {
     };
 
 
+    const deletePost = async () => {
+        var obj = {
+            id: product._id,
+        };
+        console.log('Deleting Post');
+        try {
+            const result = await fetch(buildPath('api/deletePost'),
+            {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                headers:{'Content-Type': 'application/json'},
+            });
+            const response = JSON.parse(await result.text());
+            console.log(JSON.stringify(response, null, 4));
+            if (response.error) {
+                throw new Error(response.error);
+            }
+            console.log('post removed');
+        } 
+        catch (e) {
+            console.error(e.name + '\n\t' + e.message);
+            Alert.alert(e.name, e.message);
+            goBack(navigation);
+            return null;
+        }
+    };
+
+    const deletePress = () => {
+        Alert.alert('Delete Post?', 'Do you want to delete this post?', [
+            {
+                text: 'Delete',
+                onPress: () => {
+                    deletePost();
+                    Alert.alert('Post deleted');
+                    navigation.goBack();
+                },
+            },
+            {
+                text: 'Cancel',
+                onPress: () => {
+                    Alert.alert('Post not deleted');
+                },
+                style: 'cancel',
+            },
+        ]);
+    };
+
     const GetPostFromID = useCallback(async (ID, username) => {
         var obj = {
             postId: ID.toString(),
@@ -229,6 +277,18 @@ const ProductModal = ({route, navigation}) => {
                     onPress={editItem}
                     >
                         <FontAwesome name="pencil"
+                            size={30}
+                            color="black"
+                        />
+                    </Pressable>
+                )}
+
+                {/* Delete Item */}
+                {product?.isSeller && (
+                    <Pressable style={styles.deleteBox}
+                    onPress={deletePress}
+                    >
+                        <MatIcon name="delete-forever"
                             size={30}
                             color="black"
                         />
@@ -360,6 +420,23 @@ const styles = StyleSheet.create({
 
         margin: 5,
         padding: 3,
+        right: 0,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems:'center',
+
+        borderColor: 'black',
+        borderWidth: 1,
+        borderRadius: 50,
+    },
+    deleteBox: {
+        position: 'absolute',
+        backgroundColor: 'tomato',
+
+        margin: 5,
+        padding: 3,
+        top: 50,
         right: 0,
         width: 40,
         height: 40,
