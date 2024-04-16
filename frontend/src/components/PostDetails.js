@@ -42,7 +42,7 @@ const PostDetails = props => {
             var res = JSON.parse(await response.text());
             console.log(res)
         }
-        setPost({interested: !post.interested })
+        setPost({...post, interested: !post.interested })
     }
 
     const saveHandler = data => {
