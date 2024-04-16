@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import PostInUserPage from './PostInUserPage';
 import buildPath from '../logic/buildPath';
-import useSearch from '../hooks/useSearch';
+import useSearchNoRegex from '../hooks/useSearchNoRegex';
 import FadeLoader from 'react-spinners/FadeLoader'
 
 const PostDetails = props => {
@@ -22,7 +22,7 @@ const PostDetails = props => {
         setSaved(event.target.checked)
     }
 
-    const { allPosts, setAllPosts, setOnePost } = useSearch(loadingHandler, { username: id, name: '', genre: '' }, props.loggedUser);
+    const { allPosts, setAllPosts, setOnePost } = useSearchNoRegex(loadingHandler, { username: id, name: '', genre: '' }, props.loggedUser);
 
     useEffect(() => {
         const getUser = async () => {

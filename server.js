@@ -196,6 +196,69 @@ app.post('/api/searchPost', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/noRegexSearchPost', async (req, res, next) =>
+{
+    // incoming: username, name, genre, minIndex (optional), maxIndex (optional)
+    // outgoing: results[], error
+    var error = '';
+    var searches = [];
+
+    var userResults = [];
+    var nameResults = [];
+    var genreResults = [];
+
+    const {username, name, genre} = req.body;
+
+    const db = client.db("oMarketDB");
+
+    try{
+        var usernameTrim = username.trim();
+        var nameTrim = name.trim();
+        var genreTrim = genre.trim();
+
+        if (username === '' && name === '' && genre === '')
+        {
+            searches = await db.collection('Posts').find({}).toArray();
+        }
+        else
+        {
+            if (username !== '')
+                userResults = await db.collection('Posts').find({username: usernameTrim}).toArray();
+
+            if (name !== '')
+                nameResults = await db.collection('Posts').find({name: nameTrim}).toArray();
+
+            if (genre !== '')
+                genreResults = await db.collection('Posts').find({genre: genreTrim}).toArray();
+
+            searches = [...userResults, ...nameResults, ...genreResults];
+        }
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var paginatedSearches = [];
+
+    if ((req.body.minIndex !== undefined && req.body.minIndex !== '') && (req.body.maxIndex !== undefined && req.body.maxIndex !== ''))
+    {
+        if (req.body.minIndex <= searches.length - 1)
+        {
+            let max = (req.body.maxIndex > searches.length - 1) ? searches.length - 1 : req.body.maxIndex;
+            for(var i = req.body.minIndex; i < max; i++)
+            {
+                paginatedSearches.push(searches[i]);
+            }
+        }
+    }
+    else
+        paginatedSearches = searches
+
+    var ret = {results: paginatedSearches, error:error};
+    res.status(200).json(ret);
+});
+
 app.post('/api/searchUser', async (req, res, next) => 
 {
     //incoming: username
@@ -685,8 +748,13 @@ app.post('/api/getUser', async(req, res, next) => {
     catch(e){
         error = e.toString();
     }
-
-    var ret = {user: user, error: error};
+    var rat;
+    if(req.body.justUsername){
+        ret = {user: user.username, error: error};
+    }
+    else{
+        ret = {user: user, error: error};
+    }
     res.status(200).json(ret);
 });
 

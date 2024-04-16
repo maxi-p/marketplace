@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 
 const PostDetails = props => {
     const id = props.id;
-    const [post, setPost] = useState({});
+    const [post, setPost] = useState(null);
+    const [interestedNicks, setInterestedNicks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hasUpdated, setHasUpdated] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    console.log(post)
 
     useEffect(() => {
         const getPost = async() => {
@@ -27,28 +27,52 @@ const PostDetails = props => {
                 newRes = res.post;
             setPost(newRes)
             setHasUpdated(false);
-            // TODO: remove this mimicking network request time (0.5 seconds)
+            // TODO: remove this mimicking network request time (0.1 seconds)
             setTimeout(()=>{setLoading(false)}, 100)
         }
         getPost();
     }, [hasUpdated]);
 
+    useEffect(()=>{
+        const getNicks = async () => {
+            if(post){
+                post.usersInterested.map(async id=>{
+                    const json = JSON.stringify({ userId: id, justUsername: true });
+                    const response = await fetch(buildPath('api/getUser'), {method:'POST',body:json,headers:{'Content-Type': 'application/json'}});
+                    var res = JSON.parse(await response.text());
+                    setInterestedNicks(prev => {
+                        if (!prev.includes(res.user))
+                            return [...prev, res.user]
+                        return prev
+                    })
+                });
+            }
+        }
+        getNicks();
+    },[post])
+
+    useEffect(()=>{
+        console.log("interested nicks: "+interestedNicks)
+    },[interestedNicks])
+
     const interestHandler = async () => {
-        console.log("userId", props.loggedUser.id, "postId", post._id)
         if (post.interested === false) {
-            console.log("false")
             const json = JSON.stringify({ userId: props.loggedUser.id, postId: post._id });
             const response = await fetch(buildPath('api/interestAddition'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
-            console.log(res)
+            const newInterest = [...post.usersInterested, props.loggedUser.id]
+            setPost({...post, interested: !post.interested, usersInterested: newInterest})
         }
         else {
             const json = JSON.stringify({ userId: props.loggedUser.id, postId: post._id });
             const response = await fetch(buildPath('api/interestDeletion'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
-            console.log(res)
+            const newInterest = post.usersInterested.filter((word) => word !== props.loggedUser.id)
+            setPost({...post, interested: !post.interested, usersInterested: newInterest })
+            const newNick = interestedNicks.filter(word => word !== props.loggedUser.username)
+            setInterestedNicks(newNick);
         }
-        setPost({...post, interested: !post.interested })
+        
     }
 
     const saveHandler = data => {
@@ -73,6 +97,13 @@ const PostDetails = props => {
             setIsDeleting(true);
     }
 
+    const interestedArr = interestedNicks.map(nick => {
+        return (
+            <h3>
+                {nick}
+            </h3>
+        )
+    })
     return (
         <div>
             {loading ?
@@ -141,6 +172,8 @@ const PostDetails = props => {
                                 <p className="card--price"><span className="bold">${post.price}</span></p>
                             </div>
                         </div>
+                        <h1>Interested Users:</h1>
+                            {interestedArr}
                     </section>
                 </div>)
             }
