@@ -60,8 +60,8 @@ const SellUpdateProduct = ({product, route, navigation}) => {
     {
         const formData = new FormData();
         console.log(inData);
-        formData.append('username', username);
         formData.append('name', inData.title);
+        formData.append('username', user.username);
         formData.append('genre', inData.genre);
         formData.append('price', inData.price);
         formData.append('desc', inData.desc);
@@ -140,7 +140,7 @@ const SellUpdateProduct = ({product, route, navigation}) => {
         console.log('Uploading Files ...');
 
         try {
-            let response = await fetch(buildPath('api/editPost'), {
+            let response = await fetch(buildPath(ApiPath), {
                 method: 'POST',
                 body:formData,
                 headers:{'Content-Type': 'multipart/form-data'},
@@ -257,6 +257,7 @@ const SellUpdateProduct = ({product, route, navigation}) => {
                                     <TextInput
                                         style={[styles.textInput, styles.title, errors.title && styles.titleError]}
                                         placeholder="TITLE"
+                                        placeholderTextColor="darkgray"
                                         numberOfLines={1}
                                         autoCapitalize="sentences"
                                         textAlign="center"

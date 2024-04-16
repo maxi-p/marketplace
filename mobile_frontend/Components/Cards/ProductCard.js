@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
+import UserButton from '../Buttons/UserButton'
 import React, { useEffect, useRef } from 'react';
 import { Alert, Animated, Easing, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -18,7 +19,7 @@ const defaultProduct = {
     'Nisi quis eleifend quam adipiscing vitae proin sagittis. Lacus sed viverra tellus in. ' +
     'Amet est placerat in egestas erat imperdiet sed.',
 };
-const ProductCard = ({product, onTouch, onSellerTouch}) => {
+const ProductCard = ({product, onTouch, onSellerTouch, navigation}) => {
     product ??= defaultProduct;
     onTouch ??= () => {
         Alert.alert('Card Touched', product.catagory + '\n' + product.dise);
@@ -54,19 +55,13 @@ const ProductCard = ({product, onTouch, onSellerTouch}) => {
                             {product.catagory ?? 'catagory'}
                         </Text>
                     </View>
-                    <Pressable onPress={onSellerTouch}
-                        style={styles.sellerBox}
-                        android_ripple={{
-                            color :'gray',
-                            foreground: true,
-                        }}>
-                        <Image source={staticImage} style={styles.sellerImage} />
-                        <Text style={[styles.text, styles.sellerText]}
-                        numberOfLines={1}
-                        >
-                            {product.seller ?? 'N/A'}
-                        </Text>
-                    </Pressable>
+                    <View style={styles.sellerBox}>
+                        <UserButton 
+                            seller={product.seller}
+                            onpress={null}
+                            navigation={navigation}
+                        />
+                    </View>
                 </View>
                 <View style={styles.rows} >
                     {/* Title */}
@@ -208,14 +203,8 @@ const styles = StyleSheet.create({
     },
     sellerBox: {
         position: 'absolute',
-        backgroundColor: 'lavender',
         bottom: 5,
         right: 5,
-        borderWidth: 0.8,
-        borderRadius: 50,
-
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     sellerImage: {
         width: 40,

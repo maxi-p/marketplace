@@ -6,6 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { UserContext } from '../../logic/UserContext';
 import { buildPath } from '../../logic/NetworkLogic';
 import IntrestList from '../../Components/IntrestList';
+import UserButton from '../../Components/Buttons/UserButton';
 
 // Debugging settings
 const Debugging = false;
@@ -62,7 +63,7 @@ const ProductModal = ({route, navigation}) => {
     const tempImage = require('../../Images/PlaceHolder.png');
 
     const {user, setUser} = useContext(UserContext);
-    // const user = {username: 'use'};
+    // const user = {username: 'maxi-p'};
 
     const inDataPart = route?.params.product ?? defaultProduct;
     const inData = {
@@ -248,7 +249,7 @@ const ProductModal = ({route, navigation}) => {
 
                     {/* Condition and Price Row */}
                     <View style={[styles.row, styles.conditionPriceRow]}>
-                        <View>
+                        <View style={{maxWidth: '60%'}}>
                             <Text style={[styles.text]}>Condition:</Text>
                             <Text style={[styles.text, styles.conditionText]}
                             numberOfLines={1}
@@ -265,7 +266,7 @@ const ProductModal = ({route, navigation}) => {
 
                     {/* Catagory and Seller Row */}
                     <View style={[styles.row, styles.catSellerRow]}>
-                        <View>
+                        <View style={{flex:1}}>
                             <Text style={[styles.text]}>Catagory:</Text>
                             <Text style={[styles.text, styles.catagoryText]}
                             numberOfLines={1}
@@ -273,19 +274,8 @@ const ProductModal = ({route, navigation}) => {
                                 {product.catagory ?? 'N/A'}
                             </Text>
                         </View>
-                        <Pressable onPress={null}
-                            style={styles.sellerBox}
-                            android_ripple={{
-                                color :'gray',
-                                foreground: true,
-                            }}>
-                            <Image source={tempImage} style={styles.sellerImage} />
-                            <Text style={[styles.text, styles.sellerText]}
-                            numberOfLines={1}
-                            >
-                                {product.seller ?? 'N/A'}
-                            </Text>
-                        </Pressable>
+                        <UserButton seller={product.seller} navigation={navigation}
+                        />
                     </View>
                     {/* Disc Row */}
                     <ScrollView style={[styles.discRow]}
@@ -403,7 +393,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     conditionText: {
-        maxWidth: '70%',
     },
     priceText: {
         maxWidth: '30%',
@@ -414,7 +403,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     catagoryText: {
-        maxWidth: '50%',
     },
     sellerBox: {
         backgroundColor: 'lavender',
@@ -453,8 +441,16 @@ const styles = StyleSheet.create({
     button: {
         maxWidth: 250,
     },
-    intrestListRow: {},
-    intrestList: {},
+    intrestListRow: {
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        flex:1,
+        width: '100%',
+        marginBottom: 20,
+    },
+    intrestList: {
+        width: '95%',
+    },
 });
 
 export default ProductModal;

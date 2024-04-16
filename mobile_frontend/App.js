@@ -23,8 +23,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import UserPage from './pages/UserPage';
+import UserIDPage from './pages/UserIDPage';
 import SettingsPage from './pages/SettingsPage';
+import UserPage from './pages/UserPage';
 
 const Stack = createNativeStackNavigator();
 const Stack2 = createNativeStackNavigator();
@@ -91,8 +92,8 @@ const PostLogin = () => {
         }}
       />
       <Drawer.Screen
-        name="UserPage"
-        component={UserPage}
+        name="UserIDPage"
+        component={UserIDPage}
         options={{
           title: 'View Account',
           drawerIcon: ({focused, color, size}) => {
@@ -132,6 +133,7 @@ const ProductPages = () => {
           headerShown: false,
         }}>
         <Stack.Screen name="ProductModal" component={ProductModal} />
+        <Stack.Screen name="SellerModal" component={UserPage} />
         <Stack.Screen name="ImageModal" component={ImageViewModal} />
         <Stack.Screen name="SellUpdateModal" component={SellUpdateProduct} />
       </Stack.Group>

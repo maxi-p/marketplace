@@ -50,8 +50,8 @@ async function fetchData_Real(index, search = '') {
         username: search,
         name: search,
         genre: search,
-        minIndex: index,
-        maxIndex: index - 1 + fetchAmount,
+        // minIndex: index,
+        // maxIndex: index - 1 + fetchAmount,
     };
 
 
@@ -142,8 +142,9 @@ function ProductList(props) {
         }
         return (
             <ProductCard product={item}
-            onTouch={onTouchEvent}
+             onTouch={onTouchEvent}
              onSellerTouch={onSellerTouchEvent}
+             navigation={props.navigation}
             />
         );
     };

@@ -144,17 +144,21 @@ const IntrestCard = ({UserID, containterStyle, ...props}) => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'lavender',
+        borderRadius: 20,
+        maxHeight: 180
+    },
     innerContainer: {
-        backgroundColor: 'teal',
     },
     row: {
-        backgroundColor: 'yellow',
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
         height: 30,
     },
     nameRow: {
+        justifyContent: 'center',
     },
     phoneRow: {},
     emailRow: {},
