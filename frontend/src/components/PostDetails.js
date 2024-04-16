@@ -130,7 +130,7 @@ const PostDetails = props => {
                                 <div className="card--stats">
                                     <span className="gray">{post.name}</span>
                                 </div>
-                                <Link to={"/usr="+props.loggedUser.username.toString()} ><p className="card--title"> Author: {props.loggedUser.username}</p></Link>
+                                <Link to={"/usr="+post.username.toString()} ><p className="card--title"> Author: {post.username}</p></Link>
                                 {/* <p className="card--title">Author: {post.username}</p> */}
                                 <p className="card--title">Description: {post.desc}</p>
                                 <p className="card--title">Genre: {post.genre}</p>
