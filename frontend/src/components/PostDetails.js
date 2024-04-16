@@ -106,7 +106,7 @@ const PostDetails = props => {
                                 <img src={post.image ? "data:image/;base64," + post.image.image.data : './post.png'} />
                             </div>
                             <div class="card--content">
-                                {props.loggedUser && post.username === props.loggedUser.username &&
+                                {props.loggedUser && props.loggedUser.ttl === -1 && post.username === props.loggedUser.username &&
                                     <button
                                         className="delete--badge"
                                         name="open-delete"
@@ -114,14 +114,14 @@ const PostDetails = props => {
                                     >
                                         <img src="./delete.jpg" className="card--star" />
                                     </button>}
-                                {props.loggedUser &&
+                                {props.loggedUser && props.loggedUser.ttl === -1 &&
                                     <button
                                         onClick={interestHandler}
                                         className="interestedButton"
                                     >
                                         <img src={post.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
                                     </button>}
-                                {props.loggedUser && post.username === props.loggedUser.username &&
+                                {props.loggedUser && props.loggedUser.ttl === -1 && post.username === props.loggedUser.username &&
                                     <button
                                         className="edit--badge"
                                         name="open-edit"

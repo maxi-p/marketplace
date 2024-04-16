@@ -30,7 +30,6 @@ const Products = props =>
     const posts = props.allPosts.map(post => {
         return (
             <Post
-                loggedNick={props.loggedUser? props.loggedUser.username : ''}
                 loggedUser={props.loggedUser}
                 setOnePost={props.setOnePost}
                 key={post._id}
@@ -44,7 +43,6 @@ const Products = props =>
         if (post.interested)
         return (
             <Post
-                loggedNick={props.loggedUser? props.loggedUser.username : ''}
                 loggedUser={props.loggedUser}
                 setOnePost={props.setOnePost}
                 key={post._id}

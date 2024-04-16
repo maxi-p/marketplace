@@ -57,7 +57,6 @@ const UserHome = props => {
     const posts = allPosts.map(post => {
         return (
             <PostInUserPage
-                loggedNick={props.loggedUser ? props.loggedUser.username : ''}
                 loggedUser={props.loggedUser}
                 setOnePost={setOnePost}
                 key={post._id}
@@ -70,17 +69,17 @@ const UserHome = props => {
 
     const savedPosts = allPosts.map(post => {
         if (post.interested)
-            return (
-                <PostInUserPage
-                    loggedNick={props.loggedUser ? props.loggedUser.username : ''}
-                    loggedUser={props.loggedUser}
-                    setOnePost={setOnePost}
-                    key={post._id}
-                    obj={post}
-                    openEditHandler={openEditHandler}
-                    openDeleteHandler={openDeleteHandler}
-                />
-            )
+        return (
+            <PostInUserPage
+                loggedUser={props.loggedUser}
+                setOnePost={setOnePost}
+                key={post._id}
+                obj={post}
+                openEditHandler={openEditHandler}
+                openDeleteHandler={openDeleteHandler}
+            />
+        )
+
     });
 
     return (

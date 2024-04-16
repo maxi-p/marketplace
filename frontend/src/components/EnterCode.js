@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import buildPath from '../logic/buildPath';
 
 const EnterCode =  props =>
 {
-    const navigate = useNavigate();
     const [token, setToken] = useState('');
-    const [emailVerified, setEmailVerified] = useState(false);
     const [message,setMessage] = useState('');
 
     console.log(props.loggedUser);
@@ -37,7 +34,7 @@ const EnterCode =  props =>
             }
             else    
             {
-                setEmailVerified(true);
+                props.setUpdatedTTL(res.ttl)
                 setMessage('');
             }
         }
@@ -49,7 +46,8 @@ const EnterCode =  props =>
 
     return(
         <div id="verifyEmailDiv">
-            {(props.loggedUser.ttl !== -1) &&
+            {(props.loggedUser.ttl === -1) ?
+             <h1>Email has been verified!!!</h1>:
             <form onSubmit={doVerify}>
                 <span id="inner-title">Please paste the verification code that was sent to your email.</span><br />
                 <input 
@@ -66,11 +64,7 @@ const EnterCode =  props =>
                     value = "Verify Code" 
                     onClick={doVerify} 
                     />
-            </form>
-            }
-            {(emailVerified || props.loggedUser.ttl === -1) &&
-                <h1>Email has been verified!!!</h1>
-            }
+            </form>}
             <span id="registerResult">{message}</span>
         </div>
     );
