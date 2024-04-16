@@ -8,7 +8,7 @@ import { buildPath } from '../logic/NetworkLogic';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 
 const SettingsPage = ({navigation, ...props}) => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [curUsername, setCurUsername] = useState('');
   const [curPassword, setCurPassword] = useState('');
   const [curFirstName, setCurFirstName] = useState('');
@@ -62,14 +62,14 @@ const SettingsPage = ({navigation, ...props}) => {
         setNewLastName(userData.user.lastname || '');
         setNewEmail(userData.user.email || '');
         setNewPhoneNumber(userData.user.phoneNumber || '');
-        setNewAboutMe(userData.user.aboutMe || '');
+        setNewAboutMe(userData.user.aboutme || '');
         console.log(user.id);
         console.log('userData: ', userData.user.username);
         console.log('userData: ', userData.user.firstname);
         console.log('userData: ', userData.user.lastname);
         console.log('userData: ', userData.user.email);
         console.log('userData: ', userData.user.phoneNumber);
-        console.log('userData: ', userData.user.aboutMe);
+        console.log('userData: ', userData.user.aboutme);
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
@@ -135,9 +135,16 @@ const SettingsPage = ({navigation, ...props}) => {
         body: formData,
       });
 
-      const responseData = await response.json();
-
+      const responseData = JSON.parse(await response.text());
+      
+      console.log('Response\n' + JSON.stringify(responseData, null, 4));
       if (responseData.error) {
+        setUser({...user,
+          firstName: newFirstName,
+          lastName: newLastName,
+          email: newEmail,
+          username: newUsername,
+        });
         throw new Error(responseData.error);
       } else {
         setUsernameError('');
@@ -181,7 +188,7 @@ const SettingsPage = ({navigation, ...props}) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <Pressable style={styles.backButton}
-              onPress={() => navigation.navigate('UserPage')}
+              onPress={() => navigation.navigate('UserIDPage')}
               >
                 <IonIcons name="arrow-back" size={35} color="black"/>
               </Pressable>

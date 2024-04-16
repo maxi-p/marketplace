@@ -34,6 +34,7 @@ const UserPage = ({UserID, route, navigation, ...props}) => {
         const Reload = navigation.addListener('focus', () => {
             if (UID == user.id){
                 getUser(UID);
+                console.log('reload');
             }
         });
         return Reload;

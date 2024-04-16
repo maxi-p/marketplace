@@ -83,7 +83,7 @@ const UserComponent = ({userData, goBack, ...props}) => {
         <View style={[styles.row, styles.descRow]}>
           <Text style={[styles.text, styles.label, styles.descLabel]}>About Me</Text>
           <Text style={[styles.text, styles.value, styles.descValue]}>
-            {userData.aboutMe}
+            {userData.aboutme}
           </Text>
         </View>
       </View>
