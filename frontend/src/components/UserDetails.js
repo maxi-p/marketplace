@@ -29,8 +29,10 @@ const PostDetails = props => {
             const json = JSON.stringify({ username: id });
             const response = await fetch(buildPath('api/searchUser'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
-            console.log("user", res)
-            setUser(res)
+            console.log("user", res.results[0])
+            if(res.error === ''){
+                setUser(res.results[0])
+            }
         }
         getUser();
     }, []);
@@ -58,7 +60,7 @@ const PostDetails = props => {
         )
     });
 
-    return (<div>
+    return (<div id="loggedInDiv">
         {loading ?
             (<div className="spinner-container">
                 <FadeLoader
@@ -72,12 +74,12 @@ const PostDetails = props => {
                 <section className='user-details'>
                     <h1>{user.username}</h1>
                     <div className="userDetails">
-                        <img src={user.image ? "data:image/;base64," + user.image.image.data : './post.png'} className="card--image" />
+                        <img src={user.image ? "data:image/;base64," + user.image.image.data : './post.png'} style={{ width: 100, height: 100 }} alt="avatar" className="card--image" />
                         <div className="card--stats">
                             <span className="gray">{user.username}</span>
                         </div>
-                        <p className="card--title">First Name: {user.firstName}</p>
-                        <p className="card--title">Last Name: {user.lastName}</p>
+                        <p className="card--title">First Name: {user.firstname}</p>
+                        <p className="card--title">Last Name: {user.lastname}</p>
                         <p className="card--title">About Me: {user.aboutMe}</p>
                         <p className="card--title">Email: {user.email}</p>
                         <p className="card--title">Phone Number: {user.phoneNumber}</p>
