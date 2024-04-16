@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from "react";
-import { Image, Pressable, StyleSheet, Text } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 const UserButton = ({seller, onPress, navigation, route, ...props}) => {
 
@@ -22,7 +23,9 @@ const UserButton = ({seller, onPress, navigation, route, ...props}) => {
                 color :'gray',
                 foreground: true,
             }}>
-            <Image source={tempImage} style={styles.sellerImage} />
+            <View style={styles.sellerImage}>
+                <FAIcon name="user" size={30} color="black" />
+            </View>
             <Text style={styles.text}
             numberOfLines={1}
             >
@@ -43,12 +46,16 @@ const styles = StyleSheet.create({
     sellerImage: {
         width: 40,
         height: 40,
-        borderRadius: 50,
+        borderWidth: 0,
+        borderRightWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 500,
     },
 
     sellerBox: {
         backgroundColor: 'lavender',
-        borderWidth: 0.8,
+        borderWidth: 1,
         borderRadius: 50,
 
         margin: 5,
