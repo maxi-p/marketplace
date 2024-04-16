@@ -19,7 +19,12 @@ const PostDetails = props => {
     }
 
     const handleSaved = event => {
-        setSaved(event.target.checked)
+        if(event.target.id === 'allPosts'){
+            setSaved(false);
+        }
+        else{
+            setSaved(true);
+        }
     }
 
     const { allPosts, setAllPosts, setOnePost } = useSearchNoRegex(loadingHandler, { username: id, name: '', genre: '' }, props.loggedUser);
@@ -60,7 +65,7 @@ const PostDetails = props => {
         )
     });
 
-    return (<div id="loggedInDiv">
+    return (<div style={{marginTop:'10px'}}>
         {loading ?
             (<div className="spinner-container">
                 <FadeLoader
@@ -70,39 +75,79 @@ const PostDetails = props => {
                     loading={loading}
                 />
             </div>) :
-            (<div className="user-detail-container">
-                <section className='user-details'>
-                    <h1>{user.username}</h1>
-                    <div className="userDetails">
-                        <img src={user.image ? "data:image/;base64," + user.image.image.data : './post.png'} style={{ width: 100, height: 100 }} alt="avatar" className="card--image" />
-                        <div className="card--stats">
-                            <span className="gray">{user.username}</span>
+            (<div id="loggedInDiv">
+                <div className='profile-top-section'>
+                    <div className='top-holder-section'>
+                        <div className='avatar-section'>
+                            <div className='profile-avatar'>
+                                <img src={user.image ? "data:image/;base64," + user.image.image.data : './avatar.png'} alt="avatar"/>
+                            </div>
+                            <span className='username'>{user.username}</span>    
                         </div>
-                        <p className="card--title">First Name: {user.firstname}</p>
-                        <p className="card--title">Last Name: {user.lastname}</p>
-                        <p className="card--title">About Me: {user.aboutMe}</p>
-                        <p className="card--title">Email: {user.email}</p>
-                        <p className="card--title">Phone Number: {user.phoneNumber}</p>
+                        <div className='details-section'>
+                            <section className='user-info'>
+                                <div className="userDetails">
+                                    <div className="card--stats">
+                                    </div>
+                                    <p className="userprofile-name">{user.firstname} {user.lastname}</p>
+                                    <p className="card--title">About Me: {user.aboutMe}</p>
+                                    <p className="card--title">Email: {user.email}</p>
+                                    <p className="card--title">Phone Number: {user.phoneNumber}</p>
+                                </div>
+                            </section>
+                        </div>
                     </div>
-                </section>
-                <section>
-                    <h1>Posted Products:</h1>
-                    <input
-                        type="checkbox"
-                        id="saved"
-                        name="saved"
-                        checked={saved}
-                        onChange={handleSaved}
-                        className="search-box"
-                    /><label htmlFor="saved" style={{ color: 'black' }}> saved </label>
-                    {saved ?
-                        <div>
-                            {savedPosts}
-                        </div> :
-                        <div>
-                            {posts}
-                        </div>}
-                    </section>
+                </div>
+                {props.loggedUser && 
+                <div className='profile-buttons-section'>
+                    <div className='button-holder-section'>
+                        <div className='profile-button'>
+                            {props.loggedUser.ttl === -1 && <input
+                                type="button"
+                                id="allPosts"
+                                className="buttons"
+                                value={"All Posts by "+user.firstname}
+                                onClick={handleSaved}
+                            />}
+                        </div>
+                        <div className='profile-button'>
+                            {props.loggedUser.ttl === -1 && <input
+                                type="button"
+                                id="justSaved Posts"
+                                className="buttons"
+                                value={"Posts by "+user.firstname+" I Saved"}
+                                onClick={handleSaved}
+                            />}
+                        </div>
+                    </div>
+                </div>}
+                <div className='profile-posts-section'>
+                    <div className='posts-holder-section'>
+                        <span className='name-of-post-type'>{saved? "Posts By "+user.firstname+" I Saved": "All Posts By "+user.firstname}</span>
+                        <div className='loaded-posts-section'>
+                        {loading ?
+                        (<div className="spinner-container">
+                            <FadeLoader
+                                className="spinner-loader in-homepage"
+                                color="#1a2e68"
+                                size={200}
+                                loading={loading}
+                                />
+                        </div>) : 
+                        (<div className="post-detail-container">
+                            {saved ?
+                                <div className='home-post-holder-flex'>
+                                    {savedPosts}
+                                </div> :
+                                <div className='home-post-holder-flex'>
+                                    {posts}
+                                </div>}
+                        </div>)}
+                        </div>
+                    </div>
+
+                </div>
+
                 </div>)}
             </div>)
 }
