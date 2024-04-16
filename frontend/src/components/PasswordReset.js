@@ -4,11 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import buildPath from '../logic/buildPath';
 
-const Login = props => {
+const ForgotPassword = props => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState(
-        { username: "", password: "" }
+        { username: props.tempUser.username, newPassword: "", verifyNum: ""}
     );
 
     const handleChange = (event) => {
@@ -23,18 +23,15 @@ const Login = props => {
 
     const [message, setMessage] = useState('');
 
-    const doLogin = async (event) => {
+    const doReset = async (event) => {
         event.preventDefault();
         var json = JSON.stringify(formData);
 
         try {
-            const response = await fetch(buildPath('api/login'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
+            const response = await fetch(buildPath('api/passwordChange'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
 
-            if (res.id <= 0) {
-                setMessage('User/Password combination incorrect');
-            }
-            else {
+            if (res.error === '') {
                 var user = { 
                     id: res.id, 
                     username: res.username, 
@@ -50,8 +47,11 @@ const Login = props => {
                 };
                 props.setTempUser(null)
                 props.setLoggedUser(user);
-                setMessage('');
+                setMessage('')
                 navigate('/home');
+            }
+            else {
+                setMessage(res.error);
             }
 
         }
@@ -67,40 +67,40 @@ const Login = props => {
         <div className="form_wrapper">
             <div className="form_container">
                 <div className="title_container">
-                    <h2>Login</h2>
+                    <h2>Verification Code of User {props.tempUser.username} was Sent to Email {props.tempUser.email}</h2>
                 </div>
 
                 <div className="">
-                    <form className="login" onSubmit={doLogin}>
-                        <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform="down-10"/></span>
+                    <form className="login" onSubmit={doReset}>
+                    <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform="down-10"/></span>
                             <input
                                 type="text"
-                                placeholder="Username"
-                                id="username"
+                                placeholder="Verification Code"
+                                id="verifyNum"
                                 onChange={handleChange}
                                 className="userDetails"
-                                value={formData.username}
+                                value={formData.verifyNum}
                             />
                         </div>
                         <div className="input_field"> <span> <FontAwesomeIcon icon={faLock} transform="down-10"/></span>
                             <input
                                 type="password"
-                                placeholder="Password"
-                                id="password"
+                                placeholder="New Password"
+                                id="newPassword"
                                 onChange={handleChange}
                                 className="userDetails"
-                                value={formData.password}
+                                value={formData.newPassword}
 
                             />
                         </div>
                         <input
                             type="submit"
-                            value="Login"
-                            id="loginButton"
-                            className="loginButton"
-                            onClick={doLogin}
+                            value="Reset Password"
+                            id="passwordResetButton"
+                            className="passwordResetButton"
+                            onClick={doReset}
                         />
-                        <Link to='/forgot-password'>Forgot Password</Link><br/>
+                        <Link to='/login'>Login</Link><br/>
                         <Link to='/register'>Register</Link>
                     </form>
                 </div>
@@ -113,4 +113,4 @@ const Login = props => {
     );
 };
 
-export default Login;
+export default ForgotPassword;

@@ -10,7 +10,7 @@ const LoginPage = props =>
             <PageTitle 
                 title="Log-in Page"
             />
-            <Login setLoggedUser={props.setLoggedUser}/>
+            <Login setLoggedUser={props.setLoggedUser} setTempUser={props.setTempUser}/>
         </div>
     );
 };

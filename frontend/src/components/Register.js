@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Route, { useNavigate } from 'react-router-dom';
+import Route, { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEnvelope, faPhone} from '@fortawesome/free-solid-svg-icons';
 import validateRegister from '../logic/validator';
@@ -62,6 +62,7 @@ const Register = props => {
                         aboutMe: res.aboutMe,
                         profilePic: res.profilePic
                     };
+                    props.setTempUser(null)
                     props.setLoggedUser(user)
                     setMessage('');
                     navigate('/verify-email');
@@ -164,13 +165,8 @@ const Register = props => {
                                 value="Register"
                                 onClick={doRegister}
                             />
-                            <input
-                                type="button"
-                                id="backToLogin"
-                                className="registerButton"
-                                value="Login"
-                                onClick={() => navigate('/login')}
-                            />
+                            <Link to='/login'>Login</Link><br/>
+                            <Link to='/forgot-password'>Forgot Password</Link>
                         </form>
                         <span id="registerResult">{message}</span>
                     </div>
