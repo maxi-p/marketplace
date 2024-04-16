@@ -70,14 +70,12 @@ const PostDetails = props => {
                         loading={loading}
                     />
                 </div>):
-                (<div className="post-detail-container">
-                    <section className='post-details'>
+                (<div className="user-detail-container">
+                    <section className='user-details'>
                         <h1>{user.username}</h1>
-                        <div className="card">
+                        <div className="userDetails">
                             <img src={user.image? "data:image/;base64,"+user.image.image.data:'./post.png'} className="card--image" />
                             <div className="card--stats">
-                                <img src="./star.png" className="card--star" />
-                                <span className="gray"> • </span>
                                 <span className="gray">{user.username}</span>
                             </div>
                             <p className="card--title">First Name: {user.firstName}</p>
