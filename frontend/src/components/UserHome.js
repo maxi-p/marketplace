@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EditUser } from './EditUser';
 import PostInUserPage from './PostInUserPage';
-import useSearch from '../hooks/useSearch';
+import useSearchNoRegex from '../hooks/useSearchNoRegex';
 import FadeLoader from 'react-spinners/FadeLoader'
 import { DeletePostFromHome } from './DeletePostFromHome';
 import { EditPostFromHome } from './EditPostFromHome';
@@ -18,7 +18,7 @@ const UserHome = props => {
     const loadingHandler = data => {
         setLoading(data);
     }
-    const { allPosts, setAllPosts, setOnePost, setOnePostFetch } = useSearch(loadingHandler, { username: props.loggedUser.username, name: '', genre: '' }, props.loggedUser);
+    const { allPosts, setAllPosts, setOnePost, setOnePostFetch } = useSearchNoRegex(loadingHandler, { username: props.loggedUser.username, name: '', genre: '' }, props.loggedUser);
     const openEditHandler = data => {
         setPost(data);
         setIsEditingPost(true);
