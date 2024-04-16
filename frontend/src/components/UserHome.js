@@ -108,7 +108,6 @@ const UserHome = props => {
                     <div className='details-section'>
                         <section className='user-info'>
                             <div className="userDetails">
-                                {/* <img src={user.image ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './post.png'} className="card--image" /> */}
                                 <div className="card--stats">
                                 </div>
                                 <p className="userprofile-name">{props.loggedUser.firstName} {props.loggedUser.lastName}</p>
