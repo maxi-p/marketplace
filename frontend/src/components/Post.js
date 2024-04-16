@@ -52,7 +52,9 @@ const Post = props => {
             <p className="card--title">{props.obj.genre}</p>
             </Link>
         </div>
+        
     )
+    // zena-frontend
 };
 
 export default Post;
