@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState, useContext } from 'react';
 import { Alert, Button, Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useForm, SubmitHandeler, Controller } from 'react-hook-form';
+import { useForm, SubmitHandeler, Controller, set } from 'react-hook-form';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -18,6 +18,7 @@ const SellUpdateProduct = ({product, route, navigation}) => {
 
     // States
     const [PhotoUpdate, setPhotoUpdate] = useState(false);
+    const [Loading, setLoading] = useState(false);
     // Form
     const {
         handleSubmit,
@@ -138,6 +139,7 @@ const SellUpdateProduct = ({product, route, navigation}) => {
     const Upload = async (formData, ApiPath) => {
         console.log(formData.toString());
         console.log('Uploading Files ...');
+        setLoading(true);
 
         try {
             let response = await fetch(buildPath(ApiPath), {
@@ -160,6 +162,7 @@ const SellUpdateProduct = ({product, route, navigation}) => {
         }
         finally {
             console.log('done uploading to ' + ApiPath);
+            setLoading(false);
         }
     };
 
@@ -368,8 +371,12 @@ const SellUpdateProduct = ({product, route, navigation}) => {
                         />
                     <View style={styles.submitButton}>
                         <Button
-                            title={uProduct ? 'Update Product' : 'Create Product'}
+                            title={
+                                Loading ?
+                                'Loading...' :
+                                    uProduct ? 'Update Product' : 'Create Product'}
                             onPress={handleSubmit(uProduct ? updatePost : createPost)}
+                            disabled={Loading}
                         />
                     </View>
                     </ScrollView>
