@@ -415,11 +415,13 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
     // outgoing: id, error
 
     const {id, firstName, lastName, username, password, email, phoneNumber, aboutMe} = req.body;
-
+    console.log(req.body)
     const db = client.db("oMarketDB");
 
     var newImage = null;
     var oldImage = 0;
+    var newUser;
+    var ret;
 
     if (req.file !== undefined)
     {
@@ -457,18 +459,34 @@ app.post('/api/editUser', upload.single('image'), async (req, res, next) =>
             await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {phoneNumber: phoneNumber}});
 
         if (aboutMe)
-            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutMe: aboutMe}});
+            await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {aboutme: aboutMe}});
 
         if (!oldImage)
             await db.collection('Users').updateOne({_id: new ObjectId(id)}, {$set: {profilePic: newImage}});
+
+        newUser = await db.collection('Users').find({username: username}).toArray();
+        if(newUser.length !== 0)
+        {
+            ret = 
+                {   id: newUser[0]._id, 
+                    firstName: newUser[0].firstname, 
+                    lastName: newUser[0].lastname, 
+                    username: username, 
+                    email: newUser[0].email, 
+                    phoneNumber: newUser[0].phoneNumber, 
+                    aboutMe: newUser[0].aboutme, 
+                    profilePic: newUser[0].profilePic, 
+                    ttl: newUser[0].ttl, 
+                    interestedIn: newUser[0].interestedIn
+                };  
+        }
     }
     catch(e)
     {
         error = e.toString();
     }
 
-
-    var ret = {_id: id, error: error};
+    ret = {...ret, error: error};
     res.status(200).json(ret);
 });
 

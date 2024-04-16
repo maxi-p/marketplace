@@ -86,7 +86,6 @@ const UploadForm = props =>
                             />
                         </div>
                     <div className="uploadPostDiv">
-                        <form>
                             <div className="input_field">
                                 <span><FontAwesomeIcon icon={faDollarSign} transform = "down-6"/></span>
                                 <input 
@@ -107,6 +106,7 @@ const UploadForm = props =>
                                     value={formData.desc}
                                 />
                             </div>
+                          
 
                             <div className="input_field"> <span><FontAwesomeIcon icon={faStar} transform = "down-6"/></span>
                                 <input 
@@ -117,13 +117,14 @@ const UploadForm = props =>
                                     value={formData.condition}
                                 />
                             </div>
+
                             <input 
                                 type="file" 
                                 placeholder="image"
                                 accept="image/*"
                                 id="image"
                                 onChange={handleChange} 
-                            />
+                            /><br/>
                             <input 
                                 type="submit" 
                                 value = "Post"
@@ -131,7 +132,6 @@ const UploadForm = props =>
                                 className="postUploadButton"
                                 onClick={doPost}  
                             />
-                        </form>
                         <span id="postResult">{message}</span>
                     </div>
                     </form>
