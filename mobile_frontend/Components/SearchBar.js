@@ -1,12 +1,24 @@
 /* eslint-disable prettier/prettier */
 // Search Bar Element Based on https://blog.logrocket.com/create-react-native-search-bar-from-scratch/
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}) => {
     const [currentValue, setCurrentValue] = useState(`${searchPhrase}`);
+    const searchBarRef = useRef(null);
+    
+    useEffect(() => {
+        if (clicked) {
+            searchBarRef.current.focus();
+        }
+        else {
+            setSearchPhrase('');
+            searchBarRef.current.blur();
+        }
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={[styles.searchBar, styles.searchBar__clicked]}>
@@ -22,12 +34,12 @@ const SearchBar = ({clicked, searchPhrase, setSearchPhrase, setClicked}) => {
                     setSearchPhrase(currentValue);}
                 }
                 onFocus={ () => {setClicked(true);} }
+                ref={searchBarRef}
             />
             {clicked && (
                 <Entypo name="cross" size={20}
                     color="black"
                     onPress={() => {
-                        setSearchPhrase('');
                         setClicked(false);
                     }}
                 />

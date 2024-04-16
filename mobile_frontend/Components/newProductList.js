@@ -225,10 +225,10 @@ function ProductList(props) {
                 extraData={[loading, data]}
                 ListFooterComponent={footer}
 
-                onEndReached={getData}
-                onEndReachedThreshold={0.5}
-                onMomentumScrollBegin={() => setMomentum(true)}
-                onMomentumScrollEnd={() => setMomentum(false)}
+                // onEndReached={getData}
+                // onEndReachedThreshold={0.5}
+                // onMomentumScrollBegin={() => setMomentum(true)}
+                // onMomentumScrollEnd={() => setMomentum(false)}
 
                 onRefresh={refresh}
                 refreshing={refreshing}
