@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, Image } from 'react-native';
 import HomePage from '../pages/HomePage';
 import {UserContext} from '../logic/UserContext';
 
@@ -14,6 +14,7 @@ const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const LOGO = require('../Images/openMarketLogo_png_(discord.com)_2024-04-16_16.50.57.png');
 
   const doLogin = async () => {
     try {
@@ -64,6 +65,7 @@ const Login = (props) => {
       <KeyboardAvoidingView style={styles.view}>
         <View style={styles.container}>
           <View style={styles.titleRow}>
+            <Image source={LOGO} style={styles.logo} />
             <Text style={[styles.text, styles.title]}>OpenMarket</Text>
             <Text style={[styles.text, styles.subtitle]}>
               A place to buy and sell goods!
@@ -121,6 +123,11 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
   },
+  logo: {
+    width: 300,
+    height: 200,
+    resizeMode: 'contain',
+  },
   subtitle: {
     fontSize: 16,
     color: 'dimgray',
@@ -128,9 +135,8 @@ const styles = StyleSheet.create({
   },
   titleRow: {
     alignItems: 'center',
-    marginTop: 100,
-    marginBottom: 150,
-    marginVertical: 0, 
+    marginBottom: 100,
+    marginVertical: 0,
   },
   input: {
     width: '80%',
