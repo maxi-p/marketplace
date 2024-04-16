@@ -60,13 +60,19 @@ const PostDetails = props => {
             const json = JSON.stringify({ userId: props.loggedUser.id, postId: post._id });
             const response = await fetch(buildPath('api/interestAddition'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
+            const newInterest = [...post.usersInterested, props.loggedUser.id]
+            setPost({...post, interested: !post.interested, usersInterested: newInterest})
         }
         else {
             const json = JSON.stringify({ userId: props.loggedUser.id, postId: post._id });
             const response = await fetch(buildPath('api/interestDeletion'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
+            const newInterest = post.usersInterested.filter((word) => word !== props.loggedUser.id)
+            setPost({...post, interested: !post.interested, usersInterested: newInterest })
+            const newNick = interestedNicks.filter(word => word !== props.loggedUser.username)
+            setInterestedNicks(newNick);
         }
-        setPost({...post, interested: !post.interested })
+        
     }
 
     const saveHandler = data => {
