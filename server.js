@@ -196,6 +196,52 @@ app.post('/api/searchPost', async (req, res, next) =>
     res.status(200).json(ret);
 });
 
+app.post('/api/searchPostPaged', async (req, res, next) =>
+{
+    // incoming: username, name, genre, limit, skip
+    // outgoing: results[], error
+    var error = '';
+    var searches = [];
+
+    var userResults = [];
+    var nameResults = [];
+    var genreResults = [];
+
+    const {username, name, genre, limit, skip} = req.body;
+
+    const db = client.db("oMarketDB");
+
+    try{
+        var usernameTrim = username.trim();
+        var nameTrim = name.trim();
+        var genreTrim = genre.trim();
+
+        var QueryList = [];
+        var query = {};
+        if (username !== '') {
+            QueryList.push({username: {$regex: usernameTrim + '.*', $options: 'i'}});
+        }
+        if (name !== '') {
+            QueryList.push({username: {$regex: nameTrim + '.*', $options: 'i'}});
+        }
+        if (genre !== '') {
+            QueryList.push({username: {$regex: genreTrim + '.*', $options: 'i'}});
+        }
+        if (username != '' || name != '' || genre != '')
+        {
+            query = {$or: QueryList};
+        }
+        searches = await db.collection('Posts').find(query).limit(limit).skip(skip).toArray();
+
+    }
+    catch(e)
+    {
+        error = e.toString();
+    }
+
+    var ret = {results: searches, error:error};
+    res.status(200).json(ret);
+});
 app.post('/api/searchUser', async (req, res, next) => 
 {
     //incoming: username
