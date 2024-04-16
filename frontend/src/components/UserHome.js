@@ -88,6 +88,7 @@ const UserHome = props => {
                 <EditUser
                     className="edit-post-popup"
                     loggedUser={props.loggedUser}
+                    setLoggedUser={props.setLoggedUser}
                     editHandler={editHandler}
                 />}
             <img src={props.loggedUser.profilePic ? "data:image/;base64," + props.loggedUser.profilePic.image.data : './avatar.png'} style={{ width: 100, height: 100 }} alt="avatar"></img><br />
