@@ -89,7 +89,7 @@ const UserHome = props => {
     });
 
     return (
-        <div className="loggedInDiv">
+        <div className="loggedInDiv" style={{marginTop: '15px'}}>
             {isEditing &&
                 <EditUser
                     className="edit-post-popup"

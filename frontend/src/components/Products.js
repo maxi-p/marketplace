@@ -54,7 +54,7 @@ const Products = props =>
     });
 
     return (
-        <div>
+        <div className='products-section'>
             {props.loading? 
                 (<div className="spinner-container">
                     <FadeLoader
