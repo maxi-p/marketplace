@@ -27,6 +27,7 @@ import UserIDPage from './pages/UserIDPage';
 import SettingsPage from './pages/SettingsPage';
 import UserPage from './pages/UserPage';
 import UserProductListPage from './pages/UserProductList';
+import UsernamePage from './pages/UsernamePage';
 
 const Stack = createNativeStackNavigator();
 const Stack2 = createNativeStackNavigator();
@@ -69,6 +70,8 @@ const App = () => {
             }}
           />
           <Stack.Screen name="eVerifyModel" component={EmailVerifyPage} />
+          <Stack.Screen name="Request" component={UsernamePage} />
+          <Stack.Screen name="Reset" component={UsernamePage} />
         </Stack.Navigator>
       </UserContext.Provider>
     </NavigationContainer>

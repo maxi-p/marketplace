@@ -58,6 +58,9 @@ const Login = (props) => {
     console.log('Redirecting to register screen');
     props.navigation.navigate('Register');
   };
+  const resetPassword = () => {
+    props.navigation.navigate("Request");
+  };
 
   // Render the login page if isLoggedIn is false
   return (
@@ -91,6 +94,11 @@ const Login = (props) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={registerRedirect}>
             <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={resetPassword}>
+            <Text style={[styles.text, styles.forgotPassword]}>
+              Forgot Password?
+            </Text>
           </TouchableOpacity>
           <Text style={styles.message}>{message}</Text>
         </View>
@@ -168,6 +176,10 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 16,
     marginTop: 10,
+  },
+  forgotPassword: {
+    color: 'blue',
+    fontWeight: 'bold',
   },
 });
 
