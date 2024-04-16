@@ -150,17 +150,17 @@ section {
 }
 
 .card {
-    background-color: #fffaf0;
-    border: 1px solid #82099c;
-    border-radius: 20px;
-    color: #000;
-    display: flex;
-    flex: auto auto auto;
-    flex-direction: column;
-    font-size: 14px;
-    padding: 10px;
-    position: relative;
-    width: 175px
+  background-color: #fffaf0;
+  border: 1px solid #82099c;
+  border-radius: 20px;
+  color: #000;
+  display: flex;
+  flex: auto auto auto;
+  flex-direction: column;
+  font-size: 14px;
+  padding: 10px;
+  position: relative;
+  width: 175px
 }
 .card--details {
   background-color: #fffaf0;
@@ -177,7 +177,14 @@ section {
 
 .card--image {
   border-radius: 9px;
+  margin-bottom: 9px;
+  width: 50%;
+}
+
+.card--image--details {
+  border-radius: 9px;
   width: 50%; 
+  margin-top: 30px;
 }
 
 .card--image img {

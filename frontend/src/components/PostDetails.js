@@ -97,7 +97,7 @@ const PostDetails = props => {
                     <section className='post-details'>
                         <h1>{post.name}</h1>
                         <div className="card--details">
-                            <div class="card--image">
+                            <div class="card--image--details">
                                 <img src={post.image ? "data:image/;base64," + post.image.image.data : './post.png'} />
                             </div>
                             <div class="card--content">
@@ -126,8 +126,6 @@ const PostDetails = props => {
                                     </button>}
 
                                 <div className="card--stats">
-                                    <img src="./star.png" className="card--star" />
-                                    <span className="gray"> • </span>
                                     <span className="gray">{post.name}</span>
                                 </div>
                                 <p className="card--title">Author: {post.username}</p>
