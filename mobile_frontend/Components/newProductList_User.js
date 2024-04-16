@@ -177,7 +177,7 @@ function UserProductList(props) {
                 No Products Found
             </Text>
         </View>
-    );}
+    );};
 
 
     // Fetch Data -- First Load and Refoucs
