@@ -28,21 +28,21 @@ const PostDetails = props => {
     }, [hasUpdated]);
 
     const interestHandler = async () => {
-        console.log("userId", props.loggedUser.id, "postId", props.obj._id)
-        if (props.obj.interested === false) {
+        // console.log("userId", props.loggedUser.id, "postId", props.obj._id)
+        if (post.interested === false) {
             console.log("false")
-            const json = JSON.stringify({ userId: props.loggedUser.id, postId: props.obj._id });
+            const json = JSON.stringify({ userId: props.loggedUser.id, postId: post._id });
             const response = await fetch(buildPath('api/interestAddition'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
             console.log(res)
         }
         else {
-            const json = JSON.stringify({ userId: props.loggedUser.id, postId: props.obj._id });
+            const json = JSON.stringify({ userId: props.loggedUser.id, postId: post._id });
             const response = await fetch(buildPath('api/interestDeletion'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
             console.log(res)
         }
-        props.setOnePost({ ...props.obj, interested: !props.obj.interested })
+        setPost({ ...props, interested: !post.interested })
     }
 
     const saveHandler = data => {
@@ -109,7 +109,7 @@ const PostDetails = props => {
                                     onClick={interestHandler}
                                     className="interestedButton"
                                 >
-                                    <img src={props.obj.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
+                                    <img src={post.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
                                 </button>}
                             {props.loggedUser && post.username === props.loggedUser.username &&
                                 <button
