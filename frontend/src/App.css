@@ -38,7 +38,10 @@ section {
     background-color: #82099c;
     height: 20%;
     margin-inline:auto;padding: 10px;
-    width: 95%
+    width: 95%;
+    label {
+        color: floralwhite;
+    }
 }
 
 .search,.search-Bar,.search-box {
@@ -47,10 +50,10 @@ section {
 }
 
 .search-Button {
-    background-color: #fff;
+    background-color: floralwhite;
     border: none;
     border-radius: 6px;
-    color: #000;
+    color: #82099c;
     display: inline-block;
     padding: 5px 12px;
     text-align: center;
@@ -60,7 +63,7 @@ section {
 
 .search-Button:hover {
     background-color: #c739e6;
-    color: #fff
+    color: floralwhite
 }
 
 .loginButton {
