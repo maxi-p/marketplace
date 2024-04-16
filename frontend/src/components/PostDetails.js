@@ -25,7 +25,7 @@ const PostDetails = props => {
             if (props.loggedUser)
                 newRes = {...res.post, interested: res.post.usersInterested.includes(props.loggedUser.id)};
             else
-                newRes = res;
+                newRes = res.post;
             setPost(newRes)
             setHasUpdated(false);
             // TODO: remove this mimicking network request time (0.5 seconds)
