@@ -17,7 +17,14 @@ export default function useLoggedUser() {
     setLoggedUser(data);
   };
 
+  const setTTL = data => {
+    const newUser = {...loggedUser, ttl: data}
+    localStorage.setItem('user_data', JSON.stringify(newUser));
+    setLoggedUser(newUser);
+  }
+
   return {
+    setUpdatedTTL: setTTL,
     setLoggedUser: saveLoggedUser,
     loggedUser
   }

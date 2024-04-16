@@ -18,7 +18,7 @@ import useTempUser from './hooks/useTempUser';
 
 function App()
 {
-  const {loggedUser, setLoggedUser} = useLoggedUser();
+  const {loggedUser, setLoggedUser, setUpdatedTTL} = useLoggedUser();
   const {tempUser, setTempUser} = useTempUser();
 
 
@@ -27,6 +27,7 @@ function App()
       <BrowserRouter>
       <NavBar loggedUser={loggedUser} setLoggedUser={setLoggedUser}/>
         <Routes>
+          <Route path="/home" index element={<Navigate to="/"/>}/>
           <Route path="/">
             <Route
               index
@@ -37,7 +38,16 @@ function App()
               element={<DetailsPage loggedUser={loggedUser}/>}
             />
           </Route>
-          <Route path="/home" index element={<Navigate to="/"/>}/>
+          <Route 
+            path="/user-home"
+            index 
+            element={loggedUser? <UserHomePage loggedUser={loggedUser} setLoggedUser={setLoggedUser}/> : <Navigate to="/login"/>}
+          />
+          <Route
+            path="/post" 
+            index 
+            element={loggedUser && loggedUser.ttl === -1? <UploadPage loggedUser={loggedUser} setLoggedUser={setLoggedUser}/> : <Navigate to="/login"/>}
+          />
           <Route 
             path="/login" 
             index 
@@ -58,20 +68,10 @@ function App()
             index 
             element={!loggedUser? <RegisterPage setLoggedUser={setLoggedUser} setTempUser={setTempUser}/>: <Navigate to="/user-home"/>}
           />
-          <Route 
-            path="/user-home"
-            index 
-            element={loggedUser? <UserHomePage loggedUser={loggedUser} setLoggedUser={setLoggedUser}/> : <Navigate to="/login"/>}
-          />
           <Route
             path="/verify-email" 
             index 
-            element={loggedUser? <EnterCodePage loggedUser={loggedUser}/> : <Navigate to="/login"/>}
-          />
-          <Route
-            path="/post" 
-            index 
-            element={loggedUser? <UploadPage loggedUser={loggedUser} setLoggedUser={setLoggedUser}/> : <Navigate to="/login"/>}
+            element={loggedUser? <EnterCodePage loggedUser={loggedUser} setUpdatedTTL={setUpdatedTTL}/> : <Navigate to="/login"/>}
           />
         </Routes>
       </BrowserRouter>

@@ -78,7 +78,7 @@ const PostDetails = props => {
                     <section className='post-details'>
                         <h1>{post.name}</h1>
                         <div className="card">
-                            {props.loggedUser && post.username === props.loggedUser.username && 
+                            {props.loggedUser && props.loggedUser.ttl === -1 && post.username === props.loggedUser.username && 
                             <button 
                                 className="delete--badge"
                                 name="open-delete"
@@ -86,7 +86,7 @@ const PostDetails = props => {
                             >
                                 <img src="./delete.jpg" className="card--star" />
                             </button>}
-                            {props.loggedUser && post.username === props.loggedUser.username && 
+                            {props.loggedUser && props.loggedUser.ttl === -1 && post.username === props.loggedUser.username && 
                             <button 
                                 className="edit--badge"
                                 name="open-edit"

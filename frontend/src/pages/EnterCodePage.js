@@ -9,7 +9,7 @@ const EnterCodePage = props =>
             <PageTitle 
                 title="Verification Page"
             />
-            <EnterCode loggedUser={props.loggedUser} />
+            <EnterCode loggedUser={props.loggedUser} setUpdatedTTL={props.setUpdatedTTL}/>
         </div>
     );
 };
