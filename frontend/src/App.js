@@ -11,11 +11,15 @@ import EnterCodePage from './pages/EnterCodePage';
 import DetailsPage from './pages/DetailsPage'
 import NavBar from './components/NavBar';
 import UploadPage from './pages/UploadPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import PasswordResetPage from './pages/PasswordResetPage'
 import useLoggedUser from './hooks/useLoggedUser';
+import useTempUser from './hooks/useTempUser';
 
 function App()
 {
   const {loggedUser, setLoggedUser} = useLoggedUser();
+  const {tempUser, setTempUser} = useTempUser();
 
 
   return (
@@ -37,12 +41,22 @@ function App()
           <Route 
             path="/login" 
             index 
-            element={!loggedUser? <LoginPage setLoggedUser={setLoggedUser}/> : <Navigate to="/user-home"/>}
+            element={!loggedUser? <LoginPage setLoggedUser={setLoggedUser} setTempUser={setTempUser}/> : <Navigate to="/user-home"/>}
+          />
+          <Route 
+            path="/forgot-password" 
+            index 
+            element={!loggedUser? !tempUser? <ForgotPasswordPage setLoggedUser={setLoggedUser} setTempUser={setTempUser}/>: <Navigate to="/password-reset"/>: <Navigate to="/user-home"/>}
+          />
+          <Route 
+            path="/password-reset" 
+            index 
+            element={!loggedUser? tempUser? <PasswordResetPage setLoggedUser={setLoggedUser} setTempUser={setTempUser} tempUser={tempUser}/> : <Navigate to="/forgot-password"/> : <Navigate to="/user-home"/>}
           />
           <Route 
             path="/register" 
             index 
-            element={!loggedUser? <RegisterPage setLoggedUser={setLoggedUser}/>: <Navigate to="/user-home"/>}
+            element={!loggedUser? <RegisterPage setLoggedUser={setLoggedUser} setTempUser={setTempUser}/>: <Navigate to="/user-home"/>}
           />
           <Route 
             path="/user-home"

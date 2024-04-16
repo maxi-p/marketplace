@@ -8,7 +8,12 @@ export default function useLoggedUser() {
   const [loggedUser, setLoggedUser] = useState(getLoggedUser());
 
   const saveLoggedUser = data => {
-    localStorage.setItem('user_data', JSON.stringify(data));
+    if(data == null){
+      localStorage.removeItem('user_data');
+    }
+    else{
+      localStorage.setItem('user_data', JSON.stringify(data));
+    }
     setLoggedUser(data);
   };
 

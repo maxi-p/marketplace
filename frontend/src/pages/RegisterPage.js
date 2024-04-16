@@ -9,7 +9,7 @@ const RegisterPage = props =>
             <PageTitle 
                 title="Register Page"
             />
-            <Register setLoggedUser={props.setLoggedUser}/>
+            <Register setLoggedUser={props.setLoggedUser} setTempUser={props.setTempUser}/>
         </div>
     );
 };

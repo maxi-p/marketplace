@@ -4,11 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 import buildPath from '../logic/buildPath';
 
-const Login = props => {
+const ForgotPassword = props => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState(
-        { username: "", password: "" }
+        { username: ""}
     );
 
     const handleChange = (event) => {
@@ -23,35 +23,24 @@ const Login = props => {
 
     const [message, setMessage] = useState('');
 
-    const doLogin = async (event) => {
+    const doRequest = async (event) => {
         event.preventDefault();
         var json = JSON.stringify(formData);
 
         try {
-            const response = await fetch(buildPath('api/login'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
+            const response = await fetch(buildPath('api/passwordRequest'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
 
-            if (res.id <= 0) {
-                setMessage('User/Password combination incorrect');
+            if (res.error === '') {
+                props.setTempUser(
+                    {
+                        username: res.username,
+                        email: res.email
+                    })
+                navigate('/password-reset');
             }
             else {
-                var user = { 
-                    id: res.id, 
-                    username: res.username, 
-                    password: '',
-                    firstName: res.firstName, 
-                    lastName: res.lastName, 
-                    email: res.email,
-                    interestedIn: res.interestedIn,
-                    phoneNumber: res.phoneNumber,
-                    ttl: res.ttl,
-                    aboutMe: res.aboutMe,
-                    profilePic: res.profilePic
-                };
-                props.setTempUser(null)
-                props.setLoggedUser(user);
-                setMessage('');
-                navigate('/home');
+                setMessage(res.error);
             }
 
         }
@@ -67,11 +56,11 @@ const Login = props => {
         <div className="form_wrapper">
             <div className="form_container">
                 <div className="title_container">
-                    <h2>Login</h2>
+                    <h2>Enter Your Username</h2>
                 </div>
 
                 <div className="">
-                    <form className="login" onSubmit={doLogin}>
+                    <form className="login" onSubmit={doRequest}>
                         <div className="input_field"> <span><FontAwesomeIcon icon={faUser} transform="down-10"/></span>
                             <input
                                 type="text"
@@ -82,25 +71,14 @@ const Login = props => {
                                 value={formData.username}
                             />
                         </div>
-                        <div className="input_field"> <span> <FontAwesomeIcon icon={faLock} transform="down-10"/></span>
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                id="password"
-                                onChange={handleChange}
-                                className="userDetails"
-                                value={formData.password}
-
-                            />
-                        </div>
                         <input
                             type="submit"
-                            value="Login"
-                            id="loginButton"
-                            className="loginButton"
-                            onClick={doLogin}
+                            value="Reset Password"
+                            id="passwordResetButton"
+                            className="passwordResetButton"
+                            onClick={doRequest}
                         />
-                        <Link to='/forgot-password'>Forgot Password</Link><br/>
+                        <Link to='/login'>Login</Link><br/>
                         <Link to='/register'>Register</Link>
                     </form>
                 </div>
@@ -113,4 +91,4 @@ const Login = props => {
     );
 };
 
-export default Login;
+export default ForgotPassword;
