@@ -11,7 +11,6 @@ const PostDetails = props => {
     const [hasUpdated, setHasUpdated] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [isInterested, setIsInterested] = useState(post.interested);
     console.log(post)
 
     useEffect(() => {
@@ -20,7 +19,8 @@ const PostDetails = props => {
             const json = JSON.stringify({ postId: id });
             const response = await fetch(buildPath('api/getPost'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
-            setPost(res.post)
+            var newRes = {...res.post, interested: res.post.usersInterested.includes(props.loggedUser.id)};
+            setPost(newRes)
             setHasUpdated(false);
             // TODO: remove this mimicking network request time (0.5 seconds)
             setTimeout(() => { setLoading(false) }, 100)
@@ -43,8 +43,7 @@ const PostDetails = props => {
             var res = JSON.parse(await response.text());
             console.log(res)
         }
-        setIsInterested(!post.interested);
-        setPost({...post, interested: !post.interested });
+        setPost({...post, interested: !post.interested })
     }
 
     const saveHandler = data => {
@@ -111,7 +110,7 @@ const PostDetails = props => {
                                     onClick={interestHandler}
                                     className="interestedButton"
                                 >
-                                    <img src={isInterested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
+                                    <img src={post.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
                                 </button>}
                             {props.loggedUser && post.username === props.loggedUser.username &&
                                 <button
