@@ -11,6 +11,7 @@ const PostDetails = props => {
     const [hasUpdated, setHasUpdated] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isInterested, setIsInterested] = useState(post.interested);
     console.log(post)
 
     useEffect(() => {
@@ -42,7 +43,8 @@ const PostDetails = props => {
             var res = JSON.parse(await response.text());
             console.log(res)
         }
-        setPost({...post, interested: !post.interested })
+        setIsInterested(!post.interested);
+        setPost({...post, interested: !post.interested });
     }
 
     const saveHandler = data => {
@@ -109,7 +111,7 @@ const PostDetails = props => {
                                     onClick={interestHandler}
                                     className="interestedButton"
                                 >
-                                    <img src={post.interested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
+                                    <img src={isInterested ? "filled_star_p.png" : "empty_star_p.png"} className="card--star" />
                                 </button>}
                             {props.loggedUser && post.username === props.loggedUser.username &&
                                 <button
