@@ -21,8 +21,9 @@ const PostDetails = props => {
             const json = JSON.stringify({ postId: id });
             const response = await fetch(buildPath('api/getPost'), { method: 'POST', body: json, headers: { 'Content-Type': 'application/json' } });
             var res = JSON.parse(await response.text());
+            var newRes;
             if (props.loggedUser)
-                var newRes = {...res.post, interested: res.post.usersInterested.includes(props.loggedUser.id)};
+                newRes = {...res.post, interested: res.post.usersInterested.includes(props.loggedUser.id)};
             else
                 newRes = res;
             setPost(newRes)
